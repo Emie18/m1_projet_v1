@@ -92,3 +92,8 @@ table th {
     color:var(--couleur-texte);
     text-align: center;
   }
+#croix {
+    width: fit-content;
+    background: #ee6e73;
+    margin-left: 10px;
+}

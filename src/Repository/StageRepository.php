@@ -7,7 +7,6 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Common\Util\ClassUtils;
 
-
 /**
  * @extends ServiceEntityRepository<Stage>
  *
@@ -34,6 +33,8 @@ class StageRepository extends ServiceEntityRepository
             ->addSelect('sou')
             ->leftJoin('s.rapport', 'rap')
             ->addSelect('rap')
+            ->leftJoin('s.groupe', 'gr')
+            ->addSelect('gr')
             ->leftJoin('s.tuteur_isen', 'ti')
             ->addSelect('ti')
             ->getQuery()
@@ -54,28 +55,64 @@ class StageRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
-//    /**
-//     * @return Stage[] Returns an array of Stage objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('s.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function findByFilters($nom,$groupe, $annee, $etat, $tuteurIsen)
+{
+    $queryBuilder = $this->createQueryBuilder('s')
+        ->leftJoin('s.apprenant', 'a') // Jointure avec l'entité Apprenant
+        ->addSelect('a') // Sélectionnez également l'entité Apprenant
+        ->leftJoin('s.eval_entreprise', 'e')
+        ->addSelect('e')
+        ->leftJoin('s.soutenance', 'sou')
+        ->addSelect('sou')
+        ->leftJoin('s.rapport', 'rap')
+        ->addSelect('rap')
+        ->leftJoin('s.groupe', 'gr')
+        ->addSelect('gr')
+        ->leftJoin('s.tuteur_isen', 'ti')
+        ->addSelect('ti')
+        ->addSelect('SUBSTRING(s.date_debut, 1, 4) AS HIDDEN adebut')
+        ->addSelect('SUBSTRING(s.date_fin, 1, 4) AS HIDDEN afin');
 
-//    public function findOneBySomeField($value): ?Stage
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    if ($nom !== "") {
+         $queryBuilder
+            ->andWhere('a.id = :nom')
+            ->setParameter('nom', $nom);
+    }
+
+    if ($groupe !== "") {
+        $queryBuilder
+            ->andWhere('gr.id = :groupe')
+            ->setParameter('groupe', $groupe);
+    }
+   if ($annee !== "") {
+        $queryBuilder
+        ->having('adebut = :annee OR afin = :annee')
+        ->setParameter('annee', $annee);
+    }
+
+    if ($etat !== "") {
+        if ($etat == '1') {
+            $queryBuilder
+                ->andWhere('sou.id = :soutenance AND rap.id = :rapport AND e.id = :eval_entreprise'                    )
+                ->setParameter('soutenance', '1')
+                ->setParameter('rapport', '1')
+                ->setParameter('eval_entreprise', '1');
+        } elseif ($etat == '2') {
+            $queryBuilder
+                ->andWhere('sou.id = :soutenance OR rap.id = :rapport OR e.id = :eval_entreprise'                    )
+                ->setParameter('soutenance', '2')
+                ->setParameter('rapport', '2')
+                ->setParameter('eval_entreprise', '2');
+        }
+    }
+
+    if ($tuteurIsen!="") {
+        $queryBuilder
+            ->andWhere('ti.id = :tuteurIsen')
+            ->setParameter('tuteurIsen', $tuteurIsen);
+    }
+
+    return $queryBuilder->getQuery()->getResult();
+}
+
 }

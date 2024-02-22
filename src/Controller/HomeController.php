@@ -32,7 +32,7 @@ class HomeController extends AbstractController
         $stages = $stageRepository->findAllStages();
         $noms = $apprenantRepository->findAll();
         $groupes = $groupRepository->findAll();
-        $etats_stages = [['id'=>1 , 'libelle'=>'En cours'], ['id'=>1 , 'libelle'=>'Terminé'] ];
+        $etats_stages = [['id'=>1 , 'libelle'=>'Terminé'], ['id'=>2 , 'libelle'=>'En cours'] ];
         $annees = [];
         foreach ($stages as $stage) {
             $anneeDebut = $stage->getDateDebut()->format('Y');
@@ -63,8 +63,12 @@ class HomeController extends AbstractController
     public function index2(Request $request, StageRepository $stageRepository) {
         // Récupération des paramètres de requête
         $nom2 = $request->query->get('nom');
+        $groupe = $request->query->get('groupe');
+        $annee = $request->query->get('annee');
+        $etat = $request->query->get('etat_stage');
+        $professeur = $request->query->get('professeur');
         // Récupération des stages filtrés en fonction des paramètres
-        $stages = $stageRepository->findByApprenantNom($nom2);
+        $stages = $stageRepository->findByFilters($nom2,$groupe,$annee, $etat, $professeur);
         // Rendu d'une vue partielle contenant uniquement les données de la table
         return $this->render('home/_table.html.twig', [
             'stages' => $stages,
