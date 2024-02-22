@@ -4,6 +4,8 @@
     --couleur-survol:black;
     --couleur-bouton:#B082AC;
     --couleur-ligne-tableau:#c0a2bdac;
+    --couleur-survol-tableau: rgba(139, 58, 139, 0.552);
+    --couleur-croix:#ee6e73;
   }
 * {
     margin: 0;

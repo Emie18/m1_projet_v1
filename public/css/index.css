@@ -62,7 +62,6 @@ button{
 
 button:hover{
     background:var(--couleur-texte);
-    width: 100px;
     border: solid 1px white;
     color: white;
     font-weight: bold;
@@ -92,8 +91,37 @@ table th {
     color:var(--couleur-texte);
     text-align: center;
   }
-#croix {
+.lignetableau{
+    transition: ease-in-out 0.2s;
+}
+.lignetableau:hover{
+    background-color:var(--couleur-survol-tableau) ;
+}
+.croix {
     width: fit-content;
-    background: #ee6e73;
+    background-color: var(--couleur-croix);
     margin-left: 10px;
+}
+#detailsDiv{
+    /* transition: ease-in-out 0.2s; */
+    position: absolute;
+    top: 10%;
+    left: 10%;
+    width: 80%;
+}
+.fichedetail{
+    background: var(--couleur-principale);
+    position: absolute;
+    top: 10%;
+    left: 10%;
+    width: 80%;
+    border-radius: 30px;
+    padding: 1rem;
+    height: 0px; /* Définir la hauteur à 0 par défaut */
+    overflow: hidden;
+    transition: opacity 0.2s ease-in-out, height 0.2s ease-in-out; /* Ajouter une transition pour l'opacité et la hauteur */
+}
+.fichedetail.active {
+    opacity: 1; /* Mettre l'opacité à 1 pour rendre la div visible */
+    height: 500px; /* Rétablir la hauteur automatique pour afficher le contenu */
 }

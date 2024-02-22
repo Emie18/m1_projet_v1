@@ -43,7 +43,7 @@
 	</select><br>
 
 	<button type="button" onclick="filterResults()">Filtrer</button>
-	<button id="croix" type="button" onclick="defiltrer()">✕</button>
+	<button class="croix" type="button" onclick="defiltrer()">✕</button>
 </form>
 <script>
 function filterResults() {
@@ -83,6 +83,41 @@ function defiltrer() {
     };
     xhttp.open("GET", url, true);
     xhttp.send();
+}
+
+
+function afficherDetails(id) {
+  // Envoi d'une requête AJAX pour récupérer les détails du stage
+  var xhr = new XMLHttpRequest();
+  var url = '/fichedetail?id=' + id;
+
+  xhr.open('GET', url, true);
+  xhr.onload = function() {
+    if (xhr.status >= 200 && xhr.status < 400) {
+     // Succès de la requête
+      var detailsDiv = document.getElementById('detailsDiv');
+      detailsDiv.innerHTML = xhr.responseText; // Injecter le HTML directement dans le div
+      detailsDiv.style.display = 'block'; // Afficher le div
+	   // Ajouter la classe 'active' à tous les éléments avec la classe 'fichedetail'
+     setTimeout(function() {var details = document.getElementsByClassName('fichedetail');
+      for (var i = 0; i < details.length; i++) {
+        details[i].classList.add('active');
+      }},10);
+    }
+  };
+  xhr.send();
+}
+
+// Fonction pour fermer le div des détails
+function fermerDetails() {
+	var details = document.getElementsByClassName('fichedetail');
+		for (var i = 0; i < details.length; i++) {
+		details[i].classList.remove('active');
+		}
+		 setTimeout(function() {
+  var detailsDiv = document.getElementById('detailsDiv');
+  detailsDiv.style.display = 'none';},200); 
+
 }
 
 

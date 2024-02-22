@@ -55,6 +55,30 @@ class StageRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+    public function findById($id)
+    {
+        return $this->createQueryBuilder('s')
+            ->leftJoin('s.apprenant', 'a') // Jointure avec l'entité Apprenant
+            ->addSelect('a') // Sélectionnez également l'entité Apprenant
+            ->leftJoin('s.eval_entreprise', 'e')
+            ->addSelect('e')
+            ->leftJoin('s.soutenance', 'sou')
+            ->addSelect('sou')
+            ->leftJoin('s.rapport', 'rap')
+            ->addSelect('rap')
+            ->leftJoin('s.groupe', 'gr')
+            ->addSelect('gr')
+            ->leftJoin('s.tuteur_isen', 'ti')
+            ->addSelect('ti')
+            ->leftJoin('s.entreprise', 'en')
+            ->addSelect('en')
+            ->leftJoin('s.tuteur_stage', 'ts')
+            ->addSelect('ts')
+            ->andWhere('s.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getResult();
+    }
     public function findByFilters($nom,$groupe, $annee, $etat, $tuteurIsen)
 {
     $queryBuilder = $this->createQueryBuilder('s')

@@ -74,6 +74,21 @@ class HomeController extends AbstractController
             'stages' => $stages,
         ]);
     }
+    #[Route('/fichedetail', name: 'app_fichedetail')]
+
+    public function fichedetail(Request $request, StageRepository $stageRepository) {
+        $id = $request->query->get('id');
+        $stage = $stageRepository->findByID($id);
+
+        $dateDebut = $stage[0]->getDateDebut();
+        $dateFin = $stage[0]->getDateFin();
+        $difference = $dateFin->diff($dateDebut);
+        $difference_mois = $difference->m; // Nombre de mois
+        return $this->render('home/fiche_detail.html.twig', [
+            'stage' => $stage,
+            'nbmois'=> $difference_mois,
+        ]);
+    }
 
     #[Route('/statistique', name: 'app_statistique')]
     public function statistique(): Response

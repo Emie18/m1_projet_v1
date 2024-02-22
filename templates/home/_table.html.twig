@@ -1,6 +1,6 @@
 <tbody id="tableBody">
 {% for stage in stages %}
-    <tr>
+     <tr onclick="afficherDetails({{ stage.id }});" class = "lignetableau">
       <td> {{ stage.apprenant.nom }} {{ stage.apprenant.prenom }}</td>
       <td>{{ stage.dateDebut|date('Y-m-d') }} - {{ stage.dateFin|date('Y-m-d') }}</td>
       <td>{{stage.titre}}</td>
@@ -11,3 +11,4 @@
     </tr>
     {% endfor %}
   </tbody>
+

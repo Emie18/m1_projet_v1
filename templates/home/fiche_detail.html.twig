@@ -1,0 +1,25 @@
+{% if stage is defined %}
+
+    <div class="fichedetail">
+        <button class="croix" type="button" onclick="fermerDetails()">✕</button>
+        {% for s in stage %}
+        <h1>Détails du stage</h1>
+        <p>Titre : {{ s.titre }}</p>
+        <p>Date de début : {{ s.dateDebut|date('d/m/Y') }}</p>
+        <p>Date de fin : {{ s.dateFin|date('d/m/Y') }}</p>
+        <p>Durée :{{nbmois}} mois </p>
+        <p>Description : {{ s.description }}</p>
+        <p>Commentaire : {{ s.commentaire }}</p>
+        <p>Tuteur ISEN : {{ s.tuteurIsen.nom }} {{ s.tuteurIsen.prenom }}</p>
+        <p>Tuteur de stage : {{ s.tuteurStage.nom }} {{ s.tuteurStage.prenom }}</p>
+        <p>Apprenant : {{ s.apprenant.nom }} {{ s.apprenant.prenom }}</p>
+        <p>Entreprise : {{ s.entreprise.nom }}</p>
+        <p>Groupe : {{ s.groupe.libelle }}</p>
+        <p>État de la soutenance : {{ s.soutenance.libelle }}</p>
+        <p>Évaluation de l'entreprise : {{ s.evalEntreprise.libelle }}</p>
+         {% endfor %}
+
+    </div>
+{% else %}
+    <p>Aucun détail de stage trouvé.</p>
+{% endif %}
