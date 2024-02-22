@@ -1,0 +1,15 @@
+  <tbody id="tableBody">
+{% for stage in stages %}
+    <tr>
+      <td> {{ stage.apprenant.nom }} {{ stage.apprenant.prenom }}</td>
+      <td>{{ stage.dateDebut|date('Y-m-d') }} - {{ stage.dateFin|date('Y-m-d') }}</td>
+      <td>{{stage.titre}}</td>
+      <td>{{stage.tuteurIsen.nom}} {{stage.tuteurIsen.prenom}}</td>
+      <td>{{stage.soutenance.libelle}}</td>
+      <td>{{stage.rapport.libelle}}</td>
+      <td>{{stage.evalEntreprise.libelle}}</td>
+    </tr>
+    {% endfor %}
+
+    <!-- Ajoutez d'autres lignes de données au besoin -->
+  </tbody>

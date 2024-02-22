@@ -1,0 +1,92 @@
+@import url('nav_footer.css.css');
+h1{
+    padding : 1rem;
+    color: var(--couleur-texte);
+    background-color: var(--couleur-principale);
+    width: fit-content;
+    border-radius: 15px;
+    text-align: center;
+    margin-top: 1rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+/* form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+} */
+
+form {
+    display: flex;
+        flex-wrap: wrap;
+    justify-content: space-between; /* Aligne les colonnes à l'extrémité gauche et droite */
+    width: 80%; /* Ajustez la largeur selon vos besoins */
+    margin: auto; /* Centre le formulaire */
+}
+
+#ajoutstage {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between; /* Aligne les éléments à l'extrémité gauche et droite */
+    width: 100%; /* Occupe toute la largeur disponible */
+}
+
+#ajoutstage > div {
+    flex: 1 0 50%; /* Pour diviser en deux colonnes, chaque élément occupe 45% de la largeur */
+}
+
+input {
+    border-radius: 15px;
+    padding: 15px;
+}
+#ajoutstage input {
+    padding: 5px;
+
+}
+#ajoutstage label{
+    text-align: center;
+    display: block;
+}
+/* #ajoutstage #ajoutstage_date_fin,
+#ajoutstage #ajoutstage_date_debut {
+    display: inline-block;
+    margin: 0 auto; /* Pour centrer horizontalement
+} */
+#ajoutstage div{
+    padding:10px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+#ajoutstage{
+    /* position: relative; */
+
+    /* display: flex;
+    flex-wrap: wrap;
+    flex-direction: column; */
+    align-items: center;
+    margin: 1rem;
+    background: var(--couleur-principale);
+    padding:1rem;
+    border-radius: 30px;
+}
+#ajoutstage select {
+    padding: 5px;
+    border: none;
+    border-radius: 5px;
+
+}
+form button {
+    border: none;
+    width: 100px;
+    border-radius: 15px;
+    padding:5px;
+    margin: auto;
+    transition: ease-in-out 0.2s;
+    background: var(--couleur-principale);
+}
+form button:hover {
+    background: var(--couleur-texte);
+    color:white;
+}
+

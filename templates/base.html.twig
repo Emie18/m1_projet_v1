@@ -1,19 +1,44 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
-        {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
-        {% block stylesheets %}
-            {{ encore_entry_link_tags('app') }}
-        {% endblock %}
+	<head>
+		<meta charset="UTF-8">
+		<title>
+			{% block title %}Emilie css test
+			{% endblock %}
+		</title>
+		<link rel="stylesheet" href="{{ asset('css/nav_footer.css') }}"> {% block stylesheets %}{% endblock %}
+		<!-- Ajoutez ici vos balises meta, stylesheets, scripts communs à toutes les pages -->
+		</head>
+		<body>
+			<header>
+				<!--barre de navigation -->
+				<nav>
+					<ul>
+						<li><a href="/home">Acceuil</a></li>
+						<li><a href="/statistique">Statistics</a></li>
+					</ul>
+				</nav>
+			</header>
 
-        {% block javascripts %}
-            {{ encore_entry_script_tags('app') }}
-        {% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-    </body>
-</html>
+			<div class="content"> {% block body %}{% endblock %}
+				</div>
+
+				<footer>
+					<!-- pied de page -->
+					<p>Site créer par Emilie Le Rouzic et Thibault Tanné</p>
+					<p class="version">Version 1.0</p>
+				</footer>
+
+				<script>
+					document.addEventListener("DOMContentLoaded", function () {
+                    const currentPage = window.location.pathname;
+                    const links = document.querySelectorAll("header nav ul li a");
+                    links.forEach(link => {
+                    if (link.getAttribute("href") === currentPage) {
+                    link.classList.add("active");
+                    }
+                    });
+                    });
+				</script>
+			</body>
+		</html>

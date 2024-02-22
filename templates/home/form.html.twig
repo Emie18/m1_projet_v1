@@ -1,0 +1,63 @@
+<form id="filterForm">
+  <label for="nom">Nom:</label>
+  <select name="nom" id="nomInput" onchange="getSelectedId('nomInput')">
+    <option value="">Sélectionner un nom</option>
+    {% for nom in noms %}
+      <option value="{{ nom.id }}">{{nom.nom}} {{nom.prenom}}</option>
+    {% endfor %}
+  </select><br>
+
+  <label for="groupe">Groupe :</label>
+  <select name="groupe" id="groupeInput">
+    <option value="">groupe</option>
+    {% for groupe in groupes %}
+      <option value="{{ groupe.id }}">{{groupe.libelle}}</option>
+    {% endfor %}
+  </select><br>
+
+  <label for="etat_stage">État du stage :</label>
+  <select name="etat_stage" id="etatInput">
+    <option value="">Etat du stage</option>
+    {% for etat in etats_stages %}
+      <option value="{{ etat.id }}">{{ etat.libelle }}</option>
+    {% endfor %}
+  </select><br>
+
+  <label for="annee">Année :</label>
+  <select name="annee" id="anneeInput">
+    <option value="">Année</option>
+    {% for annee in annees %}
+      <option value="{{ annee }}">{{ annee }}</option>
+    {% endfor %}
+  </select><br>
+
+  <label for="professeur">Professeur :</label>
+  <select name="professeur" id="profInput">
+    <option value="">Professeur</option>
+    {% for professeur in professeurs %}
+      <option value="{{ professeur.id}} ">{{ professeur.nom }} {{ professeur.prenom }} </option>
+    {% endfor %}
+  </select><br>
+
+   <button type="button" onclick="filterResults()">Filtrer</button>
+</form>
+<script>
+  function filterResults() {
+    var nom = document.getElementById('nomInput').value;
+    var groupe = document.getElementById('groupeInput').value;
+    var etat_stage = document.getElementById('etatInput').value;
+    var annee = document.getElementById('anneeInput').value;
+    var professeur = document.getElementById('profInput').value;
+
+    var url = '/filtrage?nom=' + nom + '&groupe=' + groupe + '&etat_stage=' + etat_stage + '&annee=' + annee + '&professeur=' + professeur;
+
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        document.getElementById("tableBody").innerHTML = this.responseText;
+      }
+    };
+    xhttp.open("GET", url, true);
+    xhttp.send();
+  }
+</script>

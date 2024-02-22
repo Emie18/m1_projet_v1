@@ -1,0 +1,94 @@
+@import url('nav_footer.css.css');
+
+h1{
+    padding : 1rem;
+    color: var(--couleur-texte);
+    background-color: var(--couleur-principale);
+    width: fit-content;
+    border-radius: 15px;
+    text-align: center;
+    margin-top: 1rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+form {
+    margin-top: 1rem;
+    display: flex;
+    background-color: var(--couleur-principale);
+    font-size: 12px;
+    padding: 10px;
+    border-radius: 15px;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+form label{
+    display: none;
+}
+
+form input, select {
+
+    margin-right: 1rem;
+    border-radius: 15px;
+    border: none;
+    text-align: center;
+}
+
+form .groupe-filtre {
+   width: 100px;
+}
+form .annee-filtre{
+    width: 80px;
+}
+form input[type="submit"], button{
+    background:var(--couleur-bouton);
+    width: 100px;
+    border: solid 1px white;
+    color: var(--couleur-texte);
+    font-weight: bold;
+    transition: ease-in-out 0.5s;
+}
+button{
+    background:var(--couleur-bouton);
+    width: 100px;
+    border: solid 1px white;
+    color: var(--couleur-texte);
+    font-weight: bold;
+    transition: ease-in-out 0.5s;
+    border-radius:15px ;
+}
+
+button:hover{
+    background:var(--couleur-texte);
+    width: 100px;
+    border: solid 1px white;
+    color: white;
+    font-weight: bold;
+
+}
+table{
+    margin-top:1rem;
+    width: 100%;
+    border-collapse: collapse; /* Fusionner les bordures des cellules */
+  border-radius: 10px; /* Arrondir les coins du tableau */
+  overflow: hidden; /* Cacher les éléments qui dépassent de la zone définie par le radius */
+
+}
+/* Style pour les titres des colonnes */
+table th {
+    background-color: var(--couleur-bouton);
+    color: white; /* Couleur du texte */
+    font-weight: bold; /* Police en gras */
+    padding: 10px; /* Espacement intérieur */
+  }
+  
+  /* Style pour les lignes impaires */
+  table tr:nth-child(odd) {
+    background-color:  var(--couleur-ligne-tableau) ; /* Couleur de fond pour les lignes impaires */
+  }
+  table td{
+    color:var(--couleur-texte);
+    text-align: center;
+  }

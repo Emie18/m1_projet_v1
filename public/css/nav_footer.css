@@ -1,0 +1,96 @@
+:root {
+    --couleur-principale: #DCBFD9;
+    --couleur-texte: #543951;
+    --couleur-survol:black;
+    --couleur-bouton:#B082AC;
+    --couleur-ligne-tableau:#c0a2bdac;
+  }
+* {
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Utilisez 100% de la hauteur de la vue (viewport height) */
+    margin: 0;
+}
+
+header {
+    background-color: var(--couleur-principale);
+    color: var(--couleur-texte);
+    padding: 10px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+}
+
+header nav ul {
+    display: flex;
+    flex-direction: row;
+}
+
+header nav ul li {
+    list-style: none;
+    margin-left: 20px;
+    position: relative;
+}
+header nav ul li a::after {
+    position: absolute;
+    z-index: -1;
+    align-self: center;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -20%); /* Centrez-le horizontalement et verticalement */
+    content: "";
+    width: 30px;
+    height: 30px;
+    border-radius: 0px 0px 15px 15px;
+    background: var(--couleur-principale);
+    transition: transform 0.5s; /* Ajoutez la transition ici pour que le mouvement soit fluide */
+
+}
+header nav ul li a.active::after {
+    transform: translate(-50%, 80%);
+}
+
+header nav ul li a:hover::after {
+    transform: translate(-50%, 80%); /* Centrez-le horizontalement et verticalement */
+}
+
+header nav ul li a {
+    position: relative;
+    text-decoration: none;
+    font-weight: 700;
+    padding: 10px; /* Ajoutez une taille fixe pour les liens */
+    color: var(--couleur-texte);
+    transition: color 0.3s; /* Ajoute une transition pour une animation douce */
+}
+
+header nav ul li a:hover {
+    text-decoration: none;
+    color: var(--couleur-survol); /* Change la couleur du texte au survol */
+}
+
+.content {
+    flex: 1; /* Occupe tout l'espace disponible */
+    padding: 20px; /* Ajoutez une marge intérieure au contenu si nécessaire */
+}
+
+footer {
+    background-color: var(--couleur-principale);
+    color: var(--couleur-texte);
+    padding: 10px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row;
+}
+footer p {
+    font-weight: 500;
+}
+
+

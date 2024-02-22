@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+{% block title %}Liste des stages
+{% endblock %}
+{% block stylesheets %}
+	{{ parent() }}
+	{# Cela inclura les stylesheets du modèle de base #}
+	<link rel="stylesheet" href="{{ asset('css/index.css') }}">
+{% endblock %}
+
+{% block body %}
+
+<div class="example-wrapper">
+
+		<h1 class="titre-page">Liste des Stages</h1>
+         {% include 'home/form.html.twig' %}
+         {% include 'home/tableau.html.twig' %}
+
+</div>
+{% endblock %}
