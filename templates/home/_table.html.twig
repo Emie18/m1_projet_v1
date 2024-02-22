@@ -1,4 +1,4 @@
-  <tbody id="tableBody">
+<tbody id="tableBody">
 {% for stage in stages %}
     <tr>
       <td> {{ stage.apprenant.nom }} {{ stage.apprenant.prenom }}</td>
@@ -10,6 +10,4 @@
       <td>{{stage.evalEntreprise.libelle}}</td>
     </tr>
     {% endfor %}
-
-    <!-- Ajoutez d'autres lignes de données au besoin -->
   </tbody>
