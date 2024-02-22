@@ -4,19 +4,27 @@
         <button class="croix" type="button" onclick="fermerDetails()">✕</button>
         {% for s in stage %}
         <h1>Détails du stage</h1>
-        <p>Titre : {{ s.titre }}</p>
-        <p>Date de début : {{ s.dateDebut|date('d/m/Y') }}</p>
-        <p>Date de fin : {{ s.dateFin|date('d/m/Y') }}</p>
-        <p>Durée :{{nbmois}} mois </p>
-        <p>Description : {{ s.description }}</p>
-        <p>Commentaire : {{ s.commentaire }}</p>
-        <p>Tuteur ISEN : {{ s.tuteurIsen.nom }} {{ s.tuteurIsen.prenom }}</p>
-        <p>Tuteur de stage : {{ s.tuteurStage.nom }} {{ s.tuteurStage.prenom }}</p>
-        <p>Apprenant : {{ s.apprenant.nom }} {{ s.apprenant.prenom }}</p>
-        <p>Entreprise : {{ s.entreprise.nom }}</p>
-        <p>Groupe : {{ s.groupe.libelle }}</p>
-        <p>État de la soutenance : {{ s.soutenance.libelle }}</p>
-        <p>Évaluation de l'entreprise : {{ s.evalEntreprise.libelle }}</p>
+
+        <p> <span>Apprenant : </span>{{ s.apprenant.nom }} {{ s.apprenant.prenom }}  </p>
+        <p><span>Groupe :  </span>{{ s.groupe.libelle }}</p>
+        </br>
+        <p> <span>Titre :  </span>{{ s.titre }}</p>
+        <p><span>Description :</span> {{ s.description }}</p>
+        </br>
+        <p> <span>Date de début :  </span>{{ s.dateDebut|date('d/m/Y') }} - {{ s.dateFin|date('d/m/Y') }} ( Durée :{{nbmois}} mois )</p>
+        </br>
+        <p><span>Tuteur industriel : </span>{{ s.tuteurStage.nom }} {{ s.tuteurStage.prenom }}</p>
+        <p><span>Entreprise : </span>{{ s.entreprise.nom }}</p>
+        </br>
+        <p><span>Responsable de suivi : </span>{{ s.tuteurIsen.nom }} {{ s.tuteurIsen.prenom }}</p>
+        </br>
+        <p><span>Commentaire :</span> {{ s.commentaire }}</p>
+        <div class="etatvalidation">
+        <h3>Etat de validation :</h3>
+        <p>Soutenance : {{ s.soutenance.libelle }}</p>
+        <p>Rapport : {{s.rapport.libelle}}</p>
+        <p>Entreprise : {{ s.evalEntreprise.libelle }}</p>
+        <div>
          {% endfor %}
 
     </div>

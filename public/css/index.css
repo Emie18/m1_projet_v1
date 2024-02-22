@@ -101,6 +101,8 @@ table th {
     width: fit-content;
     background-color: var(--couleur-croix);
     margin-left: 10px;
+    position: absolute;
+    right: 15px;
 }
 #detailsDiv{
     /* transition: ease-in-out 0.2s; */
@@ -110,6 +112,7 @@ table th {
     width: 80%;
 }
 .fichedetail{
+    position: relative;
     background: var(--couleur-principale);
     position: absolute;
     top: 10%;
@@ -124,4 +127,11 @@ table th {
 .fichedetail.active {
     opacity: 1; /* Mettre l'opacité à 1 pour rendre la div visible */
     height: 500px; /* Rétablir la hauteur automatique pour afficher le contenu */
+}
+.fichedetail span{
+    font-weight:600;
+}
+.fichedetail .etatvalidation{
+    position: absolute;
+    right: 3rem;
 }
