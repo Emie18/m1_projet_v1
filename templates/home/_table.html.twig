@@ -1,14 +1,20 @@
 <tbody id="tableBody">
-{% for stage in stages %}
-     <tr onclick="afficherDetails({{ stage.id }});" class = "lignetableau">
-      <td> {{ stage.apprenant.nom }} {{ stage.apprenant.prenom }}</td>
-      <td>{{ stage.dateDebut|date('Y-m-d') }} - {{ stage.dateFin|date('Y-m-d') }}</td>
-      <td>{{stage.titre}}</td>
-      <td>{{stage.tuteurIsen.nom}} {{stage.tuteurIsen.prenom}}</td>
-      <td>{{stage.soutenance.libelle}}</td>
-      <td>{{stage.rapport.libelle}}</td>
-      <td>{{stage.evalEntreprise.libelle}}</td>
+{% if stages is empty %}
+    <tr>
+        <td  class="coix" colspan="7">Aucun stage trouvé avec ce filtrage</td>
     </tr>
+{% else %}
+    {% for stage in stages %}
+        <tr onclick="afficherDetails({{ stage.id }});" class="lignetableau">
+            <td>{{ stage.apprenant.nom }} {{ stage.apprenant.prenom }}</td>
+            <td>{{ stage.dateDebut|date('d-m-Y') }} - {{ stage.dateFin|date('d-m-Y') }}</td>
+            <td>{{ stage.titre }}</td>
+            <td>{{ stage.tuteurIsen.nom }} {{ stage.tuteurIsen.prenom }}</td>
+            <td>{{ stage.soutenance }}</td>
+            <td>{{ stage.rapport }}</td>
+            <td>{{ stage.evalEntreprise }}</td>
+        </tr>
     {% endfor %}
-  </tbody>
+{% endif %}
+</tbody>
 

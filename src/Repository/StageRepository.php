@@ -37,6 +37,7 @@ class StageRepository extends ServiceEntityRepository
             ->addSelect('gr')
             ->leftJoin('s.tuteur_isen', 'ti')
             ->addSelect('ti')
+            ->setMaxResults(50)
             ->getQuery()
             ->getResult();
     }

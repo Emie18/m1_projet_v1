@@ -16,9 +16,6 @@ class Entreprise
     #[ORM\Column(length: 50)]
     private ?string $nom = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $adresse = null;
-
     public function getId(): ?int
     {
         return $this->id;
@@ -36,17 +33,6 @@ class Entreprise
         return $this;
     }
 
-    public function getAdresse(): ?string
-    {
-        return $this->adresse;
-    }
-
-    public function setAdresse(string $adresse): static
-    {
-        $this->adresse = $adresse;
-
-        return $this;
-    }
     public function __toString(): string
     {
         return $this->nom; // Remplacez "nom" par le nom de la propriété que vous souhaitez afficher
