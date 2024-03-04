@@ -22,6 +22,7 @@ use App\Entity\Entreprise;
 use App\Entity\Etat;
 use App\Entity\Groupe;
 use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Query\ResultSetMapping;
 use League\Csv\Reader;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType; // Importer la classe EntityType
@@ -50,7 +51,7 @@ class BackController extends AbstractController
             'controller_name' => 'BackController',
         ]);
     }
-    #[Route('/ajouter', name: 'ajouter')]
+    #[Route('/back/ajouter', name: 'ajouter')]
     public function ajouterStage(Request $request, StageRepository $stageRepository): Response
     {
         $stage = new Stage();
@@ -124,7 +125,7 @@ class BackController extends AbstractController
         ]);
     }
 
-    #[Route('/ajouter-un-tuteur-isen', name: 'ajouter_un_tuteur_isen')]
+    #[Route('/back/ajouter-tuteur-isen', name: 'ajouter_tuteur_isen')]
     public function ajouterTuteurIsen(Request $request, TuteurIsenRepository $TuteurRepository): Response
     {
         $tuteur = new TuteurIsen();
@@ -141,7 +142,7 @@ class BackController extends AbstractController
         ]);
     }
     
-    #[Route('/import-file', name: "importe_file")]
+    #[Route('/back/import-file', name: "importe_file")]
     public function importFile(Request $request): Response{
         $form = $this->createForm(FormCSVType::class);
         $form->handleRequest($request);
@@ -154,7 +155,7 @@ class BackController extends AbstractController
                 $reader->setDelimiter(';');
                 $firstLine = 0;
                 $etat = $this->entityManager->getRepository(Etat::class)->findOneBy([
-                    "libelle" => "??"
+                    "libelle" => "???"
                 ]);
                 foreach ($reader as $row) {
                     //sauter la première ligne
@@ -169,7 +170,7 @@ class BackController extends AbstractController
                     $this->checkTuteurIsen($row[12], $row[13], $row[14]);
                     $this->checkGroupe($row[3]);
                     $this->checkEntreprise($row[11]);
-
+                    //ajouter le stage
                     $this->addStage($row, $etat);
                 }
 
@@ -193,6 +194,7 @@ class BackController extends AbstractController
         $app = $this->entityManager->getRepository(Apprenant::class)->findOneBy([
             "num_apprenant" => intval($num)
         ]);
+        
         if($app == NULL){
             $newEntity = new Apprenant();
             $newEntity->setNumApprenant(intval($num));
@@ -201,7 +203,8 @@ class BackController extends AbstractController
             $this->entityManager->persist($newEntity);
             $this->entityManager->flush();
             $this->buffApprenant[$num] = $newEntity;
-        }
+        }else $this->buffApprenant[$num] = $app;
+        
     }
     /**
      * vérifier si un tuteur de stage est déjà dans la base
@@ -282,9 +285,6 @@ class BackController extends AbstractController
      * @param Etat $etat état non défini
      */
     public function addStage($row, $etat){
-        //var_dump($row);
-        $newEntity = new Stage();
-        $newEntity->setTitre($row[17]);
         $dateDebut = $row[4];
         $dateFin = $row[5];
         //exception si le format de la date diffère
@@ -295,51 +295,64 @@ class BackController extends AbstractController
             $dateFin = $dateFin." 08:00";
         }
         if(strlen($dateDebut) == 0){
-            $dateDebut = "00/00/0000 08:00";
+            $dateDebut = "01/01/0001 08:00";
         }        
         if(strlen($dateFin) == 0){
-            $dateFin = "00/00/0000 08:00";
+            $dateFin = "01/01/0001 08:00";
         }
-        $newEntity->setDateDebut(\DateTime::createFromFormat("j/n/Y H:i", $dateDebut));
-        $newEntity->setDateFin(\DateTime::createFromFormat("j/n/Y H:i", $dateFin));
-        $newEntity->setDescription($row[20]);
-        //Forreign key
-        if(array_key_exists($row[0], $this->buffApprenant)){
-            $newEntity->setApprenant($this->buffApprenant[$row[0]]);
-        }else{
-            $newEntity->setApprenant($this->entityManager->getRepository(Apprenant::class)->findOneBy([
-                "num_apprenant" => intval($row[0])
-            ]));
+
+        $app = $this->entityManager->getRepository(Stage::class)->findOneBy([
+            "num_stage" => intval($row[16])
+        ]);
+        if($app == NULL){
+
+            $newEntity = new Stage();
+            $newEntity->setTitre($row[17]);
+            $dateDebut = \DateTime::createFromFormat("d/m/Y H:i", $dateDebut);
+            $dateFin = \DateTime::createFromFormat("j/n/Y H:i", $dateFin);
+            
+            $newEntity->setDateDebut($dateDebut);
+            $newEntity->setDateFin($dateFin);
+            $newEntity->setDescription($row[20]);
+            $newEntity->setNumStage(intval($row[16]));
+            //Forreign key
+            if(array_key_exists($row[0], $this->buffApprenant)){
+                $newEntity->setApprenant($this->buffApprenant[$row[0]]);
+            }else{
+                $newEntity->setApprenant($this->entityManager->getRepository(Apprenant::class)->findOneBy([
+                    "num_apprenant" => intval($row[0])
+                ]));
+            }
+            if(array_key_exists($row[12], $this->buffTuteurIsen))$newEntity->setTuteurIsen($this->buffTuteurIsen[$row[12]]);
+            else{
+                $newEntity->setTuteurIsen($this->entityManager->getRepository(TuteurIsen::class)->findOneBy([
+                    "num_tuteur_isen" => intval($row[12])
+                ]));
+            }
+            if(array_key_exists($row[8], $this->buffTuteurStage))$newEntity->setTuteurStage($this->buffTuteurStage[$row[8]]);
+            else{
+                $newEntity->setTuteurStage($this->entityManager->getRepository(TuteurStage::class)->findOneBy([
+                    "num_tuteur_stage" => intval($row[8])
+                ]));
+            }
+            if(array_key_exists($row[11], $this->buffEntreprise))$newEntity->setEntreprise($this->buffEntreprise[$row[11]]);
+            else{
+                $newEntity->setEntreprise($this->entityManager->getRepository(Entreprise::class)->findOneBy([
+                    "nom" => $row[11]
+                ]));
+            }
+            if(array_key_exists($row[3], $this->buffGroupe))$newEntity->setGroupe($this->buffGroupe[$row[3]]);
+            else{
+                $newEntity->setGroupe($this->entityManager->getRepository(Groupe::class)->findOneBy([
+                    "libelle" => $row[3]
+                ]));
+            }
+            $newEntity->setSoutenance($etat);
+            $newEntity->setRapport($etat);
+            $newEntity->setEvalEntreprise($etat);
+            $this->entityManager->persist($newEntity);
+            $this->entityManager->flush();
         }
-        if(array_key_exists($row[12], $this->buffTuteurIsen))$newEntity->setTuteurIsen($this->buffTuteurIsen[$row[12]]);
-        else{
-            $newEntity->setTuteurIsen($this->entityManager->getRepository(TuteurIsen::class)->findOneBy([
-                "num_tuteur_isen" => intval($row[12])
-            ]));
-        }
-        if(array_key_exists($row[8], $this->buffTuteurStage))$newEntity->setTuteurStage($this->buffTuteurStage[$row[8]]);
-        else{
-            $newEntity->setTuteurStage($this->entityManager->getRepository(TuteurStage::class)->findOneBy([
-                "num_tuteur_stage" => intval($row[8])
-            ]));
-        }
-        if(array_key_exists($row[11], $this->buffEntreprise))$newEntity->setEntreprise($this->buffEntreprise[$row[11]]);
-        else{
-            $newEntity->setEntreprise($this->entityManager->getRepository(Entreprise::class)->findOneBy([
-                "nom" => $row[11]
-            ]));
-        }
-        if(array_key_exists($row[3], $this->buffGroupe))$newEntity->setGroupe($this->buffGroupe[$row[3]]);
-        else{
-            $newEntity->setGroupe($this->entityManager->getRepository(Groupe::class)->findOneBy([
-                "libelle" => $row[3]
-            ]));
-        }
-        $newEntity->setSoutenance($etat);
-        $newEntity->setRapport($etat);
-        $newEntity->setEvalEntreprise($etat);
-        
-        $this->entityManager->persist($newEntity);
-        $this->entityManager->flush();
+
     }
 }

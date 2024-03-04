@@ -99,19 +99,29 @@ function afficherDetails(id) {
   xhr.open('GET', url, true);
   xhr.onload = function() {
     if (xhr.status >= 200 && xhr.status < 400) {
-     // Succès de la requête
+      // Succès de la requête
       var detailsDiv = document.getElementById('detailsDiv');
       detailsDiv.innerHTML = xhr.responseText; // Injecter le HTML directement dans le div
       detailsDiv.style.display = 'block'; // Afficher le div
-	   // Ajouter la classe 'active' à tous les éléments avec la classe 'fichedetail'
-     setTimeout(function() {var details = document.getElementsByClassName('fichedetail');
-      for (var i = 0; i < details.length; i++) {
-        details[i].classList.add('active');
-      }},10);
+
+      // Ajouter la classe 'active' à tous les éléments avec la classe 'fichedetail'
+      setTimeout(function() {
+        var details = document.getElementsByClassName('fichedetail');
+        for (var i = 0; i < details.length; i++) {
+          details[i].classList.add('active');
+        }
+        
+        // Calculer la position actuelle de la fenêtre
+        var windowPosition = window.scrollY;
+
+        // Ajuster la position de la boîte de détails
+        detailsDiv.style.top = (windowPosition + 100) + 'px'; // Ajoutez une marge de 100 pixels par exemple
+      }, 10);
     }
   };
   xhr.send();
 }
+
 
 // Fonction pour fermer le div des détails
 function fermerDetails() {
