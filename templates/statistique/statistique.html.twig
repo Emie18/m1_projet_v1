@@ -5,14 +5,42 @@
 	{{ parent() }}
 	{# Cela inclura les stylesheets du modèle de base #}
 	<link rel="stylesheet" href="{{ asset('css/index.css') }}">
+	<link rel="stylesheet" href="{{ asset('css/stats.css') }}">
+	<script src="{{asset('chart.js')}}"></script>
 {% endblock %}
 
 {% block body %}
 
-<div class="example-wrapper">
 
-		<h1 class="titre-page">Statistique</h1>
-
-
+    <h1 class="titre-page">Statistique</h1>
+<div class="piecontent">
+    <canvas id="myChart" width="40" height="40"></canvas>
 </div>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      var ctx = document.getElementById('myChart').getContext('2d');
+      var myChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['2 mois', '4 mois', 'Autres'],
+          datasets: [{
+            label: 'Nombre de mois de stage par étudiant',
+            data: [15, 45, 40],
+            backgroundColor: [
+              '#DCBFD9',  // Violet clair pour 2 mois
+              '#543951',   // Violet pour 4 mois
+              '#B082AC'   // Rose pour les autres
+            ],
+            hoverOffset: 7
+          }]
+        },
+        options: {
+          animation: {
+            animateRotate: true,
+            animateScale: true
+          }
+        }
+      });
+    });
+  </script>
 {% endblock %}
