@@ -26,6 +26,13 @@ class TuteurIsenRepository extends ServiceEntityRepository
         $entityManager->persist($tuteur);
         $entityManager->flush();
     }
+    public function findAllTuteurIsens()
+    {
+        return $this->createQueryBuilder('ti')
+            ->orderBy('ti.nom', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 
 //    /**
 //     * @return TuteurIsen[] Returns an array of TuteurIsen objects

@@ -20,6 +20,13 @@ class ApprenantRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Apprenant::class);
     }
+    public function findAllApprenants(): array
+    {
+        return $this->createQueryBuilder('a')
+            ->orderBy('a.nom', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 
 //    /**
 //     * @return Apprenant[] Returns an array of Apprenant objects

@@ -12,7 +12,7 @@ class AjoutstageType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('num_stage')
+            // ->add('num_stage')
             ->add('titre')
             ->add('date_debut')
             ->add('date_fin')

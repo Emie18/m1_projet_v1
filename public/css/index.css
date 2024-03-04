@@ -101,8 +101,11 @@ table th {
     width: fit-content;
     background-color: var(--couleur-croix);
     margin-left: 10px;
-    position: absolute;
+
     right: 15px;
+}
+.fichedetailcroix{
+    position: absolute;
 }
 #detailsDiv{
     /* transition: ease-in-out 0.2s; */

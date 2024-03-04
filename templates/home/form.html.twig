@@ -70,6 +70,7 @@ function defiltrer() {
     var etat_stage = "";
     var annee = "";
     var professeur ="";
+  
 
     var url = '/filtrage?nom=' + nom + '&groupe=' + groupe + '&etat_stage=' + etat_stage + '&annee=' + annee + '&professeur=' + professeur;
 
@@ -82,6 +83,11 @@ function defiltrer() {
     };
     xhttp.open("GET", url, true);
     xhttp.send();
+    document.getElementById('nomInput').value ="";
+    document.getElementById('groupeInput').value = "";
+    document.getElementById('etatInput').value = "";
+    document.getElementById('anneeInput').value = "";
+    document.getElementById('profInput').value = "";
 }
 
 

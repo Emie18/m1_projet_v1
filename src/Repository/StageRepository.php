@@ -41,6 +41,7 @@ class StageRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
     public function addStage(Stage $stage): void
     {
         $entityManager = $this->getEntityManager();
