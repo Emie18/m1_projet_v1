@@ -1,0 +1,66 @@
+
+h1{
+    padding : 1rem;
+    color: var(--couleur-texte);
+    background-color: var(--couleur-principale);
+    width: fit-content;
+    border-radius: 15px;
+    text-align: center;
+    margin-top: 1rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+p{
+    font-size:15px;
+    font-weight: 200;
+}
+form{
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 1rem;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    max-width: 400px;
+    flex-direction: column;
+    background-color: var(--couleur-principale);
+    padding: 1.5rem;
+}
+form button{
+    margin-top: 1rem;
+    border-radius: 15px;
+    border:none;
+    padding: 0.5rem;
+    transition: ease-in-out 0.3s;
+}
+form button:hover, input[type="file"]::-webkit-file-upload-button:hover{
+    color: white;
+    background-color: var(--couleur-bouton)
+}
+input[type="file"]::-moz-file-upload-button:hover,input[type="file"]::file-selector-button:hover{
+    color: white;
+    background-color: var(--couleur-bouton)
+}
+input[type="file"]::-webkit-file-upload-button {
+    /* Styles spécifiques pour le bouton de fichier dans les navigateurs WebKit (Chrome, Safari) */
+    border: none;
+    border-radius: 5px;
+    transition: ease-in-out 0.2s;
+    margin-left: 3px;
+}
+
+input[type="file"]::-moz-file-upload-button {
+    /* Styles spécifiques pour le bouton de fichier dans Firefox */
+    border: none;
+    border-radius: 5px;
+    margin-left: 3px;
+    transition: ease-in-out 0.2s;
+}
+
+input[type="file"]::file-selector-button {
+    /* Styles généraux pour le bouton de fichier */
+    border: none;
+    border-radius: 5px;
+    margin-left: 3px;
+    transition: ease-in-out 0.2s;
+}

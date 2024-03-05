@@ -1,9 +1,10 @@
 {% extends 'base.html.twig' %}
+{% block stylesheets %} <link rel="stylesheet" href="{{ asset('css/importcsv.css') }}"> {% endblock %}
 
 {% block title %}Ajouter un tuteur{% endblock %}
 
 {% block body %}
-<h1> import csv </h1>
+    <h1> importer un fichier csv <p>il faut que le fichier soit en UTF8</p></h1>
     {{ form_start(form) }}
     {{ form_widget(form) }}
     <button type="submit" class="btn btn-primary">Ajouter</button>

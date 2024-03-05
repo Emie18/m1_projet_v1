@@ -91,9 +91,34 @@ class HomeController extends AbstractController
     }
 
     #[Route('/statistique', name: 'app_statistique')]
-    public function statistique(): Response
+    public function statistique(StageRepository $stageRepository): Response
     {
-        return $this->render('statistique/statistique.html.twig');
+        $statistics = $stageRepository->getStatsEntreprise();
+        // Création d'un nouveau tableau avec les pourcentages et les noms des entreprises
+        $statisticsWithPercentage = [];
+
+        // Calculer le total des stagiaires
+        $totalStagiaires = array_sum(array_column($statistics, 'nb_stage'));
+
+        // Calculer le pourcentage pour chaque entreprise et ajouter au tableau
+        foreach ($statistics as $stat) {
+            $pourcentage = ($stat['nb_stage'] / $totalStagiaires) * 100;
+            $pourcentageArrondi = round($pourcentage, 2); // Arrondi à 2 décimales
+
+            // Ajouter les données au nouveau tableau
+            $statisticsWithPercentage[] = [
+                'entreprise' => $stat['entreprise_nom'],
+                'pourcentage' => $pourcentageArrondi
+            ];
+        }
+        $statisticsDay = $stageRepository->getStatsMonth();
+
+
+        return $this->render('statistique/statistique.html.twig', [
+            'statistics' => $statistics,
+            'pourcentage' => $statisticsWithPercentage,
+            'statMois' => $statisticsDay
+        ]);
     }
 
 }

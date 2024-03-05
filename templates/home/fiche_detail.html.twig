@@ -11,7 +11,7 @@
         <p> <span>Titre :  </span>{{ s.titre }}</p>
         <p><span>Description :</span> {{ s.description }}</p>
         </br>
-        <p> <span>Date de début :  </span>{{ s.dateDebut|date('d/m/Y') }} - {{ s.dateFin|date('d/m/Y') }} ( Durée :{{nbmois}} mois )</p>
+        <p> <span>Date de début-fin :  </span>{{ s.dateDebut|date('d/m/Y') }} - {{ s.dateFin|date('d/m/Y') }} ( Durée :{{nbmois}} mois )</p>
         </br>
         <p><span>Tuteur industriel : </span>{{ s.tuteurStage.nom }} {{ s.tuteurStage.prenom }}</p>
         <p><span>Entreprise : </span>{{ s.entreprise.nom }}</p>

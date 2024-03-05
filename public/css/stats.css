@@ -11,3 +11,29 @@
     flex-direction: column;
     align-items: center;
 }
+.topEntreprise{
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.topEntreprise h3 , .graphstatmois h3 {
+    font-size: 20px;
+    padding: 1rem;
+    color: var( --couleur-texte);
+    text-align: center;
+}
+.topEntreprise ul li{
+    list-style-type: none;
+    color: var( --couleur-texte);
+}
+.topEntreprise ul {
+    border: solid 3px var( --couleur-principale);
+    padding: 1rem;
+    border-radius:15px;
+}
+.topEntreprise span{
+    font-weight:800;
+}

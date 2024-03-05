@@ -141,4 +141,106 @@ class StageRepository extends ServiceEntityRepository
     return $queryBuilder->getQuery()->getResult();
 }
 
+public function getStatsEntreprise(): array
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder
+            ->select('COUNT(s) as nb_stage')
+            ->addSelect('e.nom as entreprise_nom')
+            ->from(Stage::class, 's')
+            ->leftJoin('s.entreprise', 'e')
+            ->groupBy('e.nom')
+            ->orderBy('nb_stage', 'DESC')            
+            ->setMaxResults(5);
+        return $queryBuilder->getQuery()->getResult();
+    }
+
+    public function getStatsDay(): array
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+    
+        $queryBuilder
+            ->select('s')
+            ->from(Stage::class, 's');
+        $stages = $queryBuilder->getQuery()->getResult();
+
+        $stats = [];
+        foreach ($stages as $stage) {
+            $dateDebut = $stage->getDateDebut();
+            $dateFin = $stage->getDateFin();
+            $difference = $dateFin->diff($dateDebut);
+            $difference_jours = $difference->days; // Nombre de jours
+            $entreprise_nom = $stage->getEntreprise()->getNom(); // Nom de l'entreprise
+            
+            if (!isset($stats[$entreprise_nom])) {
+                $stats[$entreprise_nom] = [
+                    'nb_stage' => 1,
+                    'total_jours_stage' => $difference_jours
+                ];
+            } else {
+                $stats[$entreprise_nom]['nb_stage']++;
+                $stats[$entreprise_nom]['total_jours_stage'] += $difference_jours;
+            }
+        }
+    
+        // Tri des statistiques par nombre de stages décroissant
+        usort($stats, function($a, $b) {
+            return $b['nb_stage'] - $a['nb_stage'];
+        });
+    
+        return $stats;
+    }
+    public function getStatsMonth(): array
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+    
+        $queryBuilder
+            ->select('s')
+            ->from(Stage::class, 's');
+        $stages = $queryBuilder->getQuery()->getResult();
+    
+        $stats = [];
+        $totalStages = count($stages); // Nombre total de stages
+    
+        foreach ($stages as $stage) {
+            $dateDebut = $stage->getDateDebut();
+            $dateFin = $stage->getDateFin();
+            $difference = $dateDebut->diff($dateFin);
+            $difference_mois = ceil($difference->days / 30); // Nombre de mois (approximatif)
+            
+            // Vérifie si la clé pour le nombre de mois existe déjà dans le tableau $stats
+            if (!isset($stats[$difference_mois])) {
+                // Si non, crée une nouvelle entrée avec le nombre de mois comme clé et initialise le nombre de stages à 1
+                $stats[$difference_mois] = 1;
+            } else {
+                // Si oui, incrémente simplement le nombre de stages pour ce nombre de mois
+                $stats[$difference_mois]++;
+            }
+        }
+    
+        // Transformation des données pour le format demandé, en incluant le pourcentage
+        $formattedStats = [];
+        foreach ($stats as $nb_mois => $nb_stage) {
+            // Calcul du pourcentage de stages pour ce nombre de mois
+            $pourcentage = ($nb_stage / $totalStages) * 100;
+    
+            $formattedStats[] = [
+                'nb_mois' => $nb_mois . ' mois',
+                'nb_stage' => $nb_stage,
+                'pourcentage' => round($pourcentage, 2),
+            ];
+        }
+    
+        return $formattedStats;
+    }
+    
+    
+    
+
+    
+
 }
