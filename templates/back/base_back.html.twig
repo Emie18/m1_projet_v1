@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>
+			{% block title %}Emilie css test
+			{% endblock %}
+		</title>
+		<link rel="stylesheet" href="{{ asset('css/nav_footer.css') }}"> {% block stylesheets %}{% endblock %}
+		<!-- Ajoutez ici vos balises meta, stylesheets, scripts communs à toutes les pages -->
+		</head>
+		<body>
+			<header>
+				<!--barre de navigation -->
+				<nav>
+					<ul>
+						<li><a href="/back">Acceuil</a></li>
+						<li><a href="/back/statistique">Statistics</a></li>
+                        <li><a href="/back/tuteur-isen">Tuteur Isen</a></li>
+                        <li><a href="/back/tuteur-stage">Tuteur Stage</a></li>
+                        <li><a href="/back/apprenant">Apprenant</a></li>
+                        <li><a href="/back/entreprise">Entreprise</a></li>
+                        <li><a href="/back/stage">Stage</a></li>
+					</ul>
+				</nav>
+			</header>
+
+			<div class="content"> {% block body %}{% endblock %}
+				</div>
+
+				<footer>
+					<!-- pied de page -->
+					<p>Site créer par Emilie Le Rouzic et Thibault Tanné</p>
+					<p class="version">Version 1.0</p>
+				</footer>
+
+				<script>
+					document.addEventListener("DOMContentLoaded", function () {
+                    const currentPage = window.location.pathname;
+                    const links = document.querySelectorAll("header nav ul li a");
+                    links.forEach(link => {
+                    if (link.getAttribute("href") === currentPage) {
+                    link.classList.add("active");
+                    }
+                    });
+                    });
+				</script>
+			</body>
+		</html>

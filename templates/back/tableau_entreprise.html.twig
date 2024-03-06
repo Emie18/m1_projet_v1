@@ -1,0 +1,17 @@
+<table>
+  <thead>
+    <tr>
+      <th>Nom Prénom</th>
+    </tr>
+  </thead>
+  <tbody>
+{% for entreprise in entreprises %}
+
+    <tr>
+      <td> {{ entreprise.nom }}</td>
+    </tr>
+    {% endfor %}
+
+    <!-- Ajoutez d'autres lignes de données au besoin -->
+  </tbody>
+</table>

@@ -16,17 +16,8 @@ class Stage
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private ?int $num_stage = null;
-
     #[ORM\Column(length: 255)]
     private ?string $titre = null;
-
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTimeInterface $date_debut = null;
-
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTimeInterface $date_fin = null;
 
     #[ORM\Column(length: 255)]
     private ?string $description = null;
@@ -58,21 +49,21 @@ class Stage
     #[ORM\ManyToOne(targetEntity: Etat::class)]
     private ?Etat $rapport = null;
 
+    #[ORM\Column]
+    private ?int $num_stage = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $date_soutenance = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $date_debut = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $date_fin = null;
+
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getNumStage(): ?int
-    {
-        return $this->num_stage;
-    }
-
-    public function setNumStage(int $num_stage): static
-    {
-        $this->num_stage = $num_stage;
-
-        return $this;
     }
 
     public function getTitre(): ?string
@@ -83,30 +74,6 @@ class Stage
     public function setTitre(string $titre): static
     {
         $this->titre = $titre;
-
-        return $this;
-    }
-
-    public function getDateDebut(): ?\DateTimeInterface
-    {
-        return $this->date_debut;
-    }
-
-    public function setDateDebut(\DateTimeInterface $date_debut): static
-    {
-        $this->date_debut = $date_debut;
-
-        return $this;
-    }
-
-    public function getDateFin(): ?\DateTimeInterface
-    {
-        return $this->date_fin;
-    }
-
-    public function setDateFin(\DateTimeInterface $date_fin): static
-    {
-        $this->date_fin = $date_fin;
 
         return $this;
     }
@@ -227,6 +194,54 @@ class Stage
     public function setRapport(?etat $rapport): static
     {
         $this->rapport = $rapport;
+
+        return $this;
+    }
+
+    public function getNumStage(): ?int
+    {
+        return $this->num_stage;
+    }
+
+    public function setNumStage(int $num_stage): static
+    {
+        $this->num_stage = $num_stage;
+
+        return $this;
+    }
+
+    public function getDateSoutenance(): ?\DateTimeInterface
+    {
+        return $this->date_soutenance;
+    }
+
+    public function setDateSoutenance(?\DateTimeInterface $date_soutenance): static
+    {
+        $this->date_soutenance = $date_soutenance;
+
+        return $this;
+    }
+
+    public function getDateDebut(): ?\DateTimeInterface
+    {
+        return $this->date_debut;
+    }
+
+    public function setDateDebut(\DateTimeInterface $date_debut): static
+    {
+        $this->date_debut = $date_debut;
+
+        return $this;
+    }
+
+    public function getDateFin(): ?\DateTimeInterface
+    {
+        return $this->date_fin;
+    }
+
+    public function setDateFin(\DateTimeInterface $date_fin): static
+    {
+        $this->date_fin = $date_fin;
 
         return $this;
     }

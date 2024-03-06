@@ -20,6 +20,18 @@ class TuteurStageRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, TuteurStage::class);
     }
+    public function addTuteurStage(TuteurStage $tuteur){
+        $entityManager = $this->getEntityManager();
+        $entityManager->persist($tuteur);
+        $entityManager->flush();
+    }
+    public function findAllTuteurStage()
+    {
+        return $this->createQueryBuilder('ts')
+            ->orderBy('ts.nom', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 
 //    /**
 //     * @return TuteurStage[] Returns an array of TuteurStage objects

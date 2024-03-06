@@ -1,0 +1,17 @@
+<table>
+  <thead>
+    <tr>
+      <th>Nom Prénom</th>
+    </tr>
+  </thead>
+  <tbody>
+{% for personne in personnes %}
+
+    <tr>
+      <td> {{ personne.nom }} {{ personne.prenom }}</td>
+    </tr>
+    {% endfor %}
+
+    <!-- Ajoutez d'autres lignes de données au besoin -->
+  </tbody>
+</table>

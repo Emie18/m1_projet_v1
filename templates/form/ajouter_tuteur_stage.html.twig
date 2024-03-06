@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter un tuteur{% endblock %}
+
+{% block body %}
+    <h1>Ajouter un Tuteur Isen</h1>
+
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    <button type="submit" class="btn btn-primary">Ajouter</button>
+    {{ form_end(form) }}
+{% endblock %}

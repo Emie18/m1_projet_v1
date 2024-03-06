@@ -1,0 +1,69 @@
+{% extends 'back/base_back.html.twig' %}
+{% block title %}Statistique
+{% endblock %}
+{% block stylesheets %}
+	<link rel="stylesheet" href="{{ asset('css/index.css') }}">
+	<link rel="stylesheet" href="{{ asset('css/stats.css') }}">
+	<script src="{{asset('chart.js')}}"></script>
+{% endblock %}
+
+{% block body %}
+
+
+    <h1 class="titre-page">Statistique</h1>
+	<div class="topEntreprise">
+		<h3>Top 5 des entreprises qui ont pris le plus de Stagiaires</h3>
+	    <ul>
+        {% for stat in statistics %}
+            <li><span>{{ loop.index }}.</span> {{stat.entreprise_nom}} avec {{stat.nb_stage}} Stagiaires</li>
+        {% endfor %}
+    </ul>
+	</div>
+	{# {{dump(pourcentage)}} #}
+<div class="graphstatmois">
+	<h3>Pourcentage de stages en fonction de leur durée en mois</h3>
+	<div class="piecontent">
+		<canvas id="myChart" width="100" height="100"></canvas>
+	</div>
+</div>
+    <script>
+document.addEventListener("DOMContentLoaded", function() {
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: [
+                {% for stat in statMois %}
+                    '{{ stat.nb_mois }}',
+                {% endfor %}
+            ],
+            datasets: [{
+                label: 'Nombre de mois de stage par étudiant en',
+                data: [
+                    {% for stat in statMois %}
+                        {{ stat.pourcentage }},
+                    {% endfor %}
+                ],
+                backgroundColor: [
+            '#C185AF',
+			'#C185D3' ,
+			'#85C1AF',
+			'#85AFC1' ,
+			'#85AF94' ,
+			'#AF85C1' ,
+			'#AFC185'
+                ],
+                hoverOffset: 7
+            }]
+        },
+        options: {
+            animation: {
+                animateRotate: true,
+                animateScale: true
+            }
+        }
+    });
+});
+
+  </script>
+{% endblock %}

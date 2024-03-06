@@ -13,6 +13,9 @@ use App\Repository\TuteurIsenRepository;
 use App\Form\AjoutstageType;
 use App\Form\TuteurIsenType;
 use App\Form\FormCSVType;
+use App\Form\TuteurType;
+use App\Form\ApprenantType;
+use App\Form\EntrepriseType;
 
 use App\Entity\Stage;
 use App\Entity\TuteurIsen;
@@ -21,11 +24,15 @@ use App\Entity\Apprenant;
 use App\Entity\Entreprise;
 use App\Entity\Etat;
 use App\Entity\Groupe;
+use App\Repository\ApprenantRepository;
+use App\Repository\EntrepriseRepository;
+use App\Repository\TuteurStageRepository;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Query\ResultSetMapping;
 use League\Csv\Reader;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType; // Importer la classe EntityType
+use Symfony\Bundle\MakerBundle\Str;
 
 class BackController extends AbstractController
 {
@@ -51,7 +58,7 @@ class BackController extends AbstractController
             'controller_name' => 'BackController',
         ]);
     }
-    #[Route('/back/ajouter', name: 'ajouter')]
+    #[Route('/back/ajouter-stage', name: 'ajouter_stage')]
     public function ajouterStage(Request $request, StageRepository $stageRepository): Response
     {
         $stage = new Stage();
@@ -137,8 +144,9 @@ class BackController extends AbstractController
             return $this->redirectToRoute('app_home');
         }
 
-        return $this->render('form/ajouter_un_tuteur_isen.html.twig', [
+        return $this->render('form/ajouter_personne.html.twig', [
             'form' => $form->createView(),
+            'title' => "un tuteur ISEN",
         ]);
     }
     
@@ -182,6 +190,87 @@ class BackController extends AbstractController
         }
         return $this->render('form/csv_import.html.twig', [
             'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/back/ajouter-tuteur-stage', name: 'ajouter_tuteur_stage')]
+    public function ajouterTuteur(Request $request, TuteurStageRepository $TuteurRepository){
+        $tuteur = new TuteurStage();
+        $form = $this->createForm(TuteurType::class, $tuteur);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+            $TuteurRepository->addTuteurStage($tuteur);
+            return $this->redirectToRoute('app_home');
+        }
+        return $this->render('form/ajouter_personne.html.twig', [
+            'form' => $form->createView(),
+            'title' => "un tuteur de stage",
+        ]);
+
+    }
+    #[Route('/back/ajouter-apprenant', name: 'ajouter_apprenant')]
+    public function ajouterApprenant(Request $request, ApprenantRepository $ApprenantRepository){
+        $apprenant = new Apprenant();
+        $form = $this->createForm(ApprenantType::class, $apprenant);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+            $ApprenantRepository->addApprenant($apprenant);
+            return $this->redirectToRoute('app_home');
+        }
+        return $this->render('form/ajouter_personne.html.twig', [
+            'form' => $form->createView(),
+            'title' => "un apprenant",
+        ]);
+    }
+    #[Route('/back/ajouter-entreprise', name: 'ajouter_entreprise')]
+    public function ajouterEntreprise(Request $request, EntrepriseRepository $EntrepriseRepository){
+        $entreprise = new Entreprise();
+        $form = $this->createForm(EntrepriseType::class, $entreprise);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()){
+            $EntrepriseRepository->addEntreprise($entreprise);
+            return $this->redirectToRoute('app_home');
+        }
+        return $this->render('form/ajouter_personne.html.twig', [
+            'form' => $form->createView(),
+            'title' => "une entreprise",
+        ]);
+    }
+    #[Route ('/back/tuteur-isen', name : 'tuteur_isen')]
+    public function showTuteurIsen(Request $request, TuteurIsenRepository $TuteurRepository){
+        $tuteur = $TuteurRepository->findAllTuteurIsens();
+        return $this->render('back/index.html.twig', [
+            'personnes' =>$tuteur,
+        ]);
+    }
+    #[Route ('/back/tuteur-stage', name : 'tuteur_stage')]
+    public function showTuteurStage(Request $request, TuteurStageRepository $TuteurRepository){
+        $tuteur = $TuteurRepository->findAllTuteurStage();
+        return $this->render('back/index.html.twig', [
+            'personnes' =>$tuteur,
+        ]);
+    }
+    #[Route ('/back/apprenant', name: 'apprenant')]
+    public function showApprenant(Request $request, ApprenantRepository $ApprenantRepository){
+        $apprenant = $ApprenantRepository->findAllApprenants();
+        return $this->render('back/index.html.twig', [
+            'personnes' =>$apprenant,
+        ]);
+    }
+    #[Route ('/back/entreprise', name: 'entreprise')]
+    public function showEntreprise(Request $request, EntrepriseRepository $EntrepriseRepository){
+        $entreprise = $EntrepriseRepository->findAllEntreprise();
+        return $this->render('back/index.html.twig', [
+            'entreprises' =>$entreprise,
+        ]);
+    }
+    #[Route ('/back/stage', name: 'stage')]
+    public function showStage(Request $request, StageRepository $stageRepository){
+        $stage = $stageRepository->findAll();
+        return $this->render('back/index.html.twig', [
+            'stages' =>$stage,
         ]);
     }
     /**
@@ -287,6 +376,7 @@ class BackController extends AbstractController
     public function addStage($row, $etat){
         $dateDebut = $row[4];
         $dateFin = $row[5];
+        $dateSoutenance = $row[18] . " " . $row[19];
         //exception si le format de la date diffère
         if(strlen($dateDebut) == 10){
             $dateDebut = $dateDebut." 08:00";
@@ -310,7 +400,7 @@ class BackController extends AbstractController
             $newEntity->setTitre($row[17]);
             $dateDebut = \DateTime::createFromFormat("d/m/Y H:i", $dateDebut);
             $dateFin = \DateTime::createFromFormat("j/n/Y H:i", $dateFin);
-            
+            $dateSoutenance = \DateTime::createFromFormat("j/n/Y H:i", $dateSoutenance);
             $newEntity->setDateDebut($dateDebut);
             $newEntity->setDateFin($dateFin);
             $newEntity->setDescription($row[20]);
@@ -348,11 +438,42 @@ class BackController extends AbstractController
                 ]));
             }
             $newEntity->setSoutenance($etat);
+            if($dateSoutenance)$newEntity->setDateSoutenance($dateSoutenance);
             $newEntity->setRapport($etat);
             $newEntity->setEvalEntreprise($etat);
             $this->entityManager->persist($newEntity);
             $this->entityManager->flush();
         }
 
+    }
+    #[Route('/back/statistique', name: 'app_statistique_back')]
+    public function statistique(StageRepository $stageRepository): Response
+    {
+        $statistics = $stageRepository->getStatsEntreprise();
+        // Création d'un nouveau tableau avec les pourcentages et les noms des entreprises
+        $statisticsWithPercentage = [];
+
+        // Calculer le total des stagiaires
+        $totalStagiaires = array_sum(array_column($statistics, 'nb_stage'));
+
+        // Calculer le pourcentage pour chaque entreprise et ajouter au tableau
+        foreach ($statistics as $stat) {
+            $pourcentage = ($stat['nb_stage'] / $totalStagiaires) * 100;
+            $pourcentageArrondi = round($pourcentage, 2); // Arrondi à 2 décimales
+
+            // Ajouter les données au nouveau tableau
+            $statisticsWithPercentage[] = [
+                'entreprise' => $stat['entreprise_nom'],
+                'pourcentage' => $pourcentageArrondi
+            ];
+        }
+        $statisticsDay = $stageRepository->getStatsMonth();
+
+
+        return $this->render('back/statistique.html.twig', [
+            'statistics' => $statistics,
+            'pourcentage' => $statisticsWithPercentage,
+            'statMois' => $statisticsDay
+        ]);
     }
 }

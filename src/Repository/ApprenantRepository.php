@@ -27,29 +27,11 @@ class ApprenantRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+    public function addApprenant(Apprenant $apprenant): void
+    {
+        $entityManager = $this->getEntityManager();
+        $entityManager->persist($apprenant);
+        $entityManager->flush();
+    }
 
-//    /**
-//     * @return Apprenant[] Returns an array of Apprenant objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('a.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?Apprenant
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
 }

@@ -20,6 +20,17 @@ class EntrepriseRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Entreprise::class);
     }
+    public function addEntreprise(Entreprise $entreprise){
+        $entityManager = $this->getEntityManager();
+        $entityManager->persist($entreprise);
+        $entityManager->flush();
+    }    public function findAllEntreprise()
+    {
+        return $this->createQueryBuilder('e')
+            ->orderBy('e.nom', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 
 //    /**
 //     * @return Entreprise[] Returns an array of Entreprise objects
