@@ -20,6 +20,7 @@ use App\Entity\Stage;
 use App\Entity\TuteurIsen;
 use App\Entity\TuteurStage;
 use App\Repository\ApprenantRepository;
+use App\Repository\EtatRepository;
 use PHPUnit\TextUI\XmlConfiguration\Group;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType; // Importer la classe EntityType
 
@@ -27,12 +28,13 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType; // Importer la classe EntityTy
 class HomeController extends AbstractController
 {
     #[Route('/', name: 'app_home')]
-    public function index(Request $request, StageRepository $stageRepository, GroupeRepository $groupRepository, ApprenantRepository $apprenantRepository, TuteurIsenRepository $tuteurIsenRepository): Response
+    public function index(Request $request, StageRepository $stageRepository, GroupeRepository $groupRepository, ApprenantRepository $apprenantRepository, TuteurIsenRepository $tuteurIsenRepository, EtatRepository $etatRepository): Response
     {
         $stages = $stageRepository->findAllStages();
         $noms = $apprenantRepository->findAllApprenants();
         $groupes = $groupRepository->findAll();
-        $etats_stages = [['id'=>1 , 'libelle'=>'Terminé'], ['id'=>2 , 'libelle'=>'En cours'] ];
+        $etats_stages = $etatRepository->findAll();
+        // $etats_stages = [['id'=>1 , 'libelle'=>'Terminé'], ['id'=>2 , 'libelle'=>'En cours'] ];
         $annees = [];
         foreach ($stages as $stage) {
             $anneeDebut = $stage->getDateDebut()->format('Y');

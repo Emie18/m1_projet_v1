@@ -1,6 +1,11 @@
 {% extends 'back/base_back.html.twig' %}
+
+{% block stylesheets %} <link rel="stylesheet" href="{{ asset('css/importcsv.css') }}"> {% endblock %}
 {% block body %}
-<div >
+<h1> importer un fichier csv <p>il faut que le fichier soit en UTF8</p></h1>
+<div class="message" >
+   <p>  Importation Réussi !</p>
+   </br>
    <p>  Nombre de stage ajoutés : {{ nb_stage }}</p>
 </div>
 {% endblock %}

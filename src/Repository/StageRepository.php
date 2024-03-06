@@ -128,12 +128,12 @@ class StageRepository extends ServiceEntityRepository
                 ->setParameter('soutenance', '1')
                 ->setParameter('rapport', '1')
                 ->setParameter('eval_entreprise', '1');
-        } elseif ($etat == '2') {
+        } elseif ($etat == '4') {
             $queryBuilder
                 ->andWhere('sou.id = :soutenance OR rap.id = :rapport OR e.id = :eval_entreprise'                    )
-                ->setParameter('soutenance', '2')
-                ->setParameter('rapport', '2')
-                ->setParameter('eval_entreprise', '2');
+                ->setParameter('soutenance', '4')
+                ->setParameter('rapport', '4')
+                ->setParameter('eval_entreprise', '4');
         }
     }
 
