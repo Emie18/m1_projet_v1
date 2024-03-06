@@ -19,7 +19,11 @@
                 {% include 'back/tableau_entreprise.html.twig' %}
             
             {% elseif stages is defined %}
+                {% include 'home/form.html.twig' %}
                 {% include 'home/tableau.html.twig' %}
+                <div id="detailsDiv" style="display: none;">
+                {% include 'home/fiche_detail.html.twig' %}
+                </div>
             {% endif %}
 
 

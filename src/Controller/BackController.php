@@ -10,6 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 use App\Repository\StageRepository;
 use App\Repository\TuteurIsenRepository;
+use App\Repository\GroupeRepository;
 use App\Form\AjoutstageType;
 use App\Form\TuteurIsenType;
 use App\Form\FormCSVType;
@@ -26,6 +27,7 @@ use App\Entity\Etat;
 use App\Entity\Groupe;
 use App\Repository\ApprenantRepository;
 use App\Repository\EntrepriseRepository;
+use App\Repository\EtatRepository;
 use App\Repository\TuteurStageRepository;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Query\ResultSetMapping;
@@ -51,12 +53,38 @@ class BackController extends AbstractController
         $this->buffGroupe = [];
     }
     
-    #[Route('/back', name: 'app_back')]
-    public function index(): Response
+    #[Route('/back/', name: 'app_back')]
+    public function index(Request $request, StageRepository $stageRepository, GroupeRepository $groupRepository, ApprenantRepository $apprenantRepository, TuteurIsenRepository $tuteurIsenRepository): Response
     {
+        $stages = $stageRepository->findAllStages();
+        $noms = $apprenantRepository->findAllApprenants();
+        $groupes = $groupRepository->findAll();
+        $etats_stages = [['id'=>1 , 'libelle'=>'Terminé'], ['id'=>2 , 'libelle'=>'En cours'] ];
+        $annees = [];
+        foreach ($stages as $stage) {
+            $anneeDebut = $stage->getDateDebut()->format('Y');
+            $anneeFin = $stage->getDateFin()->format('Y');
+            // Ajouter l'année de début si elle n'est pas déjà présente dans le tableau
+            if (!in_array($anneeDebut, $annees)) {
+                $annees[] = $anneeDebut;
+            }
+            // Ajouter l'année de fin si elle n'est pas déjà présente dans le tableau
+            if (!in_array($anneeFin, $annees)) {
+                $annees[] = $anneeFin;
+            }
+        }
+        $professeurs = $tuteurIsenRepository->findAllTuteurIsens();
+
+
         return $this->render('back/index.html.twig', [
-            'controller_name' => 'BackController',
+            'stages' => $stages,
+            'noms' => $noms,
+            'groupes' => $groupes,
+            'etats_stages' => $etats_stages,
+            'annees' => $annees,
+            'professeurs' => $professeurs,
         ]);
+    
     }
     #[Route('/back/ajouter-stage', name: 'ajouter_stage')]
     public function ajouterStage(Request $request, StageRepository $stageRepository): Response
@@ -158,6 +186,7 @@ class BackController extends AbstractController
         if($form->isSubmitted() && $form->isValid()){
             $csvFile = $form->get('csvFile')->getData();
             $csvFilePath = $csvFile->getRealPath();
+            $this->checkEtat();
             if(($handle = fopen($csvFilePath, "r")) != FALSE){
                 $reader = Reader::createFromPath($csvFilePath, 'r');
                 $reader->setDelimiter(';');
@@ -165,6 +194,7 @@ class BackController extends AbstractController
                 $etat = $this->entityManager->getRepository(Etat::class)->findOneBy([
                     "libelle" => "???"
                 ]);
+                $nombreStagesAjoutes = 0;
                 foreach ($reader as $row) {
                     //sauter la première ligne
                     if($firstLine == 0){
@@ -178,15 +208,18 @@ class BackController extends AbstractController
                     $this->checkTuteurIsen($row[12], $row[13], $row[14]);
                     $this->checkGroupe($row[3]);
                     $this->checkEntreprise($row[11]);
-                    //ajouter le stage
-                    $this->addStage($row, $etat);
+                    if ($this->addStage($row, $etat)) {
+                        // Incrémenter le compteur des stages ajoutés
+                        $nombreStagesAjoutes++;
+                    }
                 }
+                return $this->render('form/message.html.twig', [
+                    'nb_stage' => $nombreStagesAjoutes
+                ]);
 
 
             }
-            return $this->render('form/csv_import.html.twig', [
-                'form' => $form->createView(),
-            ]);
+            //return $this->redirectToRoute("app_back");
         }
         return $this->render('form/csv_import.html.twig', [
             'form' => $form->createView(),
@@ -240,37 +273,61 @@ class BackController extends AbstractController
     }
     #[Route ('/back/tuteur-isen', name : 'tuteur_isen')]
     public function showTuteurIsen(Request $request, TuteurIsenRepository $TuteurRepository){
-        $tuteur = $TuteurRepository->findAllTuteurIsens();
+        $tuteur = $TuteurRepository->findAll();
         return $this->render('back/index.html.twig', [
             'personnes' =>$tuteur,
         ]);
     }
     #[Route ('/back/tuteur-stage', name : 'tuteur_stage')]
     public function showTuteurStage(Request $request, TuteurStageRepository $TuteurRepository){
-        $tuteur = $TuteurRepository->findAllTuteurStage();
+        $tuteur = $TuteurRepository->findAll();
         return $this->render('back/index.html.twig', [
             'personnes' =>$tuteur,
         ]);
     }
     #[Route ('/back/apprenant', name: 'apprenant')]
     public function showApprenant(Request $request, ApprenantRepository $ApprenantRepository){
-        $apprenant = $ApprenantRepository->findAllApprenants();
+        $apprenant = $ApprenantRepository->findAll();
         return $this->render('back/index.html.twig', [
             'personnes' =>$apprenant,
         ]);
     }
     #[Route ('/back/entreprise', name: 'entreprise')]
     public function showEntreprise(Request $request, EntrepriseRepository $EntrepriseRepository){
-        $entreprise = $EntrepriseRepository->findAllEntreprise();
+        $entreprise = $EntrepriseRepository->findAll();
         return $this->render('back/index.html.twig', [
             'entreprises' =>$entreprise,
         ]);
     }
-    #[Route ('/back/stage', name: 'stage')]
-    public function showStage(Request $request, StageRepository $stageRepository){
-        $stage = $stageRepository->findAll();
-        return $this->render('back/index.html.twig', [
-            'stages' =>$stage,
+    #[Route('/back/statistique', name : 'statistiques')]
+    public function statistique(StageRepository $stageRepository): Response
+    {
+        $statistics = $stageRepository->getStatsEntreprise();
+        // Création d'un nouveau tableau avec les pourcentages et les noms des entreprises
+        $statisticsWithPercentage = [];
+
+        // Calculer le total des stagiaires
+        $totalStagiaires = array_sum(array_column($statistics, 'nb_stage'));
+
+        // Calculer le pourcentage pour chaque entreprise et ajouter au tableau
+        foreach ($statistics as $stat) {
+            $pourcentage = ($stat['nb_stage'] / $totalStagiaires) * 100;
+            $pourcentageArrondi = round($pourcentage, 2); // Arrondi à 2 décimales
+
+            // Ajouter les données au nouveau tableau
+            $statisticsWithPercentage[] = [
+                'entreprise' => $stat['entreprise_nom'],
+                'pourcentage' => $pourcentageArrondi
+            ];
+        }
+        $statisticsDay = $stageRepository->getStatsMonth();
+
+
+        return $this->render('back/statistique.html.twig', [
+            'statistics' => $statistics,
+            'pourcentage' => $statisticsWithPercentage,
+            'statMois' => $statisticsDay,
+
         ]);
     }
     /**
@@ -368,112 +425,123 @@ class BackController extends AbstractController
             $this->buffEntreprise[$nom] = $newEntity;
         }
     }
+    public function checkEtat(){
+        $libelle = $this->entityManager->getRepository(Etat::class)->findAll();
+
+        if(count($libelle) != 4){
+            if(!in_array("Valide", $libelle)){
+                $newEntity = new Etat();
+                $newEntity->setLibelle("Valide");
+                $this->entityManager->persist($newEntity);
+                $this->entityManager->flush();
+            }            
+            if(!in_array("Non-valide", $libelle)){
+                $newEntity = new Etat();
+                $newEntity->setLibelle("Non-valide");
+                $this->entityManager->persist($newEntity);
+                $this->entityManager->flush();
+            }
+            if(!in_array("Valide apres non-valide", $libelle)){
+                $newEntity = new Etat();
+                $newEntity->setLibelle("Valide apres non-valide");
+                $this->entityManager->persist($newEntity);
+                $this->entityManager->flush();            }
+            if(!in_array("???", $libelle)){
+                $newEntity = new Etat();
+                $newEntity->setLibelle("???");
+                $this->entityManager->persist($newEntity);
+                $this->entityManager->flush();            }
+        }
+    }
     /**
      * ajouter le stage
      * @param Array $row l'ensemble des données du addStage
      * @param Etat $etat état non défini
      */
-    public function addStage($row, $etat){
-        $dateDebut = $row[4];
-        $dateFin = $row[5];
-        $dateSoutenance = $row[18] . " " . $row[19];
-        //exception si le format de la date diffère
-        if(strlen($dateDebut) == 10){
-            $dateDebut = $dateDebut." 08:00";
-        }        
-        if(strlen($dateFin) == 10){
-            $dateFin = $dateFin." 08:00";
-        }
-        if(strlen($dateDebut) == 0){
-            $dateDebut = "01/01/0001 08:00";
-        }        
-        if(strlen($dateFin) == 0){
-            $dateFin = "01/01/0001 08:00";
-        }
-
-        $app = $this->entityManager->getRepository(Stage::class)->findOneBy([
-            "num_stage" => intval($row[16])
-        ]);
-        if($app == NULL){
-
-            $newEntity = new Stage();
-            $newEntity->setTitre($row[17]);
-            $dateDebut = \DateTime::createFromFormat("d/m/Y H:i", $dateDebut);
-            $dateFin = \DateTime::createFromFormat("j/n/Y H:i", $dateFin);
-            $dateSoutenance = \DateTime::createFromFormat("j/n/Y H:i", $dateSoutenance);
-            $newEntity->setDateDebut($dateDebut);
-            $newEntity->setDateFin($dateFin);
-            $newEntity->setDescription($row[20]);
-            $newEntity->setNumStage(intval($row[16]));
-            //Forreign key
-            if(array_key_exists($row[0], $this->buffApprenant)){
-                $newEntity->setApprenant($this->buffApprenant[$row[0]]);
-            }else{
-                $newEntity->setApprenant($this->entityManager->getRepository(Apprenant::class)->findOneBy([
-                    "num_apprenant" => intval($row[0])
-                ]));
-            }
-            if(array_key_exists($row[12], $this->buffTuteurIsen))$newEntity->setTuteurIsen($this->buffTuteurIsen[$row[12]]);
-            else{
-                $newEntity->setTuteurIsen($this->entityManager->getRepository(TuteurIsen::class)->findOneBy([
-                    "num_tuteur_isen" => intval($row[12])
-                ]));
-            }
-            if(array_key_exists($row[8], $this->buffTuteurStage))$newEntity->setTuteurStage($this->buffTuteurStage[$row[8]]);
-            else{
-                $newEntity->setTuteurStage($this->entityManager->getRepository(TuteurStage::class)->findOneBy([
-                    "num_tuteur_stage" => intval($row[8])
-                ]));
-            }
-            if(array_key_exists($row[11], $this->buffEntreprise))$newEntity->setEntreprise($this->buffEntreprise[$row[11]]);
-            else{
-                $newEntity->setEntreprise($this->entityManager->getRepository(Entreprise::class)->findOneBy([
-                    "nom" => $row[11]
-                ]));
-            }
-            if(array_key_exists($row[3], $this->buffGroupe))$newEntity->setGroupe($this->buffGroupe[$row[3]]);
-            else{
-                $newEntity->setGroupe($this->entityManager->getRepository(Groupe::class)->findOneBy([
-                    "libelle" => $row[3]
-                ]));
-            }
-            $newEntity->setSoutenance($etat);
-            if($dateSoutenance)$newEntity->setDateSoutenance($dateSoutenance);
-            $newEntity->setRapport($etat);
-            $newEntity->setEvalEntreprise($etat);
-            $this->entityManager->persist($newEntity);
-            $this->entityManager->flush();
-        }
-
+    public function addStage($row, $etat): bool
+{
+    $dateDebut = $row[4];
+    $dateFin = $row[5];
+    $dateSoutenance = $row[18] . " " . $row[19];
+    
+    // Exception si le format de la date diffère
+    if(strlen($dateDebut) == 10){
+        $dateDebut = $dateDebut . " 08:00";
+    }        
+    if(strlen($dateFin) == 10){
+        $dateFin = $dateFin . " 08:00";
     }
-    #[Route('/back/statistique', name: 'app_statistique_back')]
-    public function statistique(StageRepository $stageRepository): Response
-    {
-        $statistics = $stageRepository->getStatsEntreprise();
-        // Création d'un nouveau tableau avec les pourcentages et les noms des entreprises
-        $statisticsWithPercentage = [];
-
-        // Calculer le total des stagiaires
-        $totalStagiaires = array_sum(array_column($statistics, 'nb_stage'));
-
-        // Calculer le pourcentage pour chaque entreprise et ajouter au tableau
-        foreach ($statistics as $stat) {
-            $pourcentage = ($stat['nb_stage'] / $totalStagiaires) * 100;
-            $pourcentageArrondi = round($pourcentage, 2); // Arrondi à 2 décimales
-
-            // Ajouter les données au nouveau tableau
-            $statisticsWithPercentage[] = [
-                'entreprise' => $stat['entreprise_nom'],
-                'pourcentage' => $pourcentageArrondi
-            ];
-        }
-        $statisticsDay = $stageRepository->getStatsMonth();
-
-
-        return $this->render('back/statistique.html.twig', [
-            'statistics' => $statistics,
-            'pourcentage' => $statisticsWithPercentage,
-            'statMois' => $statisticsDay
-        ]);
+    if(strlen($dateDebut) == 0){
+        $dateDebut = "01/01/0001 08:00";
+    }        
+    if(strlen($dateFin) == 0){
+        $dateFin = "01/01/0001 08:00";
     }
+
+    $app = $this->entityManager->getRepository(Stage::class)->findOneBy([
+        "num_stage" => intval($row[16])
+    ]);
+
+    if($app == NULL){
+        $newEntity = new Stage();
+        $newEntity->setTitre($row[17]);
+        $dateDebut = \DateTime::createFromFormat("d/m/Y H:i", $dateDebut);
+        $dateFin = \DateTime::createFromFormat("j/n/Y H:i", $dateFin);
+        $dateSoutenance = \DateTime::createFromFormat("j/n/Y H:i", $dateSoutenance);
+        $newEntity->setDateDebut($dateDebut);
+        $newEntity->setDateFin($dateFin);
+        $newEntity->setDescription($row[20]);
+        $newEntity->setNumStage(intval($row[16]));
+        
+        // Foreign key
+        if(array_key_exists($row[0], $this->buffApprenant)){
+            $newEntity->setApprenant($this->buffApprenant[$row[0]]);
+        }else{
+            $newEntity->setApprenant($this->entityManager->getRepository(Apprenant::class)->findOneBy([
+                "num_apprenant" => intval($row[0])
+            ]));
+        }
+        if(array_key_exists($row[12], $this->buffTuteurIsen)) {
+            $newEntity->setTuteurIsen($this->buffTuteurIsen[$row[12]]);
+        } else {
+            $newEntity->setTuteurIsen($this->entityManager->getRepository(TuteurIsen::class)->findOneBy([
+                "num_tuteur_isen" => intval($row[12])
+            ]));
+        }
+        if(array_key_exists($row[8], $this->buffTuteurStage)){
+            $newEntity->setTuteurStage($this->buffTuteurStage[$row[8]]);
+        } else {
+            $newEntity->setTuteurStage($this->entityManager->getRepository(TuteurStage::class)->findOneBy([
+                "num_tuteur_stage" => intval($row[8])
+            ]));
+        }
+        if(array_key_exists($row[11], $this->buffEntreprise)){
+            $newEntity->setEntreprise($this->buffEntreprise[$row[11]]);
+        } else {
+            $newEntity->setEntreprise($this->entityManager->getRepository(Entreprise::class)->findOneBy([
+                "nom" => $row[11]
+            ]));
+        }
+        if(array_key_exists($row[3], $this->buffGroupe)){
+            $newEntity->setGroupe($this->buffGroupe[$row[3]]);
+        } else {
+            $newEntity->setGroupe($this->entityManager->getRepository(Groupe::class)->findOneBy([
+                "libelle" => $row[3]
+            ]));
+        }
+        $newEntity->setSoutenance($etat);
+        if($dateSoutenance) {
+            $newEntity->setDateSoutenance($dateSoutenance);
+        }
+        $newEntity->setRapport($etat);
+        $newEntity->setEvalEntreprise($etat);
+        $this->entityManager->persist($newEntity);
+        $this->entityManager->flush();
+
+        return true; // Le stage a été ajouté avec succès
+    }
+
+    return false; // Aucun stage ajouté
+}
+
 }

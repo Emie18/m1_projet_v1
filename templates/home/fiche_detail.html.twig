@@ -17,6 +17,7 @@
         <p><span>Entreprise : </span>{{ s.entreprise.nom }}</p>
         </br>
         <p><span>Responsable de suivi : </span>{{ s.tuteurIsen.nom }} {{ s.tuteurIsen.prenom }}</p>
+        <p><span>Date Soutenance : </span>{{ s.dateSoutenance|date('d/m/Y') }} à {{ s.dateSoutenance|date('H:i') }}</p>
         </br>
         <p><span>Commentaire :</span> {{ s.commentaire }}</p>
         <div class="etatvalidation">

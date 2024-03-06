@@ -42,11 +42,16 @@ class StageRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function addStage(Stage $stage): void
+    public function addStage(Stage $stage): bool
     {
-        $entityManager = $this->getEntityManager();
-        $entityManager->persist($stage);
-        $entityManager->flush();
+        try {
+            $entityManager = $this->getEntityManager();
+            $entityManager->persist($stage);
+            $entityManager->flush();
+            return true; // Le stage a été ajouté avec succès
+        } catch (\Exception $e) {
+            return false; // Une erreur s'est produite lors de l'ajout du stage
+        }
     }
     public function findByApprenantNom(string $nom)
     {
