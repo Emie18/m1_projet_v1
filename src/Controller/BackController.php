@@ -83,6 +83,7 @@ class BackController extends AbstractController
             'etats_stages' => $etats_stages,
             'annees' => $annees,
             'professeurs' => $professeurs,
+            'title' => 'Stages',
         ]);
     
     }
@@ -276,6 +277,7 @@ class BackController extends AbstractController
         $tuteur = $TuteurRepository->findAll();
         return $this->render('back/index.html.twig', [
             'personnes' =>$tuteur,
+            'title' => 'tuteurs ISEN'
         ]);
     }
     #[Route ('/back/tuteur-stage', name : 'tuteur_stage')]
@@ -283,6 +285,7 @@ class BackController extends AbstractController
         $tuteur = $TuteurRepository->findAll();
         return $this->render('back/index.html.twig', [
             'personnes' =>$tuteur,
+            'title' => 'tuteurs Stage'
         ]);
     }
     #[Route ('/back/apprenant', name: 'apprenant')]
@@ -290,6 +293,7 @@ class BackController extends AbstractController
         $apprenant = $ApprenantRepository->findAll();
         return $this->render('back/index.html.twig', [
             'personnes' =>$apprenant,
+            'title' => 'apprenants'
         ]);
     }
     #[Route ('/back/entreprise', name: 'entreprise')]
@@ -297,6 +301,7 @@ class BackController extends AbstractController
         $entreprise = $EntrepriseRepository->findAll();
         return $this->render('back/index.html.twig', [
             'entreprises' =>$entreprise,
+            'title' => "entreprises"
         ]);
     }
     #[Route('/back/statistique', name : 'statistiques')]

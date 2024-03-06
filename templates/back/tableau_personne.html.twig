@@ -1,17 +1,25 @@
 <table>
-  <thead>
-    <tr>
-      <th>Nom Prénom</th>
-    </tr>
-  </thead>
-  <tbody>
-{% for personne in personnes %}
-
-    <tr>
-      <td> {{ personne.nom }} {{ personne.prenom }}</td>
-    </tr>
-    {% endfor %}
-
-    <!-- Ajoutez d'autres lignes de données au besoin -->
-  </tbody>
+    <thead>
+        <tr>
+            <th>Numéro Isen</th>
+            <th>Nom</th>
+            <th>Prénom</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for personne in personnes %}
+            <tr>
+                {% if personne.numApprenant is defined %}
+                    <td>{{ personne.numApprenant }}</td>
+                {% elseif personne.numTuteurStage is defined %}
+                    <td>{{ personne.numTuteurStage }}</td>
+                {% elseif personne.numTuteurIsen is defined %}
+                    <td>{{ personne.numTuteurIsen }}</td>
+                {% endif %}
+                <td>{{ personne.nom }}</td>
+                <td>{{ personne.prenom }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
 </table>
+
