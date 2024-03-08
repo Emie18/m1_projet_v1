@@ -242,10 +242,84 @@ public function getStatsEntreprise(): array
     
         return $formattedStats;
     }
-    
-    
-    
 
-    
+    /*************************trier****************************** */
+    public function trierstage(string $colonne, int $ascendant): array
+    {
+        $queryBuilder = $this->createQueryBuilder('s')
+            ->leftJoin('s.apprenant', 'a')
+            ->addSelect('a')
+            ->leftJoin('s.eval_entreprise', 'e')
+            ->addSelect('e')
+            ->leftJoin('s.soutenance', 'sou')
+            ->addSelect('sou')
+            ->leftJoin('s.rapport', 'rap')
+            ->addSelect('rap')
+            ->leftJoin('s.groupe', 'gr')
+            ->addSelect('gr')
+            ->leftJoin('s.tuteur_isen', 'ti')
+            ->addSelect('ti');
+
+        switch ($colonne) {
+            case 'apprenant':
+                if($ascendant==2){
+                    $queryBuilder->orderBy('a.nom','ASC');
+                }elseif($ascendant==1){
+                    $queryBuilder->orderBy('a.nom','DESC');
+                }
+                break;
+            case 'date':
+                if($ascendant==2){
+                    $queryBuilder->orderBy('s.date_debut','ASC');
+                }elseif($ascendant==1){
+                    $queryBuilder->orderBy('s.date_debut','DESC');
+                }
+                break;
+            case 'titre':
+                if($ascendant==2){
+                    $queryBuilder->orderBy('s.titre','ASC');
+                }elseif($ascendant==1){
+                    $queryBuilder->orderBy('s.titre','DESC');
+                }
+                break;
+            case 'tuteur':
+                if($ascendant==2){
+                    $queryBuilder->orderBy('ti.nom','ASC');
+                }elseif($ascendant==1){
+                    $queryBuilder->orderBy('ti.nom','DESC');
+                }
+                break;
+            case 'soutenance':
+                if($ascendant==2){
+                    $queryBuilder->orderBy('sou.id','ASC');
+                }elseif($ascendant==1){
+                    $queryBuilder->orderBy('sou.id','DESC');
+                }
+                break;
+            case 'rapport':
+                if($ascendant==2){
+                    $queryBuilder->orderBy('rap.id','ASC');
+                }elseif($ascendant==1){
+                    $queryBuilder->orderBy('rap.id','DESC');
+                }
+                break;
+            case 'eval':
+                if($ascendant==2){
+                    $queryBuilder->orderBy('e.id','ASC');
+                }elseif($ascendant==1){
+                    $queryBuilder->orderBy('e.id','DESC');
+                }
+                break;
+            default:
+                // Par défaut, tri par ID du stage
+                $queryBuilder->orderBy('s.id', 'ASC');
+        }
+
+        return $queryBuilder
+            ->setMaxResults(50)
+            ->getQuery()
+            ->getResult();
+    }
+
 
 }

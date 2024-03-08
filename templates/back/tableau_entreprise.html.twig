@@ -1,4 +1,5 @@
-<table>
+<a href="/back/ajouter-entreprise">Ajouter une entreprise</a>
+<table  class ="backtableau">
   <thead>
     <tr>
       <th>Nom</th>
@@ -6,12 +7,9 @@
   </thead>
   <tbody>
 {% for entreprise in entreprises %}
-
     <tr>
       <td> {{ entreprise.nom }}</td>
     </tr>
     {% endfor %}
-
-    <!-- Ajoutez d'autres lignes de données au besoin -->
   </tbody>
 </table>

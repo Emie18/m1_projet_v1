@@ -153,7 +153,7 @@ class BackController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $stageRepository->addStage($stage);
-            return $this->redirectToRoute('app_home');
+            return $this->redirectToRoute('app_back');
         }
 
         return $this->render('form/ajouter_stage.html.twig', [
@@ -169,8 +169,9 @@ class BackController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $tuteur->setNom(strtoupper($tuteur->getNom()));
             $TuteurRepository->addTuteurIsen($tuteur);
-            return $this->redirectToRoute('app_home');
+            return $this->redirectToRoute('tuteur_isen');
         }
 
         return $this->render('form/ajouter_personne.html.twig', [
@@ -234,8 +235,9 @@ class BackController extends AbstractController
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()){
+            $tuteur->setNom(strtoupper($tuteur->getNom()));
             $TuteurRepository->addTuteurStage($tuteur);
-            return $this->redirectToRoute('app_home');
+            return $this->redirectToRoute('tuteur_stage');
         }
         return $this->render('form/ajouter_personne.html.twig', [
             'form' => $form->createView(),
@@ -250,8 +252,9 @@ class BackController extends AbstractController
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()){
+            $apprenant->setNom(strtoupper($apprenant->getNom()));
             $ApprenantRepository->addApprenant($apprenant);
-            return $this->redirectToRoute('app_home');
+            return $this->redirectToRoute('apprenant');
         }
         return $this->render('form/ajouter_personne.html.twig', [
             'form' => $form->createView(),
@@ -265,7 +268,7 @@ class BackController extends AbstractController
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
             $EntrepriseRepository->addEntreprise($entreprise);
-            return $this->redirectToRoute('app_home');
+            return $this->redirectToRoute('entreprise');
         }
         return $this->render('form/ajouter_personne.html.twig', [
             'form' => $form->createView(),
@@ -274,7 +277,7 @@ class BackController extends AbstractController
     }
     #[Route ('/back/tuteur-isen', name : 'tuteur_isen')]
     public function showTuteurIsen(Request $request, TuteurIsenRepository $TuteurRepository){
-        $tuteur = $TuteurRepository->findAll();
+        $tuteur = $TuteurRepository->findAllTuteurIsens();
         return $this->render('back/index.html.twig', [
             'personnes' =>$tuteur,
             'title' => 'tuteurs ISEN'
@@ -282,7 +285,7 @@ class BackController extends AbstractController
     }
     #[Route ('/back/tuteur-stage', name : 'tuteur_stage')]
     public function showTuteurStage(Request $request, TuteurStageRepository $TuteurRepository){
-        $tuteur = $TuteurRepository->findAll();
+        $tuteur = $TuteurRepository->findAllTuteurStage();
         return $this->render('back/index.html.twig', [
             'personnes' =>$tuteur,
             'title' => 'tuteurs Stage'
@@ -290,7 +293,7 @@ class BackController extends AbstractController
     }
     #[Route ('/back/apprenant', name: 'apprenant')]
     public function showApprenant(Request $request, ApprenantRepository $ApprenantRepository){
-        $apprenant = $ApprenantRepository->findAll();
+        $apprenant = $ApprenantRepository->findAllApprenants();
         return $this->render('back/index.html.twig', [
             'personnes' =>$apprenant,
             'title' => 'apprenants'
@@ -298,7 +301,7 @@ class BackController extends AbstractController
     }
     #[Route ('/back/entreprise', name: 'entreprise')]
     public function showEntreprise(Request $request, EntrepriseRepository $EntrepriseRepository){
-        $entreprise = $EntrepriseRepository->findAll();
+        $entreprise = $EntrepriseRepository->findAllEntreprise();
         return $this->render('back/index.html.twig', [
             'entreprises' =>$entreprise,
             'title' => "entreprises"

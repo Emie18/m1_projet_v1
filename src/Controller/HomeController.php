@@ -123,4 +123,65 @@ class HomeController extends AbstractController
         ]);
     }
 
+    #[Route('/trier/apprenant', name: 'trier-apprenant')]
+    public function trierApprenant(Request $request, StageRepository $stageRepository) {
+        // Récupération des paramètres de requête
+        $des = $request->query->get('desc');
+        // Récupération des stages filtrés en fonction des paramètres
+        $stages = $stageRepository->trierstage('apprenant',$des);
+        // Rendu d'une vue partielle contenant uniquement les données de la table
+        return $this->render('home/_table.html.twig', [
+            'stages' => $stages,
+        ]);
+    }
+    #[Route('/trier/date', name: 'trier-date')]
+    public function trierdate(Request $request, StageRepository $stageRepository) {
+        $des = $request->query->get('desc');
+        $stages = $stageRepository->trierstage('date',$des);
+        return $this->render('home/_table.html.twig', [
+            'stages' => $stages,
+        ]);
+    }
+    #[Route('/trier/titre', name: 'trier-titre')]
+    public function triertitre(Request $request, StageRepository $stageRepository) {
+        $des = $request->query->get('desc');
+        $stages = $stageRepository->trierstage('date',$des);
+        return $this->render('home/_table.html.twig', [
+            'stages' => $stages,
+        ]);
+    }
+    #[Route('/trier/tuteur', name: 'trier-tuteur')]
+    public function triertuteur(Request $request, StageRepository $stageRepository) {
+        $des = $request->query->get('desc');
+        $stages = $stageRepository->trierstage('tuteur',$des);
+        return $this->render('home/_table.html.twig', [
+            'stages' => $stages,
+        ]);
+    }
+    #[Route('/trier/soutenance', name: 'trier-soutenance')]
+    public function triersoutenance(Request $request, StageRepository $stageRepository) {
+        $des = $request->query->get('desc');
+        $stages = $stageRepository->trierstage('soutenance',$des);
+        return $this->render('home/_table.html.twig', [
+            'stages' => $stages,
+        ]);
+    }
+    #[Route('/trier/rapport', name: 'trier-rapport')]
+    public function trierrapport(Request $request, StageRepository $stageRepository) {
+        $des = $request->query->get('desc');
+        $stages = $stageRepository->trierstage('rapport',$des);
+        return $this->render('home/_table.html.twig', [
+            'stages' => $stages,
+        ]);
+    }
+    #[Route('/trier/eval', name: 'trier-eval')]
+    public function triereval(Request $request, StageRepository $stageRepository) {
+        $des = $request->query->get('desc');
+        $stages = $stageRepository->trierstage('eval',$des);
+        return $this->render('home/_table.html.twig', [
+            'stages' => $stages,
+        ]);
+    }
+
+
 }

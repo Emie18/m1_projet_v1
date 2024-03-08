@@ -24,7 +24,8 @@ class EntrepriseRepository extends ServiceEntityRepository
         $entityManager = $this->getEntityManager();
         $entityManager->persist($entreprise);
         $entityManager->flush();
-    }    public function findAllEntreprise()
+    } 
+       public function findAllEntreprise()
     {
         return $this->createQueryBuilder('e')
             ->orderBy('e.nom', 'ASC')

@@ -1,27 +1,60 @@
 <table>
-  <thead>
-    <tr>
-      <th>Nom Prénom</th>
-     
-      <th>Date début-fin</th>
-      <th>Titre stage</th>
-      <th>Tuteur académique</th>
-      <th>Soutenance</th>
-      <th>Rapport</th>
-      <th>Évaluation entreprise</th>
-    </tr>
-  </thead>
-  <tbody id="tableBody">
-{% for stage in stages %}
-    <tr onclick="afficherDetails({{ stage.id }});" class = "lignetableau">
-      <td>{{ stage.apprenant.nom }} {{ stage.apprenant.prenom }}</td>
-      <td>{{ stage.dateDebut|date('d-m-Y') }} - {{ stage.dateFin|date('d-m-Y') }}</td>
-      <td>{{stage.titre}}</td>
-      <td>{{stage.tuteurIsen.nom}} {{stage.tuteurIsen.prenom}}</td>
-      <td>{{stage.soutenance}}</td>
-      <td>{{stage.rapport}}</td>
-      <td>{{stage.evalEntreprise}}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
+    <thead>
+        <tr>
+            <th >Nom Prénom <button onclick="trier('apprenant')">▲</button></th>
+            <th >Date début-fin <button onclick="trier('date')">▲</button></th>
+            <th >Titre stage <button onclick="trier('titre')">▲</button></th>
+            <th >Tuteur académique <button onclick="trier('tuteur')">▲</button></th>
+            <th >Soutenance <button onclick="trier('soutenance')">▲</button></th>
+            <th >Rapport <button onclick="trier('rapport')">▲</button></th>
+            <th >Évaluation entreprise <button onclick="trier('eval')">▲</button></th>
+        </tr>
+    </thead>
+    <tbody id="tableBody">
+        {% for stage in stages %}
+        <tr>
+            <td>{{ stage.apprenant.nom }} {{ stage.apprenant.prenom }}</td>
+            <td>{{ stage.dateDebut|date('d-m-Y') }} - {{ stage.dateFin|date('d-m-Y') }}</td>
+            <td>{{ stage.titre }}</td>
+            <td>{{ stage.tuteurIsen.nom }} {{ stage.tuteurIsen.prenom }}</td>
+            <td>{{ stage.soutenance }}</td>
+            <td>{{ stage.rapport }}</td>
+            <td>{{ stage.evalEntreprise }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
 </table>
+
+<script>
+function trier(colonne) {
+    // Récupérer le tableau
+    var tableau = document.getElementById("tableBody");
+    // Récupérer les lignes du tableau
+    var lignes = tableau.getElementsByTagName("tr");
+    var ordreAlphabetique = true;
+    var bouton = event.target;
+    // Vérifier l'ordre actuel
+    if (bouton.innerText === "▲") {
+        bouton.innerText = "▼";
+        ordreAlphabetique = 1;
+    } else {
+        bouton.innerText = "▲";
+        ordreAlphabetique = 2;
+    }
+    // Envoyer une requête AJAX
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "/trier/" + colonne + "?desc=" + ordreAlphabetique, true);
+    console.log(ordreAlphabetique);
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == XMLHttpRequest.DONE) {
+            if (xhr.status == 200) {
+                tableau.innerHTML = xhr.responseText;
+            } else {
+                console.error("Une erreur est survenue : " + xhr.status);
+            }
+        }
+    };
+    xhr.send();
+}
+
+</script>
