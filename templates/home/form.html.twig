@@ -135,4 +135,39 @@ function fermerDetails() {
 
 }
 
+function trier(colonne) {
+    // Récupérer le tableau
+    var tableau = document.getElementById("tableBody");
+    // Récupérer les lignes du tableau
+    var lignes = tableau.getElementsByTagName("tr");
+    var ordreAlphabetique = true;
+    var bouton = event.target;
+    // Vérifier l'ordre actuel
+    var span = bouton.querySelector('span');
+    if (span.innerText === "▲") {
+        span.innerText = "▼";
+        ordreAlphabetique = 1;
+    } else {
+        span.innerText = "▲";
+        ordreAlphabetique = 2;
+    }
+    var nom = document.getElementById('nomInput').value;
+    var nom = nomInput ? nomInput.value : '';
+    // Envoyer une requête AJAX
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "/trier/" + colonne + "?desc=" + ordreAlphabetique+"?apprenant="+ nom, true);
+    console.log("/trier/" + colonne + "?desc=" + ordreAlphabetique+"?apprenant="+ nom);
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == XMLHttpRequest.DONE) {
+            if (xhr.status == 200) {
+                tableau.innerHTML = xhr.responseText;
+            } else {
+                console.error("Une erreur est survenue : " + xhr.status);
+            }
+        }
+    };
+    xhr.send();
+}
+
+
 </script>

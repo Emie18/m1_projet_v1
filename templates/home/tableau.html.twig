@@ -1,13 +1,13 @@
 <table>
     <thead>
         <tr>
-            <th >Nom Prénom <button onclick="trier('apprenant')">▲</button></th>
-            <th >Date début-fin <button onclick="trier('date')">▲</button></th>
-            <th >Titre stage <button onclick="trier('titre')">▲</button></th>
-            <th >Tuteur académique <button onclick="trier('tuteur')">▲</button></th>
-            <th >Soutenance <button onclick="trier('soutenance')">▲</button></th>
-            <th >Rapport <button onclick="trier('rapport')">▲</button></th>
-            <th >Évaluation entreprise <button onclick="trier('eval')">▲</button></th>
+            <th onclick="trier('apprenant')">Nom Prénom <span id="sapprenant" >▲</span></th>
+            <th onclick="trier('date')">Date début-fin <span id ="sdate" >▲</span></th>
+            <th onclick="trier('titre')">Titre stage <span id = "stitre">▲</span></th>
+            <th onclick="trier('tuteur')" >Tuteur académique <span id="stuteur">▲</span></th>
+            <th onclick="trier('soutenance')">Soutenance <span id="ssoutenance">▲</span></th>
+            <th  onclick="trier('rapport')">Rapport <span id="srapport">▲</span></th>
+            <th onclick="trier('eval')">Évaluation entreprise <span id="seval">▲</span></th>
         </tr>
     </thead>
     <tbody id="tableBody">
@@ -27,24 +27,30 @@
 
 <script>
 function trier(colonne) {
+    // Récupérer la valeur de l'élément nomInput
+    var nomInput = document.getElementById('nomInput');
+    var nom = nomInput ? nomInput.value : '';
+    var professeur = document.getElementById('profInput').value;
+    var groupe = document.getElementById('groupeInput').value;
     // Récupérer le tableau
     var tableau = document.getElementById("tableBody");
+    var annee = document.getElementById('anneeInput').value;
     // Récupérer les lignes du tableau
     var lignes = tableau.getElementsByTagName("tr");
-    var ordreAlphabetique = true;
-    var bouton = event.target;
-    // Vérifier l'ordre actuel
-    if (bouton.innerText === "▲") {
-        bouton.innerText = "▼";
+    var ordreAlphabetique = 1;
+
+   var span =document.getElementById("s"+colonne);
+    if (span.innerHTML === "▲"){
+        span.innerText = "▼";
         ordreAlphabetique = 1;
     } else {
-        bouton.innerText = "▲";
+        span.innerText = "▲";
         ordreAlphabetique = 2;
     }
     // Envoyer une requête AJAX
     var xhr = new XMLHttpRequest();
-    xhr.open("GET", "/trier/" + colonne + "?desc=" + ordreAlphabetique, true);
-    console.log(ordreAlphabetique);
+    xhr.open("GET", "/trier/" + colonne + "?desc=" + ordreAlphabetique + "&apprenant=" + nom+"&tuteur="+professeur+"&annee="+annee+ '&groupe=' + groupe, true);
+    console.log("/trier/" + colonne + "?desc=" + ordreAlphabetique + "&apprenant=" + nom+"&tuteur="+professeur);
     xhr.onreadystatechange = function() {
         if (xhr.readyState == XMLHttpRequest.DONE) {
             if (xhr.status == 200) {
@@ -56,5 +62,6 @@ function trier(colonne) {
     };
     xhr.send();
 }
+
 
 </script>

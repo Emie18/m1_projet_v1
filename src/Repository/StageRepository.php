@@ -37,7 +37,7 @@ class StageRepository extends ServiceEntityRepository
             ->addSelect('gr')
             ->leftJoin('s.tuteur_isen', 'ti')
             ->addSelect('ti')
-            ->setMaxResults(50)
+            //->setMaxResults(50)
             ->getQuery()
             ->getResult();
     }
@@ -244,7 +244,7 @@ public function getStatsEntreprise(): array
     }
 
     /*************************trier****************************** */
-    public function trierstage(string $colonne, int $ascendant): array
+    public function trierstage(string $colonne, int $ascendant, $apprenant, $tuteur,$annee,$groupe): array
     {
         $queryBuilder = $this->createQueryBuilder('s')
             ->leftJoin('s.apprenant', 'a')
@@ -258,8 +258,24 @@ public function getStatsEntreprise(): array
             ->leftJoin('s.groupe', 'gr')
             ->addSelect('gr')
             ->leftJoin('s.tuteur_isen', 'ti')
-            ->addSelect('ti');
+            ->addSelect('ti')
+            ->addSelect('SUBSTRING(s.date_debut, 1, 4) AS HIDDEN adebut')
+            ->addSelect('SUBSTRING(s.date_fin, 1, 4) AS HIDDEN afin');
 
+        if ($apprenant!="") {
+            $queryBuilder->andWhere('a.id = :nom')->setParameter('nom', $apprenant);
+        }
+        if ($tuteur!="") {
+            $queryBuilder->andWhere('ti.id = :id')->setParameter('id', $tuteur);
+        }
+        if ($annee !== "") {
+            $queryBuilder
+            ->having('adebut = :annee OR afin = :annee')
+            ->setParameter('annee', $annee);
+        }
+        if ($groupe!="") {
+            $queryBuilder->andWhere('gr.id = :id')->setParameter('id', $groupe);
+        }
         switch ($colonne) {
             case 'apprenant':
                 if($ascendant==2){

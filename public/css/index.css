@@ -138,3 +138,27 @@ table th {
     position: absolute;
     right: 3rem;
 }
+
+table thead th {
+    position: relative;
+    padding-bottom: 20px; /* Assurez-vous que le th a une position relative */
+}
+
+table thead th span {
+    color:var(--couleur-texte);
+    position: absolute; /* Position absolue par rapport au th parent */
+    bottom: 0; /* Placer le bouton tout en bas */
+    left: 0; /* Vous pouvez ajuster cela si nécessaire */
+    width: 100%;
+    background: none;
+    border: none;
+    border-radius: none;
+
+}
+table thead th:hover span{
+    background:none;
+    border-radius: none;
+    border: none;
+    width: 100%;
+    color: #ffffff;
+}
