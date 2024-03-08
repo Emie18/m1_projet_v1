@@ -37,6 +37,8 @@ class StageRepository extends ServiceEntityRepository
             ->addSelect('gr')
             ->leftJoin('s.tuteur_isen', 'ti')
             ->addSelect('ti')
+            
+            ->orderBy('s.id', 'DESC')
             //->setMaxResults(50)
             ->getQuery()
             ->getResult();
@@ -327,8 +329,7 @@ public function getStatsEntreprise(): array
                 }
                 break;
             default:
-                // Par défaut, tri par ID du stage
-                $queryBuilder->orderBy('s.id', 'ASC');
+                $queryBuilder->orderBy('s.id', 'DESC');
         }
 
         return $queryBuilder

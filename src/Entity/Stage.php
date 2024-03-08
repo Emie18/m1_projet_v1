@@ -61,6 +61,15 @@ class Stage
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $date_fin = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $visio = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $rapport_remis = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $confidentiel = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -242,6 +251,41 @@ class Stage
     public function setDateFin(\DateTimeInterface $date_fin): static
     {
         $this->date_fin = $date_fin;
+
+        return $this;
+    }
+    public function isVisio(): ?bool
+    {
+        return $this->visio;
+    }
+
+    public function setVisio(bool $visio_confi): static
+    {
+        $this->visio = $visio_confi;
+
+        return $this;
+    }
+
+    public function isRapportRemis(): ?bool
+    {
+        return $this->rapport_remis;
+    }
+
+    public function setRapportRemis(bool $rapport_remis): static
+    {
+        $this->rapport_remis = $rapport_remis;
+
+        return $this;
+    }
+
+    public function isConfidentiel(): ?bool
+    {
+        return $this->confidentiel;
+    }
+
+    public function setConfidentiel(?bool $confidentiel): static
+    {
+        $this->confidentiel = $confidentiel;
 
         return $this;
     }

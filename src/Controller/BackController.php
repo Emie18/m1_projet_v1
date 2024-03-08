@@ -32,6 +32,7 @@ use App\Repository\TuteurStageRepository;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Query\ResultSetMapping;
 use League\Csv\Reader;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType; // Importer la classe EntityType
 use Symfony\Bundle\MakerBundle\Str;
@@ -92,7 +93,14 @@ class BackController extends AbstractController
     {
         $stage = new Stage();
         $form = $this->createForm(AjoutstageType::class, $stage);
-        
+        $form->add('date_debut', DateType::class, [
+            'widget' => 'single_text',
+            // Autres options si nécessaire
+        ]);
+        $form->add('date_fin', DateType::class, [
+            'widget' => 'single_text',
+            // Autres options si nécessaire
+        ]);
         // Modifier le formulaire pour le champ tuteur_isen
         $form->add('tuteur_isen', EntityType::class, [
             'class' => TuteurIsen::class,
