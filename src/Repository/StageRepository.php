@@ -55,6 +55,27 @@ class StageRepository extends ServiceEntityRepository
             return false; // Une erreur s'est produite lors de l'ajout du stage
         }
     }
+    public function updateStage($id, $soutenance, $rapport, $evalEntreprise): bool
+    {
+        $entityManager = $this->getEntityManager();
+        $stage = $this->find($id);
+
+        if (!$stage) {
+            return false; // Stage introuvable
+        }
+
+        $stage->setSoutenance($soutenance);
+        $stage->setRapport($rapport);
+        $stage->setEvalEntreprise($evalEntreprise);
+
+        // Enregistrer les modifications
+        try {
+            $entityManager->flush();
+            return true; // Modifications enregistrées avec succès
+        } catch (\Exception $e) {
+            return false; // Une erreur s'est produite lors de l'enregistrement des modifications
+        }
+    }
     public function findByApprenantNom(string $nom)
     {
         return $this->createQueryBuilder('s')

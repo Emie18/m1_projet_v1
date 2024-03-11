@@ -93,15 +93,39 @@
             <span>Commentaire :</span>
             {{ s.commentaire }}
         </p>
-        <div class="etatvalidation">
+        <div id ="etatvalidation" class="etatvalidation">
+        {% if form is defined %}
+        {% include 'back/modifEtat.html.twig' %}
+        {% else %}
             <h3>Etat de validation :</h3>
                 <p>Soutenance :{{ s.soutenance }}</p>
                 <p>Rapport :{{s.rapport}}</p>
                 <p>Entreprise :{{ s.evalEntreprise }}</p>
+        {% endif %}
         <div>
-        <button value="modifier">modifier</button>
+        <button  class="modifier" onclick=chargerFormulaireModificationEtats({{s.id}})>Modifier</button>
         {% endfor %}
+         
         </div>
     {% else %}
         <p>Aucun détail de stage trouvé.</p>
 {% endif %}
+<script>
+function chargerFormulaireModificationEtats(idStage) {
+    console.log(idStage);
+    // Faire un appel AJAX au contrôleur Symfony pour récupérer le formulaire
+    // Assurez-vous d'avoir la bibliothèque jQuery chargée pour utiliser $.ajax
+    $.ajax({
+        url: '/back/modifier-etats/' + idStage, // Remplacez par l'URL correcte de votre contrôleur
+        type: 'GET',
+        success: function(response) {
+            // Remplacer le contenu de la div etatvalidation par le formulaire récupéré
+            $('#etatvalidation').html(response);
+        },
+        error: function() {
+            alert('Une erreur s\'est produite lors du chargement du formulaire.');
+        }
+    });
+}
+
+</script>

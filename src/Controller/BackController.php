@@ -17,6 +17,7 @@ use App\Form\FormCSVType;
 use App\Form\TuteurType;
 use App\Form\ApprenantType;
 use App\Form\EntrepriseType;
+use App\Form\ModifierEtatType;
 
 use App\Entity\Stage;
 use App\Entity\TuteurIsen;
@@ -56,7 +57,7 @@ class BackController extends AbstractController
         $this->buffEntreprise = [];
         $this->buffGroupe = [];
     }
-    
+
     #[Route('/back/', name: 'app_back')]
     public function index(Request $request, StageRepository $stageRepository, GroupeRepository $groupRepository, ApprenantRepository $apprenantRepository, TuteurIsenRepository $tuteurIsenRepository): Response
     {
@@ -253,6 +254,40 @@ class BackController extends AbstractController
         return $this->render('form/ajouter_personne.html.twig', [
             'form' => $form->createView(),
             'title' => "un tuteur ISEN",
+        ]);
+    }
+
+    #[Route('/back/modifier-etats/{id}', name: 'modifier_etats')]
+    public function modifierEtats(Request $request, $id, StageRepository $stageRepository): Response
+    {
+        // Récupérer le stage en fonction de l'ID passé en paramètre
+        $stage = $stageRepository->findByID($id);
+    
+        // Vérifier si le stage existe
+        if (!$stage) {
+            // Gérer le cas où le stage n'est pas trouvé
+        }
+    
+        // Créer le formulaire en utilisant l'objet Stage
+        $form = $this->createForm(ModifierEtatType::class, $stage[0]);
+    
+        // Pré-remplir les champs avec les valeurs récupérées
+        $form->get('soutenance')->setData($stage[0]->getSoutenance());
+        $form->get('rapport')->setData($stage[0]->getRapport());
+        $form->get('eval_entreprise')->setData($stage[0]->getEvalEntreprise());
+    
+        // Gérer la soumission du formulaire
+        $form->handleRequest($request);
+    
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Enregistrer les modifications de l'objet Etat
+            $stageRepository->updateStage($id, $form->get('soutenance'),$form->get('eval_entreprise'),$form->get('eval_entreprise'));
+    
+            // Rediriger ou afficher un message de succès
+        }
+    
+        return $this->render('back/modifEtat.html.twig', [
+            'form' => $form->createView(),
         ]);
     }
     
