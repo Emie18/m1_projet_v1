@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Stage;
+use App\Entity\Etat;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Common\Util\ClassUtils;
@@ -59,15 +60,15 @@ class StageRepository extends ServiceEntityRepository
     {
         $entityManager = $this->getEntityManager();
         $stage = $this->find($id);
-
+    
         if (!$stage) {
             return false; // Stage introuvable
         }
-
+        
         $stage->setSoutenance($soutenance);
         $stage->setRapport($rapport);
         $stage->setEvalEntreprise($evalEntreprise);
-
+    
         // Enregistrer les modifications
         try {
             $entityManager->flush();
@@ -76,6 +77,7 @@ class StageRepository extends ServiceEntityRepository
             return false; // Une erreur s'est produite lors de l'enregistrement des modifications
         }
     }
+    
     public function findByApprenantNom(string $nom)
     {
         return $this->createQueryBuilder('s')

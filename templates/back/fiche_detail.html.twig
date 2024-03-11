@@ -111,10 +111,9 @@
         <p>Aucun détail de stage trouvé.</p>
 {% endif %}
 <script>
+
 function chargerFormulaireModificationEtats(idStage) {
     console.log(idStage);
-    // Faire un appel AJAX au contrôleur Symfony pour récupérer le formulaire
-    // Assurez-vous d'avoir la bibliothèque jQuery chargée pour utiliser $.ajax
     $.ajax({
         url: '/back/modifier-etats/' + idStage, // Remplacez par l'URL correcte de votre contrôleur
         type: 'GET',

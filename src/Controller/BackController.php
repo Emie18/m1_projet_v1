@@ -34,12 +34,15 @@ use DateTime;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Query\ResultSetMapping;
 use League\Csv\Reader;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType; // Importer la classe EntityType
 use Symfony\Bundle\MakerBundle\Str;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class BackController extends AbstractController
 {
@@ -92,7 +95,7 @@ class BackController extends AbstractController
         ]);
     
     }
-    #[Route('/back/fichedetail', name: 'app back_fichedetail')]
+    #[Route('/back/fichedetail', name: 'app_back_fichedetail')]
 
     public function fichedetail(Request $request, StageRepository $stageRepository) {
         $id = $request->query->get('id');
@@ -278,16 +281,33 @@ class BackController extends AbstractController
     
         // Gérer la soumission du formulaire
         $form->handleRequest($request);
-    
+        $operation="rien";
         if ($form->isSubmitted() && $form->isValid()) {
-            // Enregistrer les modifications de l'objet Etat
-            $stageRepository->updateStage($id, $form->get('soutenance'),$form->get('eval_entreprise'),$form->get('eval_entreprise'));
-    
-            // Rediriger ou afficher un message de succès
+           // Récupérer les données soumises du formulaire
+        $soutenance = $form->get('soutenance')->getData();
+        $rapport = $form->get('rapport')->getData();
+        $evalEntreprise = $form->get('eval_entreprise')->getData();
+
+        // Enregistrer les modifications de l'objet Etat
+        $success = $stageRepository->updateStage($id, $soutenance, $rapport, $evalEntreprise);
+
+        if ($success) {
+            $operation = "modification réussi";
+            return new JsonResponse([
+                'soutenance' => $soutenance->getLibelle(),
+                'rapport' => $rapport->getLibelle(),
+                'evalEntreprise' => $evalEntreprise->getLibelle(),
+            ]);
+
+        } else {
+            $operation = "modification échouée";
         }
-    
+
+        }
         return $this->render('back/modifEtat.html.twig', [
+            'stage' =>  $stage,
             'form' => $form->createView(),
+            'op'=> $operation,
         ]);
     }
     
