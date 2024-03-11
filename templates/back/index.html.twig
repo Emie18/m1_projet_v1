@@ -24,10 +24,42 @@
                 {% include 'home/form.html.twig' %}
                 {% include 'home/tableau.html.twig' %}
                 <div id="detailsDiv" style="display: none;">
-                {% include 'home/fiche_detail.html.twig' %}
+                {% include 'back/fiche_detail.html.twig' %}
                 </div>
             {% endif %}
 
 
 </div>
+<script>
+function afficherDetails(id) {
+  // Envoi d'une requête AJAX pour récupérer les détails du stage
+  var xhr = new XMLHttpRequest();
+  var url = '/back/fichedetail?id=' + id;
+
+  xhr.open('GET', url, true);
+  xhr.onload = function() {
+    if (xhr.status >= 200 && xhr.status < 400) {
+      // Succès de la requête
+      var detailsDiv = document.getElementById('detailsDiv');
+      detailsDiv.innerHTML = xhr.responseText; // Injecter le HTML directement dans le div
+      detailsDiv.style.display = 'block'; // Afficher le div
+
+      // Ajouter la classe 'active' à tous les éléments avec la classe 'fichedetail'
+      setTimeout(function() {
+        var details = document.getElementsByClassName('fichedetail');
+        for (var i = 0; i < details.length; i++) {
+          details[i].classList.add('active');
+        }
+        
+        // Calculer la position actuelle de la fenêtre
+        var windowPosition = window.scrollY;
+
+        // Ajuster la position de la boîte de détails
+        detailsDiv.style.top = (windowPosition + 60) + 'px'; // Ajoutez une marge de 100 pixels par exemple
+      }, 10);
+    }
+  };
+  xhr.send();
+}
+</script>
 {% endblock %}

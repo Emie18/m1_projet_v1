@@ -1,0 +1,107 @@
+{% if stage is defined %}
+
+        <div class="fichedetail">
+            <button class="croix fichedetailcroix" type="button" onclick="fermerDetails()">✕</button>
+                {% for s in stage %}
+                    <h1>Détails du stage back</h1>
+
+                    <p>
+                        <span>Apprenant :
+                        </span>
+                        {{ s.apprenant.nom }}
+                        {{ s.apprenant.prenom }}
+                    </p>
+                    <p>
+                        <span>Groupe :
+                        </span>
+                        {{ s.groupe.libelle }}</p>
+                </br>
+                <p>
+                    <span>Titre :
+                    </span>
+                    {{ s.titre }}</p>
+                <p>
+                    <span>Description :</span>
+                    {{ s.description }}</p>
+            </br>
+            <p>
+                <span>Date de début-fin :
+                </span>
+                {{ s.dateDebut|date('d/m/Y') }}
+                -
+                {{ s.dateFin|date('d/m/Y') }}
+                ( Durée :{{nbmois}}
+                mois )</p>
+        </br>
+        <p>
+            <span>Tuteur industriel :
+            </span>
+            {{ s.tuteurStage.nom }}
+            {{ s.tuteurStage.prenom }}</p>
+        <p>
+            <span>Entreprise :
+            </span>
+            {{ s.entreprise.nom }}</p></br><p>
+        <span>Responsable de suivi :
+        </span>
+        {{ s.tuteurIsen.nom }}
+        {{ s.tuteurIsen.prenom }}</p>
+        <p>
+            <span>Date Soutenance :</span>
+            {{ s.dateSoutenance|date('d/m/Y') }}
+            à
+            {{ s.dateSoutenance|date('H:i') }}
+        </p>
+        </br>
+        <p>
+            <span>Visio:</span>
+            {% if s.visio is not null %}
+                {% if s.visio %}
+                    Oui
+                {% else %}
+                    Non
+                {% endif %}
+            {% else %}
+            Non déterminé
+            {% endif %}</p>
+        </p>
+        <p>
+            <span>Rapport Remis:</span>
+            {% if s.rapportRemis is not null %}
+                {% if s.rapportRemis %}
+                    Oui
+                {% else %}
+                    Non
+                {% endif %}
+            {% else %}
+            Non déterminé
+            {% endif %}</p>
+        </p>
+        <p>
+            <span>Confidentialité:</span>
+            {% if s.confidentiel is not null %}
+                {% if s.confidentiel %}
+                    Oui
+                {% else %}
+                    Non
+                {% endif %}
+            {% else %}
+            Non déterminé
+            {% endif %}</p>
+        </br>
+        <p>
+            <span>Commentaire :</span>
+            {{ s.commentaire }}
+        </p>
+        <div class="etatvalidation">
+            <h3>Etat de validation :</h3>
+                <p>Soutenance :{{ s.soutenance }}</p>
+                <p>Rapport :{{s.rapport}}</p>
+                <p>Entreprise :{{ s.evalEntreprise }}</p>
+        <div>
+        <button value="modifier">modifier</button>
+        {% endfor %}
+        </div>
+    {% else %}
+        <p>Aucun détail de stage trouvé.</p>
+{% endif %}

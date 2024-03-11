@@ -91,6 +91,21 @@ class BackController extends AbstractController
         ]);
     
     }
+    #[Route('/back/fichedetail', name: 'app back_fichedetail')]
+
+    public function fichedetail(Request $request, StageRepository $stageRepository) {
+        $id = $request->query->get('id');
+        $stage = $stageRepository->findByID($id);
+
+        $dateDebut = $stage[0]->getDateDebut();
+        $dateFin = $stage[0]->getDateFin();
+        $difference = $dateFin->diff($dateDebut);
+        $difference_mois = $difference->m; // Nombre de mois
+        return $this->render('back/fiche_detail.html.twig', [
+            'stage' => $stage,
+            'nbmois'=> $difference_mois,
+        ]);
+    }
     #[Route('/back/ajouter-stage', name: 'ajouter_stage')]
     public function ajouterStage(Request $request, StageRepository $stageRepository): Response
     {
