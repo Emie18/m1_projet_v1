@@ -12,7 +12,7 @@ h1{
     margin-right: auto;
 }
 
-form {
+form#filterForm {
     margin-top: 1rem;
     display: flex;
     background-color: var(--couleur-principale);
