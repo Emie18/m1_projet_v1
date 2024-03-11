@@ -33,7 +33,8 @@ class HomeController extends AbstractController
         $stages = $stageRepository->findAllStages();
         $noms = $apprenantRepository->findAllApprenants();
         $groupes = $groupRepository->findAll();
-        $etats_stages = $etatRepository->findAll();
+        
+        $etats_stages = [['id'=>1 , 'libelle'=>'Terminé'], ['id'=>2 , 'libelle'=>'En cours'] ];
         // $etats_stages = [['id'=>1 , 'libelle'=>'Terminé'], ['id'=>2 , 'libelle'=>'En cours'] ];
         $annees = [];
         foreach ($stages as $stage) {
