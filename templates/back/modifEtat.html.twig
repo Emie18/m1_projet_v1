@@ -1,10 +1,13 @@
+ <h3>Etat de validation :</h3>
 {{ form_start(form, {'attr': {'id': 'myForm'}}) }}
-{{ form_widget(form) }}
+<p>Soutenance : 
+{{ form_widget(form.soutenance) }}</p>
+<p>Rapport : 
+{{ form_widget(form.rapport) }}</p>
+<p>Enteprise : 
+{{ form_widget(form.eval_entreprise) }}</p>
 <button type="button" class="btn btn-primary" id="submitForm">Valider</button>
 {{ form_end(form) }}
-{% if op is defined %}
-    {{ op }}
-{% endif %}
 
 <script>
 document.getElementById('submitForm').addEventListener('click', function() {
@@ -20,7 +23,11 @@ document.getElementById('submitForm').addEventListener('click', function() {
             $('#etatvalidation').html(`<h3>Etat de validation :</h3>
                 <p>Soutenance : ${newData.soutenance}</p>
                 <p>Rapport : ${newData.rapport}</p>
-                <p>Entreprise : ${newData.evalEntreprise}</p>`);
+                <p>Entreprise : ${newData.evalEntreprise}</p>
+                <button  class="modifier" onclick=chargerFormulaireModificationEtats({{stage[0].id}})>Modifier</button>`);
+            $('#soutenance{{stage[0].id}}').html(`${newData.soutenance}`);
+             $('#rapport{{stage[0].id}}').html(`${newData.rapport}`);
+              $('#eval{{stage[0].id}}').html(`${newData.evalEntreprise}`);
         } else {
             console.error("Une erreur s'est produite lors de la modification");
         }

@@ -138,6 +138,8 @@ table th {
 .fichedetail .etatvalidation{
     position: absolute;
     right: 3rem;
+    bottom: 1rem;
+   
 }
 
 table thead th {

@@ -26,11 +26,12 @@ class ModifierEtatType extends AbstractType
                     'class' => Etat::class,
         'choice_label' => 'libelle',
                 ])
-                ->add('eval_entreprise', EntityType::class, [
+   
+                ->add('rapport', EntityType::class, [
                     'class' => Etat::class,
         'choice_label' => 'libelle',
                 ])
-                ->add('rapport', EntityType::class, [
+                ->add('eval_entreprise', EntityType::class, [
                     'class' => Etat::class,
         'choice_label' => 'libelle',
                 ]);

@@ -17,9 +17,9 @@
             <td>{{ stage.dateDebut|date('d-m-Y') }} - {{ stage.dateFin|date('d-m-Y') }}</td>
             <td>{{ stage.titre }}</td>
             <td>{{ stage.tuteurIsen.nom }} {{ stage.tuteurIsen.prenom }}</td>
-            <td>{{ stage.soutenance }}</td>
-            <td>{{ stage.rapport }}</td>
-            <td>{{ stage.evalEntreprise }}</td>
+            <td id="soutenance{{ stage.id }}">{{ stage.soutenance }}</td>
+            <td id="rapport{{ stage.id }}">{{ stage.rapport }}</td>
+            <td id="eval{{ stage.id }}">{{ stage.evalEntreprise }}</td>
         </tr>
         {% endfor %}
     </tbody>

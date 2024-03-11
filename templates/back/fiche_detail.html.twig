@@ -3,7 +3,7 @@
         <div class="fichedetail">
             <button class="croix fichedetailcroix" type="button" onclick="fermerDetails()">✕</button>
                 {% for s in stage %}
-                    <h1>Détails du stage back</h1>
+                    <h1>Détails du stage </h1>
 
                     <p>
                         <span>Apprenant :
@@ -101,9 +101,10 @@
                 <p>Soutenance :{{ s.soutenance }}</p>
                 <p>Rapport :{{s.rapport}}</p>
                 <p>Entreprise :{{ s.evalEntreprise }}</p>
+                <button  class="modifier" onclick=chargerFormulaireModificationEtats({{s.id}})>Modifier</button>
         {% endif %}
         <div>
-        <button  class="modifier" onclick=chargerFormulaireModificationEtats({{s.id}})>Modifier</button>
+        
         {% endfor %}
          
         </div>
