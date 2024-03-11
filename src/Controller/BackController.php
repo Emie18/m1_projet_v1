@@ -29,10 +29,13 @@ use App\Repository\ApprenantRepository;
 use App\Repository\EntrepriseRepository;
 use App\Repository\EtatRepository;
 use App\Repository\TuteurStageRepository;
+use DateTime;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Query\ResultSetMapping;
 use League\Csv\Reader;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType; // Importer la classe EntityType
 use Symfony\Bundle\MakerBundle\Str;
@@ -108,6 +111,10 @@ class BackController extends AbstractController
                 return $tuteur->getNom() . ' ' . $tuteur->getPrenom();
             }, // Choisir le champ à afficher dans le champ visible
             'placeholder' => 'Choisir un tuteur isen',
+            'query_builder' => function (TuteurIsenRepository $er) {
+                return $er->createQueryBuilder('t')
+                    ->orderBy('t.nom', 'ASC');
+            },
             // D'autres options si nécessaire
         ]);
         $form->add('tuteur_stage', EntityType::class, [
@@ -116,6 +123,10 @@ class BackController extends AbstractController
                 return $tuteur->getNom() . ' ' . $tuteur->getPrenom();
             }, // Choisir le champ à afficher dans le champ visible
             'placeholder' => 'Choisir un tuteur de Stage',
+            'query_builder' => function (TuteurStageRepository $er) {
+                return $er->createQueryBuilder('t')
+                    ->orderBy('t.nom', 'ASC');
+            },
             // D'autres options si nécessaire
         ]);
         $form->add('apprenant', EntityType::class, [
@@ -124,13 +135,20 @@ class BackController extends AbstractController
                 return $tuteur->getNom() . ' ' . $tuteur->getPrenom();
             }, // Choisir le champ à afficher dans le champ visible
             'placeholder' => 'Choisir un apprenant',
-            // D'autres options si nécessaire
+            'query_builder' => function (ApprenantRepository $er) {
+                return $er->createQueryBuilder('t')
+                    ->orderBy('t.nom', 'ASC');
+            },
         ]);
         $form->add('entreprise', EntityType::class, [
             'class' => Entreprise::class,
             'choice_label' => function ($tuteur) {
                 return $tuteur->getNom();},
             'placeholder' => 'Choisir une entreprise',
+            'query_builder' => function (EntrepriseRepository $er) {
+                return $er->createQueryBuilder('t')
+                    ->orderBy('t.nom', 'ASC');
+            },
         ]);
         $form->add('groupe', EntityType::class, [
             'class' => Groupe::class,
@@ -138,6 +156,41 @@ class BackController extends AbstractController
                 return $tuteur->getLibelle();},
             'placeholder' => 'Choisir un groupe ',
         ]);
+        $form->add('visio', ChoiceType::class, [
+            'choices' => [
+                'Oui' => true,
+                'Non' => false,
+            ],
+            'expanded' => true,
+            'label' => 'Visio',
+            'required' => false,
+            'placeholder' => false,
+        ]);
+        $form->add('rapport_remis', ChoiceType::class, [
+            'choices' => [
+                'Oui' => true,
+                'Non' => false,
+            ],
+            'expanded' => true,
+            'label' => 'Rapport remis',
+            'required' => false,
+            'placeholder' => false,
+        ]);
+        $form->add('confidentiel', ChoiceType::class, [
+            'choices' => [
+                'Oui' => true,
+                'Non' => false,
+            ],
+            'expanded' => true,
+            'label' => 'Confidentiel',
+            'required' => false,
+            'placeholder' => false,
+        ]);
+
+        $form->add('date_soutenance', DateTimeType::class, [
+            'widget' => 'single_text',
+        ]);
+
         $form->add('soutenance', EntityType::class, [
             'class' => Etat::class,
             'choice_label' => function ($tuteur) {
