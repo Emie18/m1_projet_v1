@@ -18,6 +18,34 @@
         </br>
         <p><span>Responsable de suivi : </span>{{ s.tuteurIsen.nom }} {{ s.tuteurIsen.prenom }}</p>
         <p><span>Date Soutenance : </span>{{ s.dateSoutenance|date('d/m/Y') }} à {{ s.dateSoutenance|date('H:i') }}</p>
+        </br> 
+        <p><span>Visio: </span>
+         {% if s.visio == null %}
+         Non déterminé
+         {% elseif s.visio == 1%}
+            Oui
+        {% else %}
+            Non
+        {% endif %}
+         </p>
+         <p><span>Rapport Remis: </span>
+         {% if s.rapportRemis == null %}
+         Non déterminé
+         {% elseif s.rapportRemis == 1%}
+            Oui
+        {% else %}
+            Non
+        {% endif %}
+         </p>
+         <p><span>Confidentialité: </span>
+         {% if s.confidentiel == null %}
+         Non déterminé
+         {% elseif s.confidentiel == 1%}
+            Oui
+        {% else %}
+            Non
+        {% endif %}
+         </p>
         </br>
         <p><span>Commentaire :</span> {{ s.commentaire }}</p>
         <div class="etatvalidation">

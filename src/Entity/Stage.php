@@ -19,10 +19,10 @@ class Stage
     #[ORM\Column(length: 255)]
     private ?string $titre = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 1000)]
     private ?string $description = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 1000, nullable: true)]
     private ?string $commentaire = null;
 
     #[ORM\ManyToOne(targetEntity: TuteurIsen::class)]

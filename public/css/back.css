@@ -4,3 +4,73 @@
     margin-left: auto;
     margin-right: auto;
 }
+
+.bouton-ajouter {
+    text-decoration: none;
+    margin-right: auto;
+    margin-left: auto;
+    text-align: center;
+    display: block;
+    margin-top: 1rem;
+    background: var(--couleur-principale);
+    width: fit-content;
+    padding: 10px;
+    border-radius: 15px;
+    transition: ease-in-out 0.2s;
+    color: var(--couleur-texte);
+}
+.bouton-ajouter:hover {
+    background: var(--couleur-texte);
+    color:white;
+}
+.content{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+h1{
+    padding : 1rem;
+    color: var(--couleur-texte);
+    background-color: var(--couleur-principale);
+    width: fit-content;
+    border-radius: 15px;
+    text-align: center;
+    margin-top: 1rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+form[name="tuteur_isen"],form[name="tuteur"],form[name="apprenant"],form[name="entreprise"] {
+    margin-top:1rem;
+    margin-left: auto;
+    margin-right: auto;
+    align-content: center;
+    flex-direction: column;
+    display: flex;
+    align-items: center;
+}
+form[name="tuteur_isen"] input,form[name="tuteur"] input,form[name="apprenant"] input,form[name="entreprise"] input {
+    border-radius: 15px;
+    padding: 5px;
+    margin-bottom: 1rem;
+}
+form[name="tuteur_isen"] div,form[name="tuteur"] div, form[name="apprenant"] div,form[name="entreprise"] div {
+    display: flex;
+    padding:1rem;
+    flex-direction: column;
+    background: var(--couleur-principale);
+    border-radius:15px;
+}
+
+form[name="tuteur_isen"] button, form[name="tuteur"] button, form[name="apprenant"] button , form[name="entreprise"] button{
+    border: none;
+    width: 100px;
+    border-radius: 15px;
+    padding:5px;
+    margin-top: 1rem;
+    transition: ease-in-out 0.2s;
+    background: var(--couleur-principale);
+}
+form[name="tuteur_isen"] button:hover, form[name="tuteur"] button:hover, form[name="apprenant"] button:hover, form[name="entreprise"] button:hover {
+    background: var(--couleur-texte);
+    color:white;
+}

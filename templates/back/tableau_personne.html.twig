@@ -1,9 +1,9 @@
 {% if personnes[0].numApprenant is defined %}
-   <a href="/back/ajouter-apprenant">Ajouter un apprenant</a>
+   <a class = "bouton-ajouter" href="/back/ajouter-apprenant">Ajouter un apprenant</a>
 {% elseif personnes[0].numTuteurStage is defined %}
-    <a href="/back/ajouter-tuteur-stage">Ajouter un tuteur Stage</a>
+    <a class = "bouton-ajouter" href="/back/ajouter-tuteur-stage">Ajouter un tuteur Stage</a>
 {% elseif personnes[0].numTuteurIsen is defined %}
-   <a href="/back/ajouter-tuteur-isen">Ajouter un tuteur Isen</a>
+   <a class = "bouton-ajouter" href="/back/ajouter-tuteur-isen">Ajouter un tuteur Isen</a>
 {% endif %}
 <table class ="backtableau">
     <thead>

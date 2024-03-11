@@ -20,6 +20,7 @@
                 {% include 'back/tableau_entreprise.html.twig' %}
             
             {% elseif stages is defined %}
+                 <a class = "bouton-ajouter" href="/back/ajouter-stage"> Ajouter un stage </a>
                 {% include 'home/form.html.twig' %}
                 {% include 'home/tableau.html.twig' %}
                 <div id="detailsDiv" style="display: none;">
