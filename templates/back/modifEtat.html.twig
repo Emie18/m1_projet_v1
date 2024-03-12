@@ -17,9 +17,9 @@ document.getElementById('submitForm').addEventListener('click', function() {
     xhr.open('POST', url, true);
     xhr.onload = function() {
         if (xhr.status >= 200 && xhr.status < 400) {
-            console.log("Modification réussie");
+            //console.log("Modification réussie");
             var newData = JSON.parse(xhr.responseText);
-            console.log(newData);
+           // console.log(newData);
             $('#etatvalidation').html(`<h3>Etat de validation :</h3>
                 <p>Soutenance : ${newData.soutenance}</p>
                 <p>Rapport : ${newData.rapport}</p>

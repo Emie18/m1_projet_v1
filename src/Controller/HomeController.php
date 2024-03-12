@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use App\Repository\StageRepository;
 use App\Repository\GroupeRepository;
 use App\Repository\TuteurIsenRepository;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Form\AjoutstageType;
 use App\Form\TuteurIsenType;
 use App\Entity\Stage;
@@ -139,6 +140,56 @@ class HomeController extends AbstractController
         return $this->render('home/_table.html.twig', [
             'stages' => $stages,
         ]);
+    }
+    #[Route('/autocomplete', name: 'app_auto')]
+    public function autoComplete(Request $request, ApprenantRepository $apprenantRepository,
+    GroupeRepository $groupeRepository, TuteurIsenRepository $tuteurIsenRepository){
+        $filtre = $request->query->get("filtre");
+        $val = $request->query->get("val");
+        $result = [];
+        switch($filtre){
+            case "inputNom": 
+                // $result = $apprenantRepository->autoComplete($val);
+                $result = $apprenantRepository->findAllApprenants();
+                foreach ($result as $apprenant) {
+                    $formattedResult[] = [
+                        'id' => $apprenant->getId(),
+                        'nom' => $apprenant->getNom(),
+                        'prenom' => $apprenant->getPrenom()
+                    ];
+                }
+                break;
+            case "inputGroupe":
+                $result = $groupeRepository->findAll();
+                foreach ($result as $groupe) {
+                    $formattedResult[] = [
+                        'id' => $groupe->getId(),
+                        'libelle' => $groupe->getLibelle(),
+                    ];
+                }
+                break;
+            case "inputProf":
+                $result = $tuteurIsenRepository->findAllTuteurIsens();
+                foreach ($result as $tuteur) {
+                    $formattedResult[] = [
+                        'id' => $tuteur->getId(),
+                        'nom' => $tuteur->getNom(),
+                        'prenom' => $tuteur->getPrenom()
+                    ];
+                }
+                break;
+                
+        }
+        $result = array_filter($result);
+        $jsonData = json_encode($result);
+        if ($jsonData === false) {
+            // Afficher le message d'erreur
+            echo "Erreur d'encodage JSON : " . json_last_error_msg();
+        }
+        $jsonData = json_encode($formattedResult,JSON_UNESCAPED_UNICODE);
+        $response = new JsonResponse($jsonData, 200, [], true);
+    
+        return $response;
     }
 
 

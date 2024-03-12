@@ -1,20 +1,13 @@
 <form id="filterForm">
 	<label for="nom">Nom:</label>
-	<select name="nom" id="nomInput" onchange="getSelectedId('nomInput')">
-		<option value="">Sélectionner un nom</option>
-		{% for nom in noms %}
-			<option value="{{ nom.id }}">{{nom.nom}}
-				{{nom.prenom}}</option>
-		{% endfor %}
-	</select><br>
+  <input type="text" placeholder="Nom prénom" id="inputNom" list="dataList" onKeyUp="autoComplete(event)">
+  <input type="hidden" id="nameId">
+  <datalist id="dataList">
+  </datalist>
 
 	<label for="groupe">Groupe :</label>
-	<select name="groupe" id="groupeInput">
-		<option value="">groupe</option>
-		{% for groupe in groupes %}
-			<option value="{{ groupe.id }}">{{groupe.libelle}}</option>
-		{% endfor %}
-	</select><br>
+  <input type="text" placeholder="Groupe" id="inputGroupe" list="dataList" onKeyUp="autoComplete(event)">
+	<input type="hidden" id="groupeId">
 
 	<label for="etat_stage">État du stage :</label>
 	<select name="etat_stage" id="etatInput">
@@ -33,27 +26,118 @@
 	</select><br>
 
 	<label for="professeur">Professeur :</label>
-	<select name="professeur" id="profInput">
-		<option value="">Professeur</option>
-		{% for professeur in professeurs %}
-			<option value="{{ professeur.id}} ">{{ professeur.nom }}
-				{{ professeur.prenom }}
-			</option>
-		{% endfor %}
-	</select><br>
+  <input type="text" placeholder="Professeur" id="inputProf" list="dataList" onKeyUp="autoComplete(event)">
+  <input type="hidden" id="profId">
 	<button type="button" onclick="filterResults()">Filtrer</button>
 	<button class="croix" type="button" onclick="defiltrer()">✕</button>
 </form>
 <script>
+
+function autoComplete(event){
+  const input = event.target;
+  const inputValue = input.value;
+  /*const autoCompleteList = document.getElementById("autocompleteList");
+  //vider la liste
+  if(autoCompleteList){
+    autocompleteList.parentNode.removeChild(autocompleteList)
+  }
+  const suggestionList = document.createElement("ul");
+  suggestionList.setAttribute("id", "autocompleteList");*/
+  var url = "/autocomplete?filtre="+input.id+"&val="+inputValue;
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function(){
+    if(this.status == 200){
+      
+      const suggestionList = document.getElementById("dataList");
+      //vider la liste
+      suggestionList.innerHTML = "";
+      suggestionList.setAttribute("element", "apprenant")
+      var result = JSON.parse(this.responseText);
+      result.forEach(function(item){
+        const option = document.createElement("option");
+        switch(input.id){
+          case "inputNom": case "inputProf":
+            var name = item.nom + " " + item.prenom;
+            option.value = name;
+            break;
+          case "inputGroupe":
+            option.value = item.libelle;
+            break;
+        }
+
+        
+        option.setAttribute("data-id", item.id)*
+        suggestionList.appendChild(option)
+      })
+
+    }
+  }
+  xhttp.open("GET", url, true)
+  xhttp.send();
+}
+
+document.addEventListener('click', function(event) {
+    const autocompleteList = document.getElementById('autocompleteList');
+    const id = event.target;
+    if (autocompleteList && event.target !== autocompleteList && event.target.parentNode !== autocompleteList) {
+        autocompleteList.parentNode.removeChild(autocompleteList);
+    }
+    if(id.id == "inputNom" ||id.id == "inputGroupe" ||id.id == "inputEtat" || id.id == "inputAnne" || id.id == "inputProf"){
+      autoComplete.removeChild(autoCompleteList);
+    }
+});
+
+function setId(event){
+  console.log("nioc")
+  const input = event.target;
+  const selectedOption = document.querySelector(`option[value="${input.value}"]`);
+    if (selectedOption) {
+        const selectedId = selectedOption.getAttribute('data-id');
+        console.log(input)
+        switch(input.id){
+          case "inputNom":
+            document.getElementById('nameId').value = selectedId;
+            break;
+          case "inputGroupe":
+            document.getElementById('groupeId').value = selectedId;
+            break;
+          case "inputProf":
+            document.getElementById('profId').value = selectedId;
+            break;
+        }
+    } else {
+        switch(input.id){
+          case "inputNom":
+            document.getElementById('nameId').value = "";
+            break;
+          case "inputGroupe":
+            document.getElementById('groupeId').value = "";
+            break;
+          case "inputProf":
+            document.getElementById('profId').value = "";
+            break;
+        }
+    }
+}
+
+document.getElementById('inputNom').addEventListener('input', function(event){setId(event)});
+document.getElementById('inputGroupe').addEventListener('input', function(event){setId(event)});
+document.getElementById('inputProf').addEventListener('input', function(event){setId(event)});
+
 function filterResults() {
-    var nom = document.getElementById('nomInput').value;
-    var groupe = document.getElementById('groupeInput').value;
+    var nom = document.getElementById('nameId').value;
+    var groupe = document.getElementById('groupeId').value;
     var etat_stage = document.getElementById('etatInput').value;
     var annee = document.getElementById('anneeInput').value;
-    var professeur = document.getElementById('profInput').value;
+    var professeur = document.getElementById('profId').value;
+    console.log(nom);
+    console.log(groupe);
+    console.log(etat_stage);
+    console.log(annee);
+    console.log(professeur);
 
     var url = '/filtrage?nom=' + nom + '&groupe=' + groupe + '&etat_stage=' + etat_stage + '&annee=' + annee + '&professeur=' + professeur;
-
+    console.log(url)
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
@@ -83,11 +167,14 @@ function defiltrer() {
     };
     xhttp.open("GET", url, true);
     xhttp.send();
-    document.getElementById('nomInput').value ="";
-    document.getElementById('groupeInput').value = "";
+  document.getElementById('inputNom').value ="";
+    document.getElementById("nameId").value = "";
+    document.getElementById('inputGroupe').value = "";
+    document.getElementById("groupeId").value = "";
     document.getElementById('etatInput').value = "";
     document.getElementById('anneeInput').value = "";
-    document.getElementById('profInput').value = "";
+    document.getElementById('inputProf').value = "";
+    document.getElementById("profId").value = "";
 }
 
 
@@ -153,7 +240,7 @@ function trier(colonne) {
         span.innerText = "▲";
         ordreAlphabetique = 2;
     }
-    var nom = document.getElementById('nomInput').value;
+    var nom = document.getElementById('nameId').value;
     var nom = nomInput ? nomInput.value : '';
     // Envoyer une requête AJAX
     var xhr = new XMLHttpRequest();
