@@ -10,11 +10,7 @@ h1{
     margin-left: auto;
     margin-right: auto;
 }
-/* form{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-} */
+
 
 form {
     display: flex;
@@ -23,6 +19,8 @@ form {
     width: 80%; /* Ajustez la largeur selon vos besoins */
     margin: auto; /* Centre le formulaire */
 }
+
+
 
 #ajoutstage {
     display: flex;

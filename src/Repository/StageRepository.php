@@ -358,7 +358,6 @@ public function getStatsEntreprise(): array
         }
 
         return $queryBuilder
-            ->setMaxResults(50)
             ->getQuery()
             ->getResult();
     }

@@ -136,6 +136,7 @@ function filterResults() {
         if (this.readyState == 4 && this.status == 200) {
             var tableBody = document.getElementById("tableBody");
             tableBody.innerHTML = this.responseText;
+            paginer(1, true); // Utilisez le tableau principal pour la pagination
         }
     };
     xhttp.open("GET", url, true);
@@ -156,6 +157,7 @@ function defiltrer() {
         if (this.readyState == 4 && this.status == 200) {
             var tableBody = document.getElementById("tableBody");
             tableBody.innerHTML = this.responseText;
+            paginer(1, true); // Utilisez le tableau principal pour la pagination
         }
     };
     xhttp.open("GET", url, true);

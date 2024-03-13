@@ -28,7 +28,7 @@
 
 <script>
 function paginer(page) {
-    var itemsPerPage = 10; // Nombre d'éléments par page
+    var itemsPerPage = 5; // Nombre d'éléments par page
     var tableBody = document.getElementById("tableBody");
     var rows = tableBody.getElementsByTagName("tr");
 
@@ -46,6 +46,8 @@ function paginer(page) {
     // Mettre à jour les boutons de pagination
     var totalPages = Math.ceil(rows.length / itemsPerPage);
     var paginationButtons = document.getElementById("paginationButtons");
+
+    // Effacer les boutons de pagination existants
     paginationButtons.innerHTML = '';
 
     // Bouton précédent
@@ -54,8 +56,26 @@ function paginer(page) {
     }
 
     // Liens vers chaque page
-    for (var i = 1; i <= totalPages; i++) {
-        paginationButtons.innerHTML += '<button onclick="paginer(' + i + ')">' + i + '</button>';
+    var maxVisiblePages = 20; // Nombre maximal de boutons de page visibles
+    var startPage = Math.max(1, page - Math.floor(maxVisiblePages / 2));
+    var endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+    if (startPage > 1) {
+        paginationButtons.innerHTML += '<button onclick="paginer(1)">1</button>';
+        if (startPage > 2) {
+            paginationButtons.innerHTML += '<span>...</span>';
+        }
+    }
+
+    for (var i = startPage; i <= endPage; i++) {
+        paginationButtons.innerHTML += '<button onclick="paginer(' + i + ')"' + (i === page ? ' class="active"' : '') + '>' + i + '</button>';
+    }
+
+    if (endPage < totalPages) {
+        if (endPage < totalPages - 1) {
+            paginationButtons.innerHTML += '<span>...</span>';
+        }
+        paginationButtons.innerHTML += '<button onclick="paginer(' + totalPages + ')">' + totalPages + '</button>';
     }
 
     // Bouton suivant
@@ -63,6 +83,7 @@ function paginer(page) {
         paginationButtons.innerHTML += '<button onclick="paginer(' + (page + 1) + ')">Page suivante</button>';
     }
 }
+
 
 // Appeler la fonction paginer pour afficher la première page lors du chargement de la page
 document.addEventListener("DOMContentLoaded", function() {
@@ -98,6 +119,7 @@ function trier(colonne) {
         if (xhr.readyState == XMLHttpRequest.DONE) {
             if (xhr.status == 200) {
                 tableau.innerHTML = xhr.responseText;
+                paginer(1, true); // Utilisez le tableau principal pour la pagination
             } else {
                 console.error("Une erreur est survenue : " + xhr.status);
             }

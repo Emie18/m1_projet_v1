@@ -60,6 +60,26 @@ button{
     border-radius:15px ;
 }
 
+#paginationButtons button {
+    width: fit-content;
+    background-color: var(--couleur-principale);
+}
+#paginationButtons button.active {
+    background-color: var(--couleur-croix);
+    color: white; /* Couleur du texte */
+}
+
+#paginationButtons button, #paginationButtons span {
+    margin-right: 5px;
+}
+#paginationButtons{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1rem
+}
+
 button:hover{
     background:var(--couleur-texte);
     border: solid 1px white;
