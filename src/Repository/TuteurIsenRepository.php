@@ -33,6 +33,17 @@ class TuteurIsenRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+    public function autoComplete($val){
+        $query = $this->createQueryBuilder("a");
+        $result = $query->where(
+            $query->expr()->like("a.nom", ":nom")
+        )
+        ->setParameter("nom", "%".$val."%")
+        ->orderBy("a.nom", "ASC")
+        ->getQuery()
+        ->getResult();
+        return $result;
+    }
 
 //    /**
 //     * @return TuteurIsen[] Returns an array of TuteurIsen objects

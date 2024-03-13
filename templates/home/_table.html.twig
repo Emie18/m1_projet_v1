@@ -17,4 +17,11 @@
     {% endfor %}
 {% endif %}
 </tbody>
-
+<button onclick="paginer(2)">page suivante</button>
+{# {% if CurrentPage > 1 %}
+    <a href="{{ path('trier', {'type': 'colonne', 'page': CurrentPage - 1, 'desc': sortingParams['desc'], 'apprenant': filters['nom'], 'tuteur': sortingParams['tuteur'], 'annee': filters['annee'], 'groupe': filters['groupe']}) }}">Page précédente</a>
+{% endif %}
+<p>Page {{ CurrentPage }} sur {{ totalPages }}</p>
+{% if CurrentPage < totalPages %}
+    <a href="{{ path('trier', {'type': 'colonne', 'page': CurrentPage + 1, 'desc': sortingParams['desc'], 'apprenant': filters['nom'], 'tuteur': sortingParams['tuteur'], 'annee': filters['annee'], 'groupe': filters['groupe']}) }}">Page suivante</a>
+{% endif %} #}

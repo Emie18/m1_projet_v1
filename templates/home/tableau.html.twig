@@ -24,8 +24,51 @@
         {% endfor %}
     </tbody>
 </table>
+<div id="paginationButtons"></div>
 
 <script>
+function paginer(page) {
+    var itemsPerPage = 10; // Nombre d'éléments par page
+    var tableBody = document.getElementById("tableBody");
+    var rows = tableBody.getElementsByTagName("tr");
+
+    var startIndex = (page - 1) * itemsPerPage;
+    var endIndex = startIndex + itemsPerPage;
+
+    for (var i = 0; i < rows.length; i++) {
+        if (i >= startIndex && i < endIndex) {
+            rows[i].style.display = "";
+        } else {
+            rows[i].style.display = "none";
+        }
+    }
+
+    // Mettre à jour les boutons de pagination
+    var totalPages = Math.ceil(rows.length / itemsPerPage);
+    var paginationButtons = document.getElementById("paginationButtons");
+    paginationButtons.innerHTML = '';
+
+    // Bouton précédent
+    if (page > 1) {
+        paginationButtons.innerHTML += '<button onclick="paginer(' + (page - 1) + ')">Page précédente</button>';
+    }
+
+    // Liens vers chaque page
+    for (var i = 1; i <= totalPages; i++) {
+        paginationButtons.innerHTML += '<button onclick="paginer(' + i + ')">' + i + '</button>';
+    }
+
+    // Bouton suivant
+    if (page < totalPages) {
+        paginationButtons.innerHTML += '<button onclick="paginer(' + (page + 1) + ')">Page suivante</button>';
+    }
+}
+
+// Appeler la fonction paginer pour afficher la première page lors du chargement de la page
+document.addEventListener("DOMContentLoaded", function() {
+    paginer(1);
+});
+
 function trier(colonne) {
     // Récupérer la valeur de l'élément nomInput
     var nomInput = document.getElementById('nameId');

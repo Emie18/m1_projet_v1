@@ -20,6 +20,17 @@ class GroupeRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Groupe::class);
     }
+    public function autoComplete($val){
+        $query = $this->createQueryBuilder("g");
+        $result = $query->where(
+            $query->expr()->like("g.libelle", ":libelle")
+        )
+        ->setParameter("libelle", "%".$val."%")
+        ->orderBy("g.libelle", "ASC")
+        ->getQuery()
+        ->getResult();
+        return $result;
+    }
 
 //    /**
 //     * @return Groupe[] Returns an array of Groupe objects

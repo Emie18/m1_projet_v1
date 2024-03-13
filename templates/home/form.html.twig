@@ -36,13 +36,6 @@
 function autoComplete(event){
   const input = event.target;
   const inputValue = input.value;
-  /*const autoCompleteList = document.getElementById("autocompleteList");
-  //vider la liste
-  if(autoCompleteList){
-    autocompleteList.parentNode.removeChild(autocompleteList)
-  }
-  const suggestionList = document.createElement("ul");
-  suggestionList.setAttribute("id", "autocompleteList");*/
   var url = "/autocomplete?filtre="+input.id+"&val="+inputValue;
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function(){

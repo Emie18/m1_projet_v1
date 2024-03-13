@@ -24,6 +24,8 @@ use App\Repository\ApprenantRepository;
 use App\Repository\EtatRepository;
 use PHPUnit\TextUI\XmlConfiguration\Group;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType; // Importer la classe EntityType
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+
 
 
 class HomeController extends AbstractController
@@ -34,32 +36,45 @@ class HomeController extends AbstractController
         $stages = $stageRepository->findAllStages();
         $noms = $apprenantRepository->findAllApprenants();
         $groupes = $groupRepository->findAll();
-        
-        $etats_stages = [['id'=>1 , 'libelle'=>'Terminé'], ['id'=>2 , 'libelle'=>'En cours'] ];
-        // $etats_stages = [['id'=>1 , 'libelle'=>'Terminé'], ['id'=>2 , 'libelle'=>'En cours'] ];
+
+        // Nombre d'éléments par page
+        //$itemsPerPage = 50;
+
+        // // Récupérer le numéro de la page actuelle depuis la requête
+        // $currentPage = $request->query->getInt('page', 1);
+
+        // // Calculer l'offset pour récupérer les éléments correspondant à la page actuelle
+        // $offset = ($currentPage - 1) * $itemsPerPage;
+        // $stagesPagines = array_slice($stages, $offset, $itemsPerPage);
+
+        // $totalStages = count($stages);
+        // $totalPages = ceil($totalStages / $itemsPerPage);
+
+        $etats_stages = [['id' => 1, 'libelle' => 'Terminé'], ['id' => 2, 'libelle' => 'En cours']];
         $annees = [];
         foreach ($stages as $stage) {
             $anneeDebut = $stage->getDateDebut()->format('Y');
             $anneeFin = $stage->getDateFin()->format('Y');
-            // Ajouter l'année de début si elle n'est pas déjà présente dans le tableau
             if (!in_array($anneeDebut, $annees)) {
                 $annees[] = $anneeDebut;
             }
-            // Ajouter l'année de fin si elle n'est pas déjà présente dans le tableau
             if (!in_array($anneeFin, $annees)) {
                 $annees[] = $anneeFin;
             }
         }
         $professeurs = $tuteurIsenRepository->findAllTuteurIsens();
 
-
         return $this->render('home/index.html.twig', [
-            'stages' => $stages,
+            'stages' => $stages, // Utilisation des stages paginés
+            'stages_form' => $stages, // Utilisation des stages paginés
             'noms' => $noms,
             'groupes' => $groupes,
             'etats_stages' => $etats_stages,
             'annees' => $annees,
             'professeurs' => $professeurs,
+            // 'CurrentPage' =>$currentPage,
+            // 'totalPages' =>$totalPages,
+
         ]);
     }
     #[Route('/filtrage', name: 'app_filtrage')]
@@ -73,9 +88,27 @@ class HomeController extends AbstractController
         $professeur = $request->query->get('professeur');
         // Récupération des stages filtrés en fonction des paramètres
         $stages = $stageRepository->findByFilters($nom2,$groupe,$annee, $etat, $professeur);
+
+        // $itemsPerPage = 50;
+
+        // // Récupérer le numéro de la page actuelle depuis la requête
+        // $currentPage = $request->query->getInt('page', 1);
+
+        // // Calculer l'offset pour récupérer les éléments correspondant à la page actuelle
+        // $offset = ($currentPage - 1) * $itemsPerPage;
+        // $stagesPagines = array_slice($stages, $offset, $itemsPerPage);
+
+        // $totalStages = count($stages);
+        // $totalPages = ceil($totalStages / $itemsPerPage);
+        // $filters = compact('nom2', 'groupe', 'annee', 'etat', 'professeur');
+
+
         // Rendu d'une vue partielle contenant uniquement les données de la table
         return $this->render('home/_table.html.twig', [
             'stages' => $stages,
+            // 'CurrentPage' =>$currentPage,
+            // 'totalPages' =>$totalPages,
+            // 'filters'=>$filters,
         ]);
     }
     #[Route('/fichedetail', name: 'app_fichedetail')]
@@ -91,6 +124,7 @@ class HomeController extends AbstractController
         return $this->render('home/fiche_detail.html.twig', [
             'stage' => $stage,
             'nbmois'=> $difference_mois,
+            
         ]);
     }
 
@@ -136,9 +170,22 @@ class HomeController extends AbstractController
         $groupe = $request->query->get('groupe');
 
         $stages = $stageRepository->trierstage($type, $des, $apprenant, $tuteur, $annee,$groupe);
+        // // Récupérer le numéro de la page actuelle depuis la requête
+        // $currentPage = $request->query->getInt('page', 1);
+        // $itemsPerPage = 50;
+        // // Calculer l'offset pour récupérer les éléments correspondant à la page actuelle
+        // $offset = ($currentPage - 1) * $itemsPerPage;
+        // $stagesPagines = array_slice($stages, $offset, $itemsPerPage);
+
+        // $totalStages = count($stages);
+        // $totalPages = ceil($totalStages / $itemsPerPage);
+        // $sortingParams = compact('type', 'des', 'apprenant', 'tuteur', 'annee', 'groupe');
 
         return $this->render('home/_table.html.twig', [
             'stages' => $stages,
+            // 'sortingParams'=>$sortingParams,
+            // 'CurrentPage'=> $currentPage,
+            // 'totalPages'=>$totalPages,
         ]);
     }
     #[Route('/autocomplete', name: 'app_auto')]
@@ -150,7 +197,7 @@ class HomeController extends AbstractController
         switch($filtre){
             case "inputNom": 
                 // $result = $apprenantRepository->autoComplete($val);
-                $result = $apprenantRepository->findAllApprenants();
+                $result = $apprenantRepository->autoComplete($val);
                 foreach ($result as $apprenant) {
                     $formattedResult[] = [
                         'id' => $apprenant->getId(),
@@ -160,7 +207,7 @@ class HomeController extends AbstractController
                 }
                 break;
             case "inputGroupe":
-                $result = $groupeRepository->findAll();
+                $result = $groupeRepository->autoComplete($val);
                 foreach ($result as $groupe) {
                     $formattedResult[] = [
                         'id' => $groupe->getId(),
@@ -169,7 +216,7 @@ class HomeController extends AbstractController
                 }
                 break;
             case "inputProf":
-                $result = $tuteurIsenRepository->findAllTuteurIsens();
+                $result = $tuteurIsenRepository->autoComplete($val);
                 foreach ($result as $tuteur) {
                     $formattedResult[] = [
                         'id' => $tuteur->getId(),
