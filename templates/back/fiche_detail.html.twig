@@ -2,14 +2,16 @@
 
         <div class="fichedetail">
             <button class="croix fichedetailcroix" type="button" onclick="fermerDetails()">✕</button>
+
                 {% for s in stage %}
                     <h1>Détails du stage </h1>
-
+                    <div id="contenu_form"> 
                     <p>
                         <span>Apprenant :
                         </span>
                         {{ s.apprenant.nom }}
                         {{ s.apprenant.prenom }}
+
                     </p>
                     <p>
                         <span>Groupe :
@@ -104,9 +106,10 @@
                 <button  class="modifier" onclick=chargerFormulaireModificationEtats({{s.id}})>Modifier</button>
         {% endif %}
         <div>
-        
+        </div>
+
         {% endfor %}
-         
+
         </div>
     {% else %}
         <p>Aucun détail de stage trouvé.</p>
@@ -116,11 +119,12 @@
 function chargerFormulaireModificationEtats(idStage) {
     console.log(idStage);
     $.ajax({
-        url: '/back/modifier-etats/' + idStage, // Remplacez par l'URL correcte de votre contrôleur
+        url: '/back/modifier-stage/' + idStage, // Remplacez par l'URL correcte de votre contrôleur
         type: 'GET',
         success: function(response) {
             // Remplacer le contenu de la div etatvalidation par le formulaire récupéré
-            $('#etatvalidation').html(response);
+            $('#contenu_form').html(response);
+            console.log(response);
         },
         error: function() {
             alert('Une erreur s\'est produite lors du chargement du formulaire.');

@@ -80,3 +80,17 @@ form[name="tuteur_isen"] button:hover, form[name="tuteur"] button:hover, form[na
     align-items: flex-start;
     font-size: 15px;
 }
+
+.fichedetail label{
+    display: inline;
+}
+.fichedetail #ajoutstage_num_stage {
+    display:none;
+}
+.fichedetail #ajoutstage_num_stage label {
+    display:none;
+}
+.fichedetail #ajoutstage_commentaire{
+    width: 50%;
+    height: 100px;
+}

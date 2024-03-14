@@ -23,6 +23,11 @@ class AjoutstageType extends AbstractType
             ->add('apprenant')
             ->add('entreprise')
             ->add('groupe')
+            ->add('date_soutenance')
+            ->add('visio')
+            ->add('confidentiel')
+            ->add('rapport_remis')
+            
             ->add('soutenance')
             ->add('eval_entreprise')
             ->add('rapport')

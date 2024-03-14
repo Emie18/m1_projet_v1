@@ -1,0 +1,75 @@
+{{ form_start(form) }}
+<p>
+                        <span>Apprenant :
+                        </span>
+                        {{form_widget(form.apprenant)}}
+                    </p>
+                    <p>
+                        <span>Groupe :
+                        </span>
+                       {{form_widget(form.groupe)}}
+                        </p>
+                </br>
+                <p>
+                    <span>Titre :
+                    </span>
+                   {{form_widget(form.titre)}}
+                    </p>
+                <p>
+                    <span>Description :</span>
+                    {{form_widget(form.description)}}
+                    </p>
+            </br>
+            <p>
+                <span>Date de début-fin :
+                </span>
+                {{form_widget(form.date_debut)}}
+                -
+                {{form_widget(form.date_fin)}}
+         </p>
+        </br>
+        <p>
+            <span>Tuteur industriel :
+            </span>
+   {{form_widget(form.tuteur_stage)}}
+            </p>
+        <p>
+            <span>Entreprise :
+            </span>
+            {{form_widget(form.entreprise)}}
+            </p></br><p>
+        <span>Responsable de suivi :
+        </span>
+        {{form_widget(form.tuteur_isen)}}
+        </p>
+        <p>
+            <span>Date Soutenance :</span>
+            {{form_widget(form.date_soutenance)}}
+        </p>
+        </br>
+        <p>
+            <span>Visio:</span>
+      {{form_widget(form.visio)}}</p>
+        </p>
+        <p>
+            <span>Rapport Remis:</span>
+            {{form_widget(form.rapport_remis)}}</p>
+        </p>
+        <p>
+            <span>Confidentialité:</span>
+            <label></label>
+            {{form_widget(form.confidentiel)}}</p>
+        </br>
+        <p>
+            <span>Commentaire :</span>
+        </p>
+         {{ form_widget(form.commentaire) }}
+       
+<div id ="etatvalidation" class="etatvalidation">
+  <h3>Etat de validation :</h3>
+                <p>Soutenance :{{form_widget(form.soutenance)}}</p>
+                <p>Rapport :{{form_widget(form.rapport)}}</p>
+                <p>Entreprise :{{form_widget(form.eval_entreprise)}}</p>
+
+        <div>
+{{ form_end(form) }}

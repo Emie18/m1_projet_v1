@@ -38,6 +38,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType; // Importer la classe EntityType
 use Symfony\Bundle\MakerBundle\Str;
@@ -240,6 +241,146 @@ class BackController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+    #[Route('/back/modifier-stage/{id}', name: 'modifier_stage')]
+public function modifierStage(Request $request, StageRepository $stageRepository, $id): Response
+{
+    $stage = $stageRepository->find($id);
+    if (!$stage) {
+        throw $this->createNotFoundException('Stage non trouvé avec l\'identifiant '.$id);
+    }
+
+    $form = $this->createForm(AjoutstageType::class, $stage);
+        $form->add('date_debut', DateType::class, [
+            'widget' => 'single_text',
+            // Autres options si nécessaire
+        ]);
+        $form->add('date_fin', DateType::class, [
+            'widget' => 'single_text',
+            // Autres options si nécessaire
+        ]);
+        // Modifier le formulaire pour le champ tuteur_isen
+        $form->add('tuteur_isen', EntityType::class, [
+            'class' => TuteurIsen::class,
+            'choice_label' => function ($tuteur) {
+                return $tuteur->getNom() . ' ' . $tuteur->getPrenom();
+            }, // Choisir le champ à afficher dans le champ visible
+            'placeholder' => 'Choisir un tuteur isen',
+            'query_builder' => function (TuteurIsenRepository $er) {
+                return $er->createQueryBuilder('t')
+                    ->orderBy('t.nom', 'ASC');
+            },
+            // D'autres options si nécessaire
+        ]);
+        $form->add('tuteur_stage', EntityType::class, [
+            'class' => TuteurStage::class,
+            'choice_label' => function ($tuteur) {
+                return $tuteur->getNom() . ' ' . $tuteur->getPrenom();
+            }, // Choisir le champ à afficher dans le champ visible
+            'placeholder' => 'Choisir un tuteur de Stage',
+            'query_builder' => function (TuteurStageRepository $er) {
+                return $er->createQueryBuilder('t')
+                    ->orderBy('t.nom', 'ASC');
+            },
+            // D'autres options si nécessaire
+        ]);
+        $form->add('apprenant', EntityType::class, [
+            'class' => Apprenant::class,
+            'choice_label' => function ($tuteur) {
+                return $tuteur->getNom() . ' ' . $tuteur->getPrenom();
+            }, // Choisir le champ à afficher dans le champ visible
+            'placeholder' => 'Choisir un apprenant',
+            'query_builder' => function (ApprenantRepository $er) {
+                return $er->createQueryBuilder('t')
+                    ->orderBy('t.nom', 'ASC');
+            },
+        ]);
+        $form->add('entreprise', EntityType::class, [
+            'class' => Entreprise::class,
+            'choice_label' => function ($tuteur) {
+                return $tuteur->getNom();},
+            'placeholder' => 'Choisir une entreprise',
+            'query_builder' => function (EntrepriseRepository $er) {
+                return $er->createQueryBuilder('t')
+                    ->orderBy('t.nom', 'ASC');
+            },
+        ]);
+        $form->add('groupe', EntityType::class, [
+            'class' => Groupe::class,
+            'choice_label' => function ($tuteur) {
+                return $tuteur->getLibelle();},
+            'placeholder' => 'Choisir un groupe ',
+        ]);
+        $form->add('visio', ChoiceType::class, [
+            'choices' => [
+                'Oui' => true,
+                'Non' => false,
+            ],
+            'expanded' => true,
+            'label' => 'Visio',
+            'required' => false,
+            'placeholder' => false,
+        ]);
+        $form->add('rapport_remis', ChoiceType::class, [
+            'choices' => [
+                'Oui' => true,
+                'Non' => false,
+            ],
+            'expanded' => true,
+            'label' => 'Rapport remis',
+            'required' => false,
+            'placeholder' => false,
+        ]);
+        $form->add('confidentiel', ChoiceType::class, [
+            'choices' => [
+                'Oui' => true,
+                'Non' => false,
+            ],
+            'expanded' => true,
+            'label' => 'Confidentiel',
+            'required' => false,
+            'placeholder' => false,
+        ]);
+        $form->add('commentaire', TextareaType::class, [
+            'attr' => ['rows' => 4], // Définit le nombre de lignes initiales
+        ]);
+
+        $form->add('date_soutenance', DateTimeType::class, [
+            'widget' => 'single_text',
+        ]);
+
+        $form->add('soutenance', EntityType::class, [
+            'class' => Etat::class,
+            'choice_label' => function ($tuteur) {
+                return $tuteur->getLibelle();},
+            'placeholder' => 'Choisir un état pour la soutenance ',
+        ]);
+        $form->add('rapport', EntityType::class, [
+            'class' => Etat::class,
+            'choice_label' => function ($tuteur) {
+                return $tuteur->getLibelle();},
+            'placeholder' => 'Choisir un état pour le rapport ',
+        ]);
+        $form->add('eval_entreprise', EntityType::class, [
+            'class' => Etat::class,
+            'choice_label' => function ($tuteur) {
+                return $tuteur->getLibelle();},
+            'placeholder' => 'Choisir un état pour l\'evaluation d\'enteprise ',
+        ]);
+
+        $form->remove('num_stage');
+    // Ajouter d'autres modifications de formulaire si nécessaire
+
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        $stageRepository->modifierStage($stage); // Sauvegarder les modifications dans la base de données
+        return $this->redirectToRoute('app_back');
+    }
+
+    return $this->render('form/modifier_stage.html.twig', [
+        'form' => $form->createView(),
+    ]);
+}
 
     #[Route('/back/ajouter-tuteur-isen', name: 'ajouter_tuteur_isen')]
     public function ajouterTuteurIsen(Request $request, TuteurIsenRepository $TuteurRepository): Response

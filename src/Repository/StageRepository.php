@@ -56,6 +56,18 @@ class StageRepository extends ServiceEntityRepository
             return false; // Une erreur s'est produite lors de l'ajout du stage
         }
     }
+
+    public function modifierStage(Stage $stage): bool
+{
+    try {
+        $entityManager = $this->getEntityManager();
+        $entityManager->flush(); // Cette ligne suffit pour mettre à jour les données du stage en base de données
+        return true; // Le stage a été modifié avec succès
+    } catch (\Exception $e) {
+        return false; // Une erreur s'est produite lors de la modification du stage
+    }
+}
+
     public function updateStage($id, $soutenance, $rapport, $evalEntreprise): bool
     {
         $entityManager = $this->getEntityManager();
