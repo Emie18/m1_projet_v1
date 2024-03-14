@@ -5,14 +5,14 @@
       var etat_stage = document.getElementById('etatInput').value;
       var annee = document.getElementById('anneeInput').value;
       var professeur = document.getElementById('profId').value;
-      console.log(nom);
-      console.log(groupe);
-      console.log(etat_stage);
-      console.log(annee);
-      console.log(professeur);
+      // console.log(nom);
+      // console.log(groupe);
+      // console.log(etat_stage);
+      // console.log(annee);
+      // console.log(professeur);
   
       var url = '/filtrage?nom=' + nom + '&groupe=' + groupe + '&etat_stage=' + etat_stage + '&annee=' + annee + '&professeur=' + professeur;
-      console.log(url)
+      //console.log(url)
       var xhttp = new XMLHttpRequest();
       xhttp.onreadystatechange = function () {
           if (this.readyState == 4 && this.status == 200) {

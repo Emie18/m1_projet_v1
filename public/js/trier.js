@@ -8,6 +8,7 @@ function trier(colonne) {
     // Récupérer le tableau
     var tableau = document.getElementById("tableBody");
     var annee = document.getElementById('anneeInput').value;
+    var etat = document.getElementById('etatInput').value;
     // Récupérer les lignes du tableau
     var lignes = tableau.getElementsByTagName("tr");
     var ordreAlphabetique = 1;
@@ -22,8 +23,8 @@ function trier(colonne) {
     }
     // Envoyer une requête AJAX
     var xhr = new XMLHttpRequest();
-    xhr.open("GET", "/trier/" + colonne + "?desc=" + ordreAlphabetique + "&apprenant=" + nom+"&tuteur="+professeur+"&annee="+annee+ '&groupe=' + groupe, true);
-    console.log("/trier/" + colonne + "?desc=" + ordreAlphabetique + "&apprenant=" + nom+"&tuteur="+professeur);
+    xhr.open("GET", "/trier/" + colonne + "?desc=" + ordreAlphabetique + "&apprenant=" + nom+"&tuteur="+professeur+"&annee="+annee+ '&groupe=' + groupe+ '&etat=' + etat, true);
+    console.log("/trier/" + colonne + "?desc=" + ordreAlphabetique + "&apprenant=" + nom+"&tuteur="+professeur+"&annee="+annee+ '&groupe=' + groupe+ '&etat=' + etat);
     xhr.onreadystatechange = function() {
         if (xhr.readyState == XMLHttpRequest.DONE) {
             if (xhr.status == 200) {

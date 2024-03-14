@@ -127,7 +127,8 @@ class StageRepository extends ServiceEntityRepository
         ->leftJoin('s.tuteur_isen', 'ti')
         ->addSelect('ti')
         ->addSelect('SUBSTRING(s.date_debut, 1, 4) AS HIDDEN adebut')
-        ->addSelect('SUBSTRING(s.date_fin, 1, 4) AS HIDDEN afin');
+        ->addSelect('SUBSTRING(s.date_fin, 1, 4) AS HIDDEN afin')
+        ->orderBy('s.id', 'DESC');
 
     if ($nom !== "") {
          $queryBuilder
@@ -169,6 +170,7 @@ class StageRepository extends ServiceEntityRepository
             ->andWhere('ti.id = :tuteurIsen')
             ->setParameter('tuteurIsen', $tuteurIsen);
     }
+    
 
     return $queryBuilder->getQuery()->getResult();
 }
@@ -269,9 +271,23 @@ public function getStatsEntreprise(): array
     
         return $formattedStats;
     }
+    public function getStatsTuteurIsen(): array{
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder
+            ->select("COUNT(s) as nb_stage")
+            ->addSelect("t.nom as nom_tuteur")
+            ->addSelect("t.prenom as prenom_tuteur")
+            ->from(Stage::class, "s")
+            ->leftJoin("s.tuteur_isen", "t")
+            ->groupBy("s.nom")
+            ->orderBy("nb_stage", "DESC")
+            ->setMaxResults(10);
+        return $queryBuilder->getQuery()->getResult();
+    }
 
     /*************************trier****************************** */
-    public function trierstage(string $colonne, int $ascendant, $apprenant, $tuteur,$annee,$groupe): array
+    public function trierstage(string $colonne, int $ascendant, $apprenant, $tuteur,$annee,$groupe,$etat): array
     {
         $queryBuilder = $this->createQueryBuilder('s')
             ->leftJoin('s.apprenant', 'a')
@@ -302,6 +318,23 @@ public function getStatsEntreprise(): array
         }
         if ($groupe!="") {
             $queryBuilder->andWhere('gr.id = :id')->setParameter('id', $groupe);
+        }
+        if($etat != ""){
+            if ($etat == '1') {
+                $queryBuilder
+                    ->andWhere('(sou.id = :soutenance OR sou.id = :ss) AND (rap.id = :rapport OR rap.id = :ss)  AND (e.id = :eval_entreprise OR e.id = :ss)'                    )
+                    ->setParameter('soutenance', '1')
+                    ->setParameter('rapport', '1')
+                    ->setParameter('ss', '3')
+                    ->setParameter('eval_entreprise', '1');
+            } elseif ($etat == '2') {
+                $queryBuilder
+                    ->andWhere('(sou.id = :soutenance OR sou.id = :ss) OR (rap.id = :rapport OR rap.id = :ss)  OR (e.id = :eval_entreprise OR e.id = :ss)'                    )
+                    ->setParameter('soutenance', '2')
+                    ->setParameter('rapport', '2')
+                    ->setParameter('ss', '4')
+                    ->setParameter('eval_entreprise', '2');
+            }
         }
         switch ($colonne) {
             case 'apprenant':

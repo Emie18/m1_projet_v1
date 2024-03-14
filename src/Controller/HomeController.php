@@ -168,18 +168,9 @@ class HomeController extends AbstractController
         $apprenant = $request->query->get('apprenant');
         $annee = $request->query->get('annee');
         $groupe = $request->query->get('groupe');
+        $etat = $request->query->get('etat');
 
-        $stages = $stageRepository->trierstage($type, $des, $apprenant, $tuteur, $annee,$groupe);
-        // // Récupérer le numéro de la page actuelle depuis la requête
-        // $currentPage = $request->query->getInt('page', 1);
-        // $itemsPerPage = 50;
-        // // Calculer l'offset pour récupérer les éléments correspondant à la page actuelle
-        // $offset = ($currentPage - 1) * $itemsPerPage;
-        // $stagesPagines = array_slice($stages, $offset, $itemsPerPage);
-
-        // $totalStages = count($stages);
-        // $totalPages = ceil($totalStages / $itemsPerPage);
-        // $sortingParams = compact('type', 'des', 'apprenant', 'tuteur', 'annee', 'groupe');
+        $stages = $stageRepository->trierstage($type, $des, $apprenant, $tuteur, $annee,$groupe, $etat);
 
         return $this->render('home/_table.html.twig', [
             'stages' => $stages,
@@ -194,6 +185,7 @@ class HomeController extends AbstractController
         $filtre = $request->query->get("filtre");
         $val = $request->query->get("val");
         $result = [];
+        $formattedResult =[];
         switch($filtre){
             case "inputNom": 
                 // $result = $apprenantRepository->autoComplete($val);

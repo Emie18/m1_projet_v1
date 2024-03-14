@@ -1,3 +1,4 @@
+<script src="{{ asset('js/pagination.js') }}"></script>
 {% if personnes[0].numApprenant is defined %}
    <a class = "bouton-ajouter" href="/back/ajouter-apprenant">Ajouter un apprenant</a>
 {% elseif personnes[0].numTuteurStage is defined %}
@@ -13,7 +14,7 @@
             <th>Prénom</th>
         </tr>
     </thead>
-    <tbody>
+    <tbody id="tableBody">
         {% for personne in personnes %}
             <tr>
                 {% if personne.numApprenant is defined %}
@@ -29,4 +30,14 @@
         {% endfor %}
     </tbody>
 </table>
+<div id="paginationButtons"></div>
+
+<script>
+
+// Appeler la fonction paginer pour afficher la première page lors du chargement de la page
+document.addEventListener("DOMContentLoaded", function() {
+    paginer(1);
+});
+
+</script>
 
