@@ -4,7 +4,7 @@
             <button class="croix fichedetailcroix" type="button" onclick="fermerDetails()">✕</button>
 
                 {% for s in stage %}
-                    <h1>Détails du stage </h1>
+                    <h1 id="fiche_detail_titre">Détails du stage </h1>
                     <div id="contenu_form"> 
                     <p>
                         <span>Apprenant :
@@ -32,7 +32,7 @@
                 {{ s.dateDebut|date('d/m/Y') }}
                 -
                 {{ s.dateFin|date('d/m/Y') }}
-                ( Durée :{{nbmois}}
+                ( Durée : {{nbmois}}
                 mois )</p>
         </br>
         <p>
@@ -91,13 +91,14 @@
             Non déterminé
             {% endif %}</p>
         </br>
-        <p>
+        <div class="commentaire_etat">
+        <p >
             <span>Commentaire :</span>
             {{ s.commentaire }}
         </p>
         <div id ="etatvalidation" class="etatvalidation">
         {% if form is defined %}
-        {% include 'back/modifEtat.html.twig' %}
+        {% include 'form/modifier_stage.html.twig' %}
         {% else %}
             <h3>Etat de validation :</h3>
                 <p>Soutenance :{{ s.soutenance }}</p>
@@ -106,6 +107,7 @@
                 <button  class="modifier" onclick=chargerFormulaireModificationEtats({{s.id}})>Modifier</button>
         {% endif %}
         <div>
+        </div>
         </div>
 
         {% endfor %}
@@ -124,7 +126,7 @@ function chargerFormulaireModificationEtats(idStage) {
         success: function(response) {
             // Remplacer le contenu de la div etatvalidation par le formulaire récupéré
             $('#contenu_form').html(response);
-            console.log(response);
+            $('#fiche_detail_titre').html('Modification du stage')
         },
         error: function() {
             alert('Une erreur s\'est produite lors du chargement du formulaire.');

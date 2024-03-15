@@ -150,15 +150,15 @@ table th {
 .fichedetail.active {
     opacity: 1; /* Mettre l'opacité à 1 pour rendre la div visible */
     height: fit-content;
-    padding-bottom: 100px;
+    /* padding-bottom: 100px; */
 }
 .fichedetail span{
     font-weight:600;
 }
 .fichedetail .etatvalidation{
-    position: absolute;
-    right: 3rem;
-    bottom: 1rem;
+    /* position: absolute; */
+    /* right: 3rem; 
+    bottom: 1rem;*/
    
 }
 

@@ -91,6 +91,35 @@ form[name="tuteur_isen"] button:hover, form[name="tuteur"] button:hover, form[na
     display:none;
 }
 .fichedetail #ajoutstage_commentaire{
-    width: 50%;
     height: 100px;
+    width: 400px;
+}
+
+#commentaire {
+    width: 100%;
+    height: 100px;
+}
+#description{
+    height: fit-content;
+    width: 100%;
+}
+#description textarea{
+    width: 100%;
+    height: 100px;
+}
+
+
+.commentaire_etat{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+.form_modif{
+    display: flex;
+}
+.des {
+    flex-direction: column;
+    width: 100%;
 }

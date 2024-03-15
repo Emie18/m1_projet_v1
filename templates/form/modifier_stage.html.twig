@@ -1,75 +1,168 @@
-{{ form_start(form) }}
+{{ form_start(form, {'attr': {'id': 'myForm'}}) }}
+
+<div class="form_modif">
+    <span>Apprenant :</span>
+    <div id="apprenant">
+        {{ form_widget(form.apprenant) }}
+    </div>
+</div>
+<div class="form_modif">
+    <span>Groupe :</span>
+    <div id="groupe">
+        {{ form_widget(form.groupe) }}
+    </div>
+</div>
+</br>
+<div class="form_modif">
+    <span>Titre :</span>
+    <div id="titre">
+        {{ form_widget(form.titre) }}
+    </div>
+</div>
+<div class="form_modif des">
 <p>
-                        <span>Apprenant :
-                        </span>
-                        {{form_widget(form.apprenant)}}
-                    </p>
-                    <p>
-                        <span>Groupe :
-                        </span>
-                       {{form_widget(form.groupe)}}
-                        </p>
-                </br>
-                <p>
-                    <span>Titre :
-                    </span>
-                   {{form_widget(form.titre)}}
-                    </p>
-                <p>
-                    <span>Description :</span>
-                    {{form_widget(form.description)}}
-                    </p>
-            </br>
-            <p>
-                <span>Date de début-fin :
-                </span>
-                {{form_widget(form.date_debut)}}
-                -
-                {{form_widget(form.date_fin)}}
-         </p>
-        </br>
-        <p>
-            <span>Tuteur industriel :
-            </span>
-   {{form_widget(form.tuteur_stage)}}
-            </p>
-        <p>
-            <span>Entreprise :
-            </span>
-            {{form_widget(form.entreprise)}}
-            </p></br><p>
-        <span>Responsable de suivi :
-        </span>
-        {{form_widget(form.tuteur_isen)}}
-        </p>
-        <p>
-            <span>Date Soutenance :</span>
-            {{form_widget(form.date_soutenance)}}
-        </p>
-        </br>
-        <p>
-            <span>Visio:</span>
-      {{form_widget(form.visio)}}</p>
-        </p>
-        <p>
-            <span>Rapport Remis:</span>
-            {{form_widget(form.rapport_remis)}}</p>
-        </p>
-        <p>
-            <span>Confidentialité:</span>
-            <label></label>
-            {{form_widget(form.confidentiel)}}</p>
-        </br>
+    <span>Description: </span>
+    <p id="description">
+        {{ form_widget(form.description) }}
+    </p>
+    </p>
+</div>
+</br>
+<div class="form_modif">
+    <span>Date de début-fin :</span>
+    <div id="date_debut_fin">
+        {{ form_widget(form.date_debut) }} -
+        {{ form_widget(form.date_fin) }}
+    </div>
+</div>
+</br>
+<div class="form_modif" >
+    <span>Tuteur industriel :</span>
+    <div id="tuteur_stage">
+        {{ form_widget(form.tuteur_stage) }}
+    </div>
+</div>
+<div class="form_modif">
+    <span>Entreprise :</span>
+    <div id="entreprise">
+        {{ form_widget(form.entreprise) }}
+    </div>
+</div>
+</br>
+<div class="form_modif">
+    <span>Responsable de suivi :</span>
+    <div id="tuteur_isen">
+        {{ form_widget(form.tuteur_isen) }}
+    </div>
+</div>
+<div class="form_modif">
+    <span>Date Soutenance :</span>
+    <div id="date_soutenance">
+        {{ form_widget(form.date_soutenance ) }}
+    </div>
+</div>
+</br>
+<div class="form_modif">
+    <span>Visio :</span>
+    <div id="visio">
+        {{ form_widget(form.visio) }}
+    </div>
+</div>
+<div class="form_modif">
+    <span>Rapport Remis :</span>
+    <div id="rapport_remis">
+        {{ form_widget(form.rapport_remis) }}
+    </div>
+</div>
+<div class="form_modif">
+    <span>Confidentialité :</span>
+    <div id="confidentiel">
+        {{ form_widget(form.confidentiel) }}
+    </div>
+</div>
+</br>
+<div class="commentaire_etat">
+    <div>
         <p>
             <span>Commentaire :</span>
+            <div id="commentaire">
+                {{ form_widget(form.commentaire) }}
+            </div>
         </p>
-         {{ form_widget(form.commentaire) }}
-       
-<div id ="etatvalidation" class="etatvalidation">
-  <h3>Etat de validation :</h3>
-                <p>Soutenance :{{form_widget(form.soutenance)}}</p>
-                <p>Rapport :{{form_widget(form.rapport)}}</p>
-                <p>Entreprise :{{form_widget(form.eval_entreprise)}}</p>
+    </div>
 
-        <div>
+    <div id="etatvalidation" class="etatvalidation">
+        <h3>Etat de validation :</h3>
+        <p>Soutenance : {{ form_widget(form.soutenance) }}</p>
+        <p>Rapport : {{ form_widget(form.rapport) }}</p>
+        <p>Entreprise : {{ form_widget(form.eval_entreprise) }}</p>
+
+        <button type="button" class="btn btn-primary" id="submitForm">Valider</button>
+    </div>
+</div>
+
 {{ form_end(form) }}
+
+<script>
+    document.getElementById('submitForm').addEventListener('click', function() {
+
+        // Récupérer la date de soutenance
+        var dateSoutenance = document.getElementById('ajoutstage_date_soutenance').value;
+    var formData = new FormData(document.getElementById('myForm'));
+        // Vérifier si la date de soutenance est vide
+        if (dateSoutenance === "") {
+            // Remplacer la valeur vide par null
+            document.getElementById('ajoutstage_date_soutenance').value = null;
+                console.log("oui");
+        }
+
+        console.log(formData.dat);
+        var xhr = new XMLHttpRequest();
+        var url = '/back/modifier-stage/{{ stage.id }}';
+        xhr.open('POST', url, true);
+        xhr.onload = function() {
+            if (xhr.status >= 200 && xhr.status < 400) {
+                var newData = JSON.parse(xhr.responseText);
+                console.log(newData);
+                $('#etatvalidation').html(`<h3>Etat de validation :</h3>
+                    <p>Soutenance : ${newData.soutenance}</p>
+                    <p>Rapport : ${newData.rapport}</p>
+                    <p>Entreprise : ${newData.evalEntreprise}</p>
+                    <button type="button"  class="modifier" onclick=chargerFormulaireModificationEtats({{ stage.id }})>Modifier</button>`);
+                $('#soutenance{{ stage.id }}').html(`${newData.soutenance}`);
+                $('#rapport{{ stage.id }}').html(`${newData.rapport}`);
+                $('#eval{{ stage.id }}').html(`${newData.evalEntreprise}`);
+                $('#tuteur{{ stage.id }}').html(`${newData.tuteur_isenN} ${newData.tuteur_isenP}`);
+                $('#commentaire').html(`${newData.commentaire}`);
+                $('#confidentiel').html(`${newData.visio}`);
+                $('#rapport_remis').html(`${newData.rapport_remis}`);
+                $('#visio').html(`${newData.visio}`);
+                $('#date_soutenance').html(`${newData.date_soutenance}`);
+                $('#tuteur_isen').html(`${newData.tuteur_isenN} ${newData.tuteur_isenP}`);
+                $('#tuteur_stage').html(`${newData.tuteur_stageN} ${newData.tuteur_stageP}`);
+                $('#entreprise').html(`${newData.entreprise}`);
+                $('#date_debut_fin').html(`${newData.date_debut_fin}`);
+                $('#description').html(`${newData.description}`);
+                $('#titre').html(`${newData.titre}`);
+                $('#groupe').html(`${newData.groupe}`);
+                $('#apprenant').html(`${newData.apprenant}`);
+                $('#fiche_detail_titre').html('Détails du stage');
+                // Sélectionnez tous les éléments HTML avec la classe form_modif
+                var elements = document.querySelectorAll('.form_modif');
+                // Parcourez tous les éléments et enlevez la classe 'des' de chacun d'eux
+                elements.forEach(function(element) {
+                element.classList.remove('des');
+            });
+            } else {
+                console.error("Une erreur s'est produite lors de la modification");
+            }
+        };
+
+        xhr.onerror = function() {
+            console.error("Erreur réseau lors de la modification");
+        };
+    console.log(formData);
+        // Envoyer les données du formulaire
+        xhr.send(formData);
+    });
+</script>

@@ -45,6 +45,15 @@ use Symfony\Bundle\MakerBundle\Str;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
+function convertToLabel($value) {
+    if ($value === null) {
+        return "Non déterminé";
+    } elseif ($value === true) {
+        return "Oui";
+    } elseif ($value === false) {
+        return "Non";
+    }
+}
 class BackController extends AbstractController
 {
     private $entityManager;
@@ -264,7 +273,7 @@ public function modifierStage(Request $request, StageRepository $stageRepository
             'choice_label' => function ($tuteur) {
                 return $tuteur->getNom() . ' ' . $tuteur->getPrenom();
             }, // Choisir le champ à afficher dans le champ visible
-            'placeholder' => 'Choisir un tuteur isen',
+            //'placeholder' => 'Choisir un tuteur isen',
             'query_builder' => function (TuteurIsenRepository $er) {
                 return $er->createQueryBuilder('t')
                     ->orderBy('t.nom', 'ASC');
@@ -276,7 +285,7 @@ public function modifierStage(Request $request, StageRepository $stageRepository
             'choice_label' => function ($tuteur) {
                 return $tuteur->getNom() . ' ' . $tuteur->getPrenom();
             }, // Choisir le champ à afficher dans le champ visible
-            'placeholder' => 'Choisir un tuteur de Stage',
+            //'placeholder' => 'Choisir un tuteur de Stage',
             'query_builder' => function (TuteurStageRepository $er) {
                 return $er->createQueryBuilder('t')
                     ->orderBy('t.nom', 'ASC');
@@ -288,7 +297,7 @@ public function modifierStage(Request $request, StageRepository $stageRepository
             'choice_label' => function ($tuteur) {
                 return $tuteur->getNom() . ' ' . $tuteur->getPrenom();
             }, // Choisir le champ à afficher dans le champ visible
-            'placeholder' => 'Choisir un apprenant',
+            //'placeholder' => 'Choisir un apprenant',
             'query_builder' => function (ApprenantRepository $er) {
                 return $er->createQueryBuilder('t')
                     ->orderBy('t.nom', 'ASC');
@@ -298,7 +307,7 @@ public function modifierStage(Request $request, StageRepository $stageRepository
             'class' => Entreprise::class,
             'choice_label' => function ($tuteur) {
                 return $tuteur->getNom();},
-            'placeholder' => 'Choisir une entreprise',
+            //'placeholder' => 'Choisir une entreprise',
             'query_builder' => function (EntrepriseRepository $er) {
                 return $er->createQueryBuilder('t')
                     ->orderBy('t.nom', 'ASC');
@@ -308,7 +317,7 @@ public function modifierStage(Request $request, StageRepository $stageRepository
             'class' => Groupe::class,
             'choice_label' => function ($tuteur) {
                 return $tuteur->getLibelle();},
-            'placeholder' => 'Choisir un groupe ',
+            //'placeholder' => 'Choisir un groupe ',
         ]);
         $form->add('visio', ChoiceType::class, [
             'choices' => [
@@ -341,7 +350,11 @@ public function modifierStage(Request $request, StageRepository $stageRepository
             'placeholder' => false,
         ]);
         $form->add('commentaire', TextareaType::class, [
-            'attr' => ['rows' => 4], // Définit le nombre de lignes initiales
+            //'attr' => ['rows' => 4], // Définit le nombre de lignes initiales
+        ]);
+        $form->add('description', TextareaType::class, [
+            //'attr' => ['rows' => 20],
+            //'attr' => ['cols' => 50] // Définit le nombre de lignes initiales
         ]);
 
         $form->add('date_soutenance', DateTimeType::class, [
@@ -352,19 +365,19 @@ public function modifierStage(Request $request, StageRepository $stageRepository
             'class' => Etat::class,
             'choice_label' => function ($tuteur) {
                 return $tuteur->getLibelle();},
-            'placeholder' => 'Choisir un état pour la soutenance ',
+            //'placeholder' => 'Choisir un état pour la soutenance ',
         ]);
         $form->add('rapport', EntityType::class, [
             'class' => Etat::class,
             'choice_label' => function ($tuteur) {
                 return $tuteur->getLibelle();},
-            'placeholder' => 'Choisir un état pour le rapport ',
+            //'placeholder' => 'Choisir un état pour le rapport ',
         ]);
         $form->add('eval_entreprise', EntityType::class, [
             'class' => Etat::class,
             'choice_label' => function ($tuteur) {
                 return $tuteur->getLibelle();},
-            'placeholder' => 'Choisir un état pour l\'evaluation d\'enteprise ',
+            
         ]);
 
         $form->remove('num_stage');
@@ -373,14 +386,68 @@ public function modifierStage(Request $request, StageRepository $stageRepository
     $form->handleRequest($request);
 
     if ($form->isSubmitted() && $form->isValid()) {
-        $stageRepository->modifierStage($stage); // Sauvegarder les modifications dans la base de données
-        return $this->redirectToRoute('app_back');
+        $soutenance = $form->get('soutenance')->getData();
+        $rapport = $form->get('rapport')->getData();
+        $evalEntreprise = $form->get('eval_entreprise')->getData();
+        $commentaire = $form->get('commentaire')->getData();
+        if($commentaire === null){$commentaire = "";}
+        $confi = convertToLabel($form->get('confidentiel')->getData());
+        $visio = convertToLabel($form->get('visio')->getData());
+        $rapport_remis = convertToLabel($form->get('rapport_remis')->getData());
+        $tuteurIsen = $form->get('tuteur_isen')->getData();
+        $titre = $form->get('titre')->getData();
+        $date_soutenance = $form->get('date_soutenance')->getData();
+        $description = $form->get('description')->getData();
+        $groupe = $form->get('groupe')->getData()->getLibelle();
+        $apprenant = $form->get('apprenant')->getData()->getNom()." ".$form->get('apprenant')->getData()->getPrenom();
+        $entreprise = $form->get('entreprise')->getData();
+        $tuteur_stage = $form->get('tuteur_stage')->getData();
+        $description = $form->get('description')->getData();
+        $dateDebut = $form->get('date_debut')->getData();
+        $dateFin = $form->get('date_fin')->getData();
+        $difference = $dateFin->diff($dateDebut);
+        $difference_mois = $difference->m; // Nombre de mois
+        $date_debut_fin =  $dateDebut->format('d/m/Y')." - ".$dateFin->format('d/m/Y'). " ( Durée: ".$difference_mois." mois )";
+        $success =$stageRepository->modifierStage($stage);
+        if ($success) {
+            $operation = "modification réussi";
+            return new JsonResponse([
+                'soutenance' => $soutenance->getLibelle(),
+                'rapport' => $rapport->getLibelle(),
+                'evalEntreprise' => $evalEntreprise->getLibelle(),
+                'commentaire' => $commentaire,
+                'confidentel' => $confi,
+                'visio' => $visio,
+                'rapport_remis'=> $rapport_remis,
+                'date_soutenance' => ($date_soutenance ? $date_soutenance->format('d/m/Y à H:i') : "Non déterminée"),
+                'tuteur_isenN'=> $tuteurIsen->getNom(),
+                'tuteur_isenP'=> $tuteurIsen->getPrenom(),
+                'entreprise'=> $entreprise->getNom(),
+                'tuteur_stageN' => $tuteur_stage->getNom(),
+                'tuteur_stageP' => $tuteur_stage->getPrenom(),
+                'date_debut_fin' => $date_debut_fin,
+                'description' => $description,
+                'groupe' => $groupe,
+                'apprenant' => $apprenant,
+                'titre' => $titre,
+
+            ]);
+
+        } else {
+            $operation = "modification échouée";
+            return new JsonResponse([
+                'operation' => "modification échouée",
+                ]);
+        }
     }
 
     return $this->render('form/modifier_stage.html.twig', [
         'form' => $form->createView(),
+        'stage' =>$stage,
     ]);
+
 }
+
 
     #[Route('/back/ajouter-tuteur-isen', name: 'ajouter_tuteur_isen')]
     public function ajouterTuteurIsen(Request $request, TuteurIsenRepository $TuteurRepository): Response
