@@ -50,9 +50,11 @@
         {{ s.tuteurIsen.prenom }}</p>
         <p>
             <span>Date Soutenance :</span>
-            {{ s.dateSoutenance|date('d/m/Y') }}
-            à
-            {{ s.dateSoutenance|date('H:i') }}
+            {% if s.dateSoutenance is null %}
+                Non déterminée
+            {% else %}
+                {{ s.dateSoutenance|date('d/m/Y') }} à {{ s.dateSoutenance|date('H:i') }}
+            {% endif %}
         </p>
         </br>
         <p>
