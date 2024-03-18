@@ -185,3 +185,10 @@ table thead th:hover span{
     width: 100%;
     color: #ffffff;
 }
+.commentaire_etat{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+}

@@ -19,6 +19,7 @@ use App\Form\ApprenantType;
 use App\Form\EntrepriseType;
 use App\Form\ModifierEtatType;
 
+
 use App\Entity\Stage;
 use App\Entity\TuteurIsen;
 use App\Entity\TuteurStage;
@@ -34,6 +35,7 @@ use DateTime;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Query\ResultSetMapping;
 use League\Csv\Reader;
+use League\Csv\Exception;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -408,6 +410,7 @@ public function modifierStage(Request $request, StageRepository $stageRepository
         $difference = $dateFin->diff($dateDebut);
         $difference_mois = $difference->m; // Nombre de mois
         $date_debut_fin =  $dateDebut->format('d/m/Y')." - ".$dateFin->format('d/m/Y'). " ( Durée: ".$difference_mois." mois )";
+        $date_tt=  $dateDebut->format('d-m-Y')." - ".$dateFin->format('d-m-Y');
         $success =$stageRepository->modifierStage($stage);
         if ($success) {
             $operation = "modification réussi";
@@ -430,6 +433,7 @@ public function modifierStage(Request $request, StageRepository $stageRepository
                 'groupe' => $groupe,
                 'apprenant' => $apprenant,
                 'titre' => $titre,
+                'date_tt'=> $date_tt,
 
             ]);
 
@@ -519,53 +523,77 @@ public function modifierStage(Request $request, StageRepository $stageRepository
         ]);
     }
     
+
     #[Route('/back/import-file', name: "importe_file")]
-    public function importFile(Request $request): Response{
+    public function importFile(Request $request): Response {
         $form = $this->createForm(FormCSVType::class);
         $form->handleRequest($request);
         //$entityManager = $this->getDoctrine()->getManager();
-        if($form->isSubmitted() && $form->isValid()){
+    
+        if ($form->isSubmitted() && $form->isValid()) {
             $csvFile = $form->get('csvFile')->getData();
+            
+            // Vérifier l'extension du fichier
+            $originalFileName = $csvFile->getClientOriginalName();
+            $extension = pathinfo($originalFileName, PATHINFO_EXTENSION);
+            if ($extension !== 'csv') {
+                // Si l'extension n'est pas 'csv', retourner un message d'erreur
+                return $this->render('form/message.html.twig', [
+                    'error' => "Le fichier doit être au format CSV. Veuillez sélectionner un fichier avec l'extension .csv."
+                ]);
+            }
+    
             $csvFilePath = $csvFile->getRealPath();
             $this->checkEtat();
-            if(($handle = fopen($csvFilePath, "r")) != FALSE){
+            
+
                 $reader = Reader::createFromPath($csvFilePath, 'r');
                 $reader->setDelimiter(';');
                 $firstLine = 0;
-                $etat = $this->entityManager->getRepository(Etat::class)->findOneBy([
-                    "libelle" => "???"
-                ]);
+                $etat = $this->entityManager->getRepository(Etat::class)->findOneBy(["libelle" => "???"]);
                 $nombreStagesAjoutes = 0;
+                
+    
                 foreach ($reader as $row) {
                     //sauter la première ligne
-                    if($firstLine == 0){
+                    if ($firstLine == 0) {
                         $firstLine++;
                         continue;
                     }
-                    if($row[0] == NULL) break;
+                    // if (isset($row[0]) || isset($row[1]) || isset($row[2]) || isset($row[3]) || isset($row[8]) || isset($row[9]) || isset($row[10]) || isset($row[11]) || isset($row[12]) || isset($row[13]) || !isset($row[14])) {
+                    //     return $this->render('form/message.html.twig', [
+                    //         'error' => "Le fichier ne correspond pas à l'import de stage, veuillez vérifier son contenu d'abord."
+                    //     ]);
+                    // }
                     //vérifier si les éléments existent déjà
+                    try{
                     $this->checkApprenant($row[0], $row[1], $row[2]);
                     $this->checkTuteurStage($row[8], $row[9], $row[10]);
                     $this->checkTuteurIsen($row[12], $row[13], $row[14]);
                     $this->checkGroupe($row[3]);
                     $this->checkEntreprise($row[11]);
+    
                     if ($this->addStage($row, $etat)) {
+                        print("ui");
                         // Incrémenter le compteur des stages ajoutés
                         $nombreStagesAjoutes++;
                     }
+                }catch (\Exception $e){
+                    print($e);
                 }
+                }
+    
                 return $this->render('form/message.html.twig', [
                     'nb_stage' => $nombreStagesAjoutes
                 ]);
 
-
-            }
-            //return $this->redirectToRoute("app_back");
         }
+    
         return $this->render('form/csv_import.html.twig', [
             'form' => $form->createView(),
         ]);
     }
+    
 
     #[Route('/back/ajouter-tuteur-stage', name: 'ajouter_tuteur_stage')]
     public function ajouterTuteur(Request $request, TuteurStageRepository $TuteurRepository){

@@ -4,8 +4,13 @@
 {% block body %}
 <h1> importer un fichier csv <p>il faut que le fichier soit en UTF8</p></h1>
 <div class="message" >
+{% if error is defined%}
+<p class="error">{{error}}</p>
+<a href="/back/import-file">réessayer </a>
+{% else %}
    <p>  Importation Réussi !</p>
    </br>
    <p>  Nombre de stage ajoutés : {{ nb_stage }}</p>
+{% endif %}
 </div>
 {% endblock %}
