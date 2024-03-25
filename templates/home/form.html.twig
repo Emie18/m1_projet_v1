@@ -1,7 +1,7 @@
 <script src="{{ asset('js/filtrage.js') }}"></script>
 <form id="filterForm">
 	<label for="nom">Nom:</label>
-  <input type="text" placeholder="Nom prénom" id="inputNom" list="dataList" onKeyUp="autoComplete(event)">
+  <input type="text" placeholder="Apprenant" id="inputNom" list="dataList" onKeyUp="autoComplete(event)">
   <input type="hidden" id="nameId">
   <datalist id="dataList">
   </datalist>
@@ -19,7 +19,7 @@
 	</select><br>
 
 	<label for="annee">Année :</label>
-	<select name="annee" id="anneeInput">
+	<select name="Annee" id="anneeInput">
 		<option value="">Année</option>
 		{% for annee in annees %}
 			<option value="{{ annee }}">{{ annee }}</option>
@@ -27,7 +27,7 @@
 	</select><br>
 
 	<label for="professeur">Professeur :</label>
-  <input type="text" placeholder="Professeur" id="inputProf" list="dataList" onKeyUp="autoComplete(event)">
+  <input type="text" placeholder="Tuteur ISEN" id="inputProf" list="dataList" onKeyUp="autoComplete(event)">
   <input type="hidden" id="profId">
 	<button type="button" onclick="filterResults()">Filtrer</button>
 	<button class="croix" type="button" onclick="defiltrer()">✕</button>

@@ -560,11 +560,12 @@ public function modifierStage(Request $request, StageRepository $stageRepository
                         $firstLine++;
                         continue;
                     }
-                    // if (isset($row[0]) || isset($row[1]) || isset($row[2]) || isset($row[3]) || isset($row[8]) || isset($row[9]) || isset($row[10]) || isset($row[11]) || isset($row[12]) || isset($row[13]) || !isset($row[14])) {
-                    //     return $this->render('form/message.html.twig', [
-                    //         'error' => "Le fichier ne correspond pas à l'import de stage, veuillez vérifier son contenu d'abord."
-                    //     ]);
-                    // }
+                    if($row[0] == NULL) continue;
+                    if (!isset($row[0]) || !isset($row[1]) || !isset($row[2]) || !isset($row[3]) || !isset($row[8]) || !isset($row[9]) || !isset($row[10]) || !isset($row[11]) || !isset($row[12]) || !isset($row[13]) || !isset($row[14])) {
+                        return $this->render('form/message.html.twig', [
+                            'error' => "Le fichier ne correspond pas à l'import de stage, veuillez vérifier son contenu d'abord."
+                        ]);
+                    }
                     //vérifier si les éléments existent déjà
                     try{
                     $this->checkApprenant($row[0], $row[1], $row[2]);
