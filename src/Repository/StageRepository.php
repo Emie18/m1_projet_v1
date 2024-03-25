@@ -301,11 +301,10 @@ public function getStatsEntreprise(): array
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder
             ->select("COUNT(s) as nb_stage")
-            ->addSelect("t.nom as nom_tuteur")
-            ->addSelect("t.prenom as prenom_tuteur")
+            ->addSelect("CONCAT(t.nom, ' ', t.prenom) as tuteur")
             ->from(Stage::class, "s")
             ->leftJoin("s.tuteur_isen", "t")
-            ->groupBy("s.nom")
+            ->groupBy("t.nom")
             ->orderBy("nb_stage", "DESC")
             ->setMaxResults(10);
         return $queryBuilder->getQuery()->getResult();

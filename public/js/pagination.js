@@ -1,5 +1,5 @@
 function paginer(page) {
-    var itemsPerPage = 30; // Nombre d'éléments par page
+    var itemsPerPage = 20; // Nombre d'éléments par page
     var tableBody = document.getElementById("tableBody");
     var rows = tableBody.getElementsByTagName("tr");
 
