@@ -1,4 +1,12 @@
-.backtableau{
+/**************************************************************************
+* Nom du fichier: back.css
+* Description: feuille de style pour le back
+* Auteurs: Emilie Le Rouzic, Thibault Tanné
+* Date de création: avril 2024
+* Version: 1.0
+**************************************************************************/
+
+.backtableau {
     max-width: fit-content;
     padding: 2rem;
     margin-left: auto;
@@ -19,17 +27,20 @@
     transition: ease-in-out 0.2s;
     color: var(--couleur-texte);
 }
+
 .bouton-ajouter:hover {
     background: var(--couleur-texte);
-    color:white;
+    color: var(--couleur-blanc);
 }
-.content{
+
+.content {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
-h1{
-    padding : 1rem;
+
+h1 {
+    padding: 1rem;
     color: var(--couleur-texte);
     background-color: var(--couleur-principale);
     width: fit-content;
@@ -39,8 +50,12 @@ h1{
     margin-left: auto;
     margin-right: auto;
 }
-form[name="tuteur_isen"],form[name="tuteur"],form[name="apprenant"],form[name="entreprise"] {
-    margin-top:1rem;
+
+form[name="tuteur_isen"],
+form[name="tuteur"],
+form[name="apprenant"],
+form[name="entreprise"] {
+    margin-top: 1rem;
     margin-left: auto;
     margin-right: auto;
     align-content: center;
@@ -48,32 +63,48 @@ form[name="tuteur_isen"],form[name="tuteur"],form[name="apprenant"],form[name="e
     display: flex;
     align-items: center;
 }
-form[name="tuteur_isen"] input,form[name="tuteur"] input,form[name="apprenant"] input,form[name="entreprise"] input {
+
+form[name="tuteur_isen"] input,
+form[name="tuteur"] input,
+form[name="apprenant"] input,
+form[name="entreprise"] input {
     border-radius: 15px;
     padding: 5px;
     margin-bottom: 1rem;
 }
-form[name="tuteur_isen"] div,form[name="tuteur"] div, form[name="apprenant"] div,form[name="entreprise"] div {
+
+form[name="tuteur_isen"] div,
+form[name="tuteur"] div,
+form[name="apprenant"] div,
+form[name="entreprise"] div {
     display: flex;
-    padding:1rem;
+    padding: 1rem;
     flex-direction: column;
     background: var(--couleur-principale);
-    border-radius:15px;
+    border-radius: 15px;
 }
 
-form[name="tuteur_isen"] button, form[name="tuteur"] button, form[name="apprenant"] button , form[name="entreprise"] button{
+form[name="tuteur_isen"] button,
+form[name="tuteur"] button,
+form[name="apprenant"] button,
+form[name="entreprise"] button {
     border: none;
     width: 100px;
     border-radius: 15px;
-    padding:5px;
+    padding: 5px;
     margin-top: 1rem;
     transition: ease-in-out 0.2s;
     background: var(--couleur-principale);
 }
-form[name="tuteur_isen"] button:hover, form[name="tuteur"] button:hover, form[name="apprenant"] button:hover, form[name="entreprise"] button:hover {
+
+form[name="tuteur_isen"] button:hover,
+form[name="tuteur"] button:hover,
+form[name="apprenant"] button:hover,
+form[name="entreprise"] button:hover {
     background: var(--couleur-texte);
-    color:white;
+    color: var(--couleur-blanc);
 }
+
 #myForm {
     display: flex;
     flex-direction: column;
@@ -81,16 +112,19 @@ form[name="tuteur_isen"] button:hover, form[name="tuteur"] button:hover, form[na
     font-size: 15px;
 }
 
-.fichedetail label{
+.fichedetail label {
     display: inline;
 }
+
 .fichedetail #ajoutstage_num_stage {
-    display:none;
+    display: none;
 }
+
 .fichedetail #ajoutstage_num_stage label {
-    display:none;
+    display: none;
 }
-.fichedetail #ajoutstage_commentaire{
+
+.fichedetail #ajoutstage_commentaire {
     height: 100px;
     width: 400px;
 }
@@ -99,27 +133,61 @@ form[name="tuteur_isen"] button:hover, form[name="tuteur"] button:hover, form[na
     width: 100%;
     height: 100px;
 }
-#description{
+
+#description {
     height: fit-content;
     width: 100%;
 }
-#description textarea{
+
+#description textarea {
     width: 100%;
     height: 100px;
 }
 
+#ajoutstage_rapport_remis_1,
+#ajoutstage_visio_1,
+#ajoutstage_confidentiel_1 {
+    margin-left: 2rem;
+}
 
-.commentaire_etat{
+.fichedetail .etatvalidation p {
+    margin-bottom: 0.5rem;
+}
+
+.commentaire_etat {
     width: 100%;
     display: flex;
     flex-direction: row;
     align-items: flex-start;
     justify-content: space-between;
 }
-.form_modif{
+
+.form_modif {
     display: flex;
+    width: 100%;
+    margin-bottom: 5px;
 }
+
+#ajoutstage_confidentiel,
+#ajoutstage_rapport_remis,
+#ajoutstage_visio {
+    margin-left: 0.7rem;
+}
+
 .des {
     flex-direction: column;
     width: 100%;
+}
+
+.form_modif #titre {
+    width: 80%;
+}
+
+.form_modif #titre input {
+    width: 80%;
+    text-align: left;
+}
+
+.text-rouge {
+    color: var(--couleur-croix);
 }

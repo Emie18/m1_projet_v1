@@ -1,16 +1,24 @@
+{# #######################################################################
+# Nom du fichier: _table.html.twig
+# Description: Afficher le contenu du tableau
+# Auteurs: Emilie Le Rouzic, Thibault Tanné
+# Date de création: avril 2024
+# Version: 1.0
+####################################################################### #}
 <tbody id="tableBody">
 {% if stages is empty %}
     <tr>
-        <td  class="croix" colspan="7">Aucun stage trouvé avec ce filtrage</td>
+        <td  class="croix" colspan="8">Aucun stage trouvé avec ce filtrage</td>
     </tr>
 {% else %}
     {% for stage in stages %}
         <tr onclick="afficherDetails({{ stage.id }});" class="lignetableau">
-            <td id="apprenant{{ stage.id }}"> {{ stage.apprenant.nom }} {{ stage.apprenant.prenom }}</td>
-            <td id="date{{ stage.id }}">{{ stage.dateDebut|date('d-m-Y') }} - {{ stage.dateFin|date('d-m-Y') }}</td>
-            <td id="titre{{ stage.id }}">{{ stage.titre }}</td>
+            <td id="apprenant{{stage.id}}">{{ stage.apprenant.nom }} {{ stage.apprenant.prenom }}</td>
+            <td id="date{{stage.id}}">{{ stage.dateDebut|date('d-m-Y') }} - {{ stage.dateFin|date('d-m-Y') }}</td>
+            <td id="groupe{{stage.id}}">{{stage.groupe}}</td>  
+            <td id="titre{{stage.id}}">{{ stage.titre }}</td>
             <td id="tuteur{{ stage.id }}">{{ stage.tuteurIsen.nom }} {{ stage.tuteurIsen.prenom }}</td>
-         <td id="soutenance{{ stage.id }}">{{ stage.soutenance }}</td>
+            <td id="soutenance{{ stage.id }}">{{ stage.soutenance }}</td>
             <td id="rapport{{ stage.id }}">{{ stage.rapport }}</td>
             <td id="eval{{ stage.id }}">{{ stage.evalEntreprise }}</td>
         </tr>

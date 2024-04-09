@@ -1,7 +1,14 @@
+/**************************************************************************
+* Nom du fichier: index.css
+* Description: feuille de style pour la page d'accueil du site
+* Auteurs: Emilie Le Rouzic, Thibault Tanné
+* Date de création: avril 2024
+* Version: 1.0
+**************************************************************************/
 @import url('nav_footer.css');
 
-h1{
-    padding : 1rem;
+h1 {
+    padding: 1rem;
     color: var(--couleur-texte);
     background-color: var(--couleur-principale);
     width: fit-content;
@@ -24,12 +31,12 @@ form#filterForm {
     margin-right: auto;
 }
 
-form label{
+form label {
     display: none;
 }
 
-form input, select {
-
+form input,
+select {
     margin-right: 1rem;
     border-radius: 15px;
     border: none;
@@ -37,42 +44,49 @@ form input, select {
 }
 
 form .groupe-filtre {
-   width: 100px;
+    width: 100px;
 }
-form .annee-filtre{
+
+form .annee-filtre {
     width: 80px;
 }
-form input[type="submit"], button{
-    background:var(--couleur-bouton);
+
+form input[type="submit"],
+button {
+    background: var(--couleur-bouton);
     width: 100px;
-    border: solid 1px white;
+    border: solid 1px var(--couleur-blanc);
     color: var(--couleur-texte);
     font-weight: bold;
     transition: ease-in-out 0.5s;
 }
-button{
-    background:var(--couleur-bouton);
+
+button {
+    background: var(--couleur-bouton);
     width: 100px;
-    border: solid 1px white;
+    border: solid 1px var(--couleur-blanc);
     color: var(--couleur-texte);
     font-weight: bold;
     transition: ease-in-out 0.5s;
-    border-radius:15px ;
+    border-radius: 15px;
 }
 
 #paginationButtons button {
     width: fit-content;
     background-color: var(--couleur-principale);
 }
+
 #paginationButtons button.active {
     background-color: var(--couleur-croix);
-    color: white; /* Couleur du texte */
+    color: var(--couleur-blanc);
 }
 
-#paginationButtons button, #paginationButtons span {
+#paginationButtons button,
+#paginationButtons span {
     margin-right: 5px;
 }
-#paginationButtons{
+
+#paginationButtons {
     width: 100%;
     display: flex;
     align-items: center;
@@ -80,43 +94,47 @@ button{
     margin-top: 1rem
 }
 
-button:hover{
-    background:var(--couleur-texte);
-    border: solid 1px white;
-    color: white;
+button:hover {
+    background: var(--couleur-texte);
+    border: solid 1px var(--couleur-blanc);
+    color: var(--couleur-blanc);
     font-weight: bold;
 
 }
-table{
-    margin-top:1rem;
+
+table {
+    margin-top: 1rem;
     width: 100%;
-    border-collapse: collapse; /* Fusionner les bordures des cellules */
-  border-radius: 10px; /* Arrondir les coins du tableau */
-  overflow: hidden; /* Cacher les éléments qui dépassent de la zone définie par le radius */
+    border-collapse: collapse;/* Fusionner les bordures des cellules */
+    border-radius: 10px;
+    overflow: hidden;/* Cacher les éléments qui dépassent de la zone définie par le radius */
 
 }
-/* Style pour les titres des colonnes */
+
 table th {
     background-color: var(--couleur-bouton);
-    color: white; /* Couleur du texte */
-    font-weight: bold; /* Police en gras */
-    padding: 10px; /* Espacement intérieur */
-  }
-  
-  /* Style pour les lignes impaires */
-  table tr:nth-child(odd) {
-    background-color:  var(--couleur-ligne-tableau) ; /* Couleur de fond pour les lignes impaires */
-  }
-  table td{
-    color:var(--couleur-texte);
+    color: var(--couleur-blanc);
+    font-weight: bold;
+    padding: 10px
+}
+
+table tr:nth-child(odd) {
+    background-color: var(--couleur-ligne-tableau);/* Couleur de fond pour les lignes impaires */
+}
+
+table td {
+    color: var(--couleur-texte);
     text-align: center;
-  }
-.lignetableau{
+}
+
+.lignetableau {
     transition: ease-in-out 0.2s;
 }
-.lignetableau:hover{
-    background-color:var(--couleur-survol-tableau) ;
+
+.lignetableau:hover {
+    background-color: var(--couleur-survol-tableau);
 }
+
 .croix {
     width: fit-content;
     background-color: var(--couleur-croix);
@@ -124,17 +142,19 @@ table th {
 
     right: 15px;
 }
-.fichedetailcroix{
+
+.fichedetailcroix {
     position: absolute;
 }
-#detailsDiv{
-    /* transition: ease-in-out 0.2s; */
+
+#detailsDiv {
     position: absolute;
     top: 10%;
     left: 10%;
     width: 80%;
 }
-.fichedetail{
+
+.fichedetail {
     position: relative;
     background: var(--couleur-principale);
     position: absolute;
@@ -143,49 +163,46 @@ table th {
     width: 80%;
     border-radius: 30px;
     padding: 1rem;
-    height: 0px; /* Définir la hauteur à 0 par défaut */
+    height: 0px;/* Définir la hauteur à 0 par défaut */
     overflow: hidden;
-    transition: opacity 0.3s ease-in-out, height 0.3s ease-in-out, padding-bottom 0.3s ease-in-out; /* Ajouter une transition pour l'opacité et la hauteur */
+    transition: opacity 0.3s ease-in-out, height 0.3s ease-in-out, padding-bottom 0.3s ease-in-out;/* Ajouter une transition pour l'opacité et la hauteur */
 }
+
 .fichedetail.active {
-    opacity: 1; /* Mettre l'opacité à 1 pour rendre la div visible */
+    opacity: 1;/* Mettre l'opacité à 1 pour rendre la div visible */
     height: fit-content;
-    /* padding-bottom: 100px; */
 }
-.fichedetail span{
-    font-weight:600;
-}
-.fichedetail .etatvalidation{
-    /* position: absolute; */
-    /* right: 3rem; 
-    bottom: 1rem;*/
-   
+
+.fichedetail span {
+    font-weight: 600;
 }
 
 table thead th {
     position: relative;
-    padding-bottom: 20px; /* Assurez-vous que le th a une position relative */
+    padding-bottom: 20px;
 }
 
 table thead th span {
-    color:var(--couleur-texte);
-    position: absolute; /* Position absolue par rapport au th parent */
-    bottom: 0; /* Placer le bouton tout en bas */
-    left: 0; /* Vous pouvez ajuster cela si nécessaire */
+    color: var(--couleur-texte);
+    position: absolute;
+    bottom: 0;
+    left: 0;
     width: 100%;
     background: none;
     border: none;
     border-radius: none;
 
 }
-table thead th:hover span{
-    background:none;
+
+table thead th:hover span {
+    background: none;
     border-radius: none;
     border: none;
     width: 100%;
-    color: #ffffff;
+    color: var(--couleur-blanc);
 }
-.commentaire_etat{
+
+.commentaire_etat {
     width: 100%;
     display: flex;
     flex-direction: row;

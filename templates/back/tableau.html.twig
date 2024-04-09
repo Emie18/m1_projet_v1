@@ -1,0 +1,62 @@
+{# #######################################################################
+# Nom du fichier: tableau.html.twig
+# Description: Afficher le contenu du tableau
+# Auteurs: Emilie Le Rouzic, Thibault Tanné
+# Date de création: avril 2024
+# Version: 1.0
+####################################################################### #}
+<script src="{{ asset('js/pagination.js') }}"></script>
+<script src="{{ asset('js/trier.js') }}"></script>
+<table>
+    <thead>
+        <tr>
+            {% if personnes is defined %}
+                <th>Numéro</th>
+                <th>Nom</th>
+                <th>Prénom</th>
+            {% elseif entreprises is defined %}
+                <th>Nom</th>
+            {% endif %}
+        </tr>
+    </thead>
+    <tbody id="tableBody">
+        {% if personnes is defined %}
+   
+            {% for personne in personnes %}
+                <tr>
+                    {% if personne.numApprenant is defined %}
+                        <td>{{ personne.numApprenant }}</td>
+                    {% elseif personne.numTuteurStage is defined %}
+                        <td>{{ personne.numTuteurStage }}</td>
+                    {% elseif personne.numTuteurIsen is defined %}
+                        <td>{{ personne.numTuteurIsen }}</td>
+                    {% endif %}
+                    <td>{{ personne.nom }}</td>
+                    <td>{{ personne.prenom }}</td>
+                </tr>
+            {% endfor %}
+            
+        {% elseif entreprises is defined %}
+            {% for entreprise in entreprises %}
+            
+                <tr>
+                    <td> {{ entreprise.nom }}</td>
+                </tr>
+            {% endfor %}
+        {% endif %}
+    </tbody>
+  
+    </table>
+ 
+  <div id="paginationButtons"></div>
+<script>
+
+// Appeler la fonction paginer pour afficher la première page lors du chargement de la page
+document.addEventListener("DOMContentLoaded", function() {
+    paginer(1);
+});
+
+</script>
+
+
+

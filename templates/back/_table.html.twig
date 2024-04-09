@@ -1,0 +1,43 @@
+{# #######################################################################
+# Nom du fichier: _table.html.twig
+# Description: Controller du front
+# Auteurs: Emilie Le Rouzic, Thibault Tanné
+# Date de création: avril 2024
+# Version: 1.0
+####################################################################### #}
+<tbody id="tableBody">
+        {% if personnes is defined %}
+        {% if personnes is empty %}
+        <tr>
+            <td  class="croix" colspan="3">Aucune personne correspondante trouvée</td>
+        </tr>
+        {% else %}
+            {% for personne in personnes %}
+                <tr>
+                    {% if personne.numApprenant is defined %}
+                        <td>{{ personne.numApprenant }}</td>
+                    {% elseif personne.numTuteurStage is defined %}
+                        <td>{{ personne.numTuteurStage }}</td>
+                    {% elseif personne.numTuteurIsen is defined %}
+                        <td>{{ personne.numTuteurIsen }}</td>
+                    {% endif %}
+                    <td>{{ personne.nom }}</td>
+                    <td>{{ personne.prenom }}</td>
+                </tr>
+            {% endfor %}
+            {% endif %}
+        {% elseif entreprises is defined %}
+                {% if entreprises is empty %}
+        <tr>
+            <td  class="croix" colspan="3">Aucune entreprise correspondante trouvée</td>
+        </tr>
+        {% else %}
+            {% for entreprise in entreprises %}
+            
+                <tr>
+                    <td> {{ entreprise.nom }}</td>
+                </tr>
+            {% endfor %}
+            {% endif %}
+        {% endif %}
+</tbody>

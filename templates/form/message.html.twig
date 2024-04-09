@@ -1,3 +1,10 @@
+{# #######################################################################
+# Nom du fichier: message.html.twig
+# Description: Afficher le message après l'importation
+# Auteurs: Emilie Le Rouzic, Thibault Tanné
+# Date de création: avril 2024
+# Version: 1.0
+####################################################################### #}
 {% extends 'back/base_back.html.twig' %}
 
 {% block stylesheets %} <link rel="stylesheet" href="{{ asset('css/importcsv.css') }}"> {% endblock %}
@@ -8,7 +15,7 @@
 <p class="error">{{error}}</p>
 <a href="/back/import-file">réessayer </a>
 {% else %}
-   <p>  Importation Réussi !</p>
+   <p>  Importation Réussie !</p>
    </br>
    <p>  Nombre de stage ajoutés : {{ nb_stage }}</p>
 {% endif %}

@@ -1,14 +1,25 @@
+{# #######################################################################
+# Nom du fichier: form.html.twig
+# Description: Afficher le formu:aire pour le filtre
+# Auteurs: Emilie Le Rouzic, Thibault Tanné
+# Date de création: avril 2024
+# Version: 1.0
+####################################################################### #}
 <script src="{{ asset('js/filtrage.js') }}"></script>
 <form id="filterForm">
-	<label for="nom">Nom:</label>
+	<label for="nom">Apprenant</label>
   <input type="text" placeholder="Apprenant" id="inputNom" list="dataList" onKeyUp="autoComplete(event)">
-  <input type="hidden" id="nameId">
   <datalist id="dataList">
   </datalist>
 
 	<label for="groupe">Groupe :</label>
-  <input type="text" placeholder="Groupe" id="inputGroupe" list="dataList" onKeyUp="autoComplete(event)">
-	<input type="hidden" id="groupeId">
+
+	<select name="groupe" id="groupeInput">
+		<option value="">groupe</option>
+		{% for groupe in groupes %}
+			<option value="{{ groupe.id }}">{{groupe.libelle}}</option>
+		{% endfor %}
+	</select><br>
 
 	<label for="etat_stage">État du stage :</label>
 	<select name="etat_stage" id="etatInput">
@@ -19,7 +30,7 @@
 	</select><br>
 
 	<label for="annee">Année :</label>
-	<select name="Annee" id="anneeInput">
+	<select name="annee" id="anneeInput">
 		<option value="">Année</option>
 		{% for annee in annees %}
 			<option value="{{ annee }}">{{ annee }}</option>
@@ -27,8 +38,7 @@
 	</select><br>
 
 	<label for="professeur">Professeur :</label>
-  <input type="text" placeholder="Tuteur ISEN" id="inputProf" list="dataList" onKeyUp="autoComplete(event)">
-  <input type="hidden" id="profId">
+  <input type="text" placeholder="Professeur" id="inputProf" list="dataList" onKeyUp="autoComplete(event)">
 	<button type="button" onclick="filterResults()">Filtrer</button>
 	<button class="croix" type="button" onclick="defiltrer()">✕</button>
 </form>
@@ -38,6 +48,7 @@ function autoComplete(event){
   const inputValue = input.value;
   if(inputValue.length >= 3){
     var url = "/autocomplete?filtre="+input.id+"&val="+inputValue;
+    console.log(url)
       var xhttp = new XMLHttpRequest();
       xhttp.onreadystatechange = function(){
         if(this.status == 200){
@@ -47,6 +58,7 @@ function autoComplete(event){
           suggestionList.innerHTML = "";
           suggestionList.setAttribute("element", "apprenant")
           if(this.responseText != ""){
+            console.log(this.responseText)
             var result = JSON.parse(this.responseText);
             result.forEach(function(item){
               const option = document.createElement("option");
@@ -72,7 +84,6 @@ function autoComplete(event){
       xhttp.open("GET", url, true)
       xhttp.send();
   } 
-  
 }
 
 document.addEventListener('click', function(event) {
@@ -87,40 +98,6 @@ document.addEventListener('click', function(event) {
     }
 });
 
-function setId(event){
-  const input = event.target;
-  const selectedOption = document.querySelector(`option[value="${input.value}"]`);
-    if (selectedOption) {
-        const selectedId = selectedOption.getAttribute('data-id');
-        switch(input.id){
-          case "inputNom":
-            document.getElementById('nameId').value = selectedId;
-            break;
-          case "inputGroupe":
-            document.getElementById('groupeId').value = selectedId;
-            break;
-          case "inputProf":
-            document.getElementById('profId').value = selectedId;
-            break;
-        }
-    } else {
-        switch(input.id){
-          case "inputNom":
-            document.getElementById('nameId').value = "";
-            break;
-          case "inputGroupe":
-            document.getElementById('groupeId').value = "";
-            break;
-          case "inputProf":
-            document.getElementById('profId').value = "";
-            break;
-        }
-    }
-}
-
-document.getElementById('inputNom').addEventListener('input', function(event){setId(event)});
-document.getElementById('inputGroupe').addEventListener('input', function(event){setId(event)});
-document.getElementById('inputProf').addEventListener('input', function(event){setId(event)});
 
 
 </script>

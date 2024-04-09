@@ -157,8 +157,11 @@ class StageRepository extends ServiceEntityRepository
 
     if ($nom !== "") {
          $queryBuilder
-            ->andWhere('a.id = :nom')
-            ->setParameter('nom', $nom);
+            //->andWhere('a.id = :nom')
+            ->andWhere(
+                $queryBuilder->expr()->like("CONCAT(a.nom, ' ', a.prenom)", ":nom")
+            )
+            ->setParameter('nom', "%".$nom."%");
     }
 
     if ($groupe !== "") {
@@ -192,15 +195,16 @@ class StageRepository extends ServiceEntityRepository
 
     if ($tuteurIsen!="") {
         $queryBuilder
-            ->andWhere('ti.id = :tuteurIsen')
-            ->setParameter('tuteurIsen', $tuteurIsen);
+            ->andWhere(
+                $queryBuilder->expr()->like("CONCAT(ti.nom, ' ', ti.prenom)", ":tuteurIsen")
+            )
+            ->setParameter('tuteurIsen', "%".$tuteurIsen."%");
     }
     
-
     return $queryBuilder->getQuery()->getResult();
 }
 
-public function getStatsEntreprise(): array
+    public function getStatsEntreprise(): array
     {
         $entityManager = $this->getEntityManager();
         $queryBuilder = $entityManager->createQueryBuilder();
@@ -212,10 +216,22 @@ public function getStatsEntreprise(): array
             ->leftJoin('s.entreprise', 'e')
             ->groupBy('e.nom')
             ->orderBy('nb_stage', 'DESC')            
-            ->setMaxResults(5);
+            ->setMaxResults(30);
         return $queryBuilder->getQuery()->getResult();
     }
-
+    public function getStatsTuteurIsen(): array{
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder
+            ->select("COUNT(s) as nb_stage")
+            ->addSelect("CONCAT(t.nom, ' ', t.prenom) as tuteur")
+            ->from(Stage::class, "s")
+            ->leftJoin("s.tuteur_isen", "t")
+            ->groupBy("t.nom")
+            ->orderBy("nb_stage", "DESC");
+            //->setMaxResults(5);
+        return $queryBuilder->getQuery()->getResult();
+    }
     public function getStatsDay(): array
     {
         $entityManager = $this->getEntityManager();
@@ -296,22 +312,23 @@ public function getStatsEntreprise(): array
     
         return $formattedStats;
     }
-    public function getStatsTuteurIsen(): array{
-        $entityManager = $this->getEntityManager();
-        $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder
-            ->select("COUNT(s) as nb_stage")
-            ->addSelect("CONCAT(t.nom, ' ', t.prenom) as tuteur")
-            ->from(Stage::class, "s")
-            ->leftJoin("s.tuteur_isen", "t")
-            ->groupBy("t.nom")
-            ->orderBy("nb_stage", "DESC")
-            ->setMaxResults(10);
-        return $queryBuilder->getQuery()->getResult();
-    }
+
 
     /*************************trier****************************** */
-    public function trierstage(string $colonne, int $ascendant, $apprenant, $tuteur,$annee,$groupe,$etat): array
+        
+    /**
+     * trierstage
+     *
+     * @param  string $colonne colonne utilisée pour trier par ordre alphabétique 
+     * @param  int $ascendant vérifier par quel ordre les éléments sont triées
+     * @param  mixed $apprenant
+     * @param  mixed $tuteur
+     * @param  mixed $annee
+     * @param  mixed $groupe
+     * @param  mixed $etat
+     * @return array les stages triés
+     */
+    public function trierstage(string $colonne, int $ascendant, $apprenant, $tuteur, $annee, $groupe, $etat): array
     {
         $queryBuilder = $this->createQueryBuilder('s')
             ->leftJoin('s.apprenant', 'a')
@@ -330,10 +347,17 @@ public function getStatsEntreprise(): array
             ->addSelect('SUBSTRING(s.date_fin, 1, 4) AS HIDDEN afin');
 
         if ($apprenant!="") {
-            $queryBuilder->andWhere('a.id = :nom')->setParameter('nom', $apprenant);
+            //$queryBuilder->andWhere('a.id = :nom')->setParameter('nom', $apprenant);
+            $queryBuilder->andWhere(
+                $queryBuilder->expr()->like("CONCAT(a.nom, ' ', a.prenom)", ":nom")
+            )
+            ->setParameter("nom", "%".$apprenant."%");
         }
         if ($tuteur!="") {
-            $queryBuilder->andWhere('ti.id = :id')->setParameter('id', $tuteur);
+            $queryBuilder->andWhere(
+                $queryBuilder->expr()->like("CONCAT(ti.nom, ' ', ti.prenom)", ":tuteur")
+            )
+            ->setParameter("tuteur", "%".$tuteur."%");
         }
         if ($annee !== "") {
             $queryBuilder
@@ -375,6 +399,13 @@ public function getStatsEntreprise(): array
                     $queryBuilder->orderBy('s.date_debut','DESC');
                 }
                 break;
+            case 'groupe':
+                if($ascendant==2){
+                    $queryBuilder->orderBy('gr.libelle','ASC');
+                }elseif($ascendant==1){
+                    $queryBuilder->orderBy('gr.libelle','DESC');
+                }
+                break;
             case 'titre':
                 if($ascendant==2){
                     $queryBuilder->orderBy('s.titre','ASC');
@@ -413,7 +444,6 @@ public function getStatsEntreprise(): array
             default:
                 $queryBuilder->orderBy('s.id', 'DESC');
         }
-
         return $queryBuilder
             ->getQuery()
             ->getResult();

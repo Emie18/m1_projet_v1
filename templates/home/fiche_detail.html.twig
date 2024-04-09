@@ -1,3 +1,10 @@
+{# #######################################################################
+# Nom du fichier: fiche_detail.html.twig
+# Description: Afficher la fiche detail dans le front
+# Auteurs: Emilie Le Rouzic, Thibault Tanné
+# Date de création: avril 2024
+# Version: 1.0
+####################################################################### #}
 {% if stage is defined %}
 
         <div class="fichedetail">
@@ -92,7 +99,7 @@
             Non déterminé
             {% endif %}</p>
         </br>
-         <div class="commentaire_etat">
+        <div class="commentaire_etat">
         <p>
             <span>Commentaire :</span>
             {{ s.commentaire }}
@@ -103,8 +110,8 @@
                 <p>Rapport :{{s.rapport}}</p>
                 <p>Entreprise :{{ s.evalEntreprise }}</p>
         <div>
-        </div>
         {% endfor %}
+        </div>
         </div>
     {% else %}
         <p>Aucun détail de stage trouvé.</p>

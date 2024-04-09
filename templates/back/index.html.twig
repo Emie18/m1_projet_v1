@@ -1,3 +1,10 @@
+{# #######################################################################
+# Nom du fichier: index.html.twig
+# Description: Afficher le tableau dans le back
+# Auteurs: Emilie Le Rouzic, Thibault Tanné
+# Date de création: avril 2024
+# Version: 1.0
+####################################################################### #}
 {% extends 'back/base_back.html.twig' %}
 {% block title %}Liste des {{title}}
 {% endblock %}
@@ -15,9 +22,12 @@
 		<h1 class="titre-page">Liste des {{title}}</h1>
             {# {% include 'home/form.html.twig' %} #}
             {% if personnes is defined %}
-                {% include 'back/tableau_personne.html.twig' %}
+                {% include "back/head_tableau.html.twig" %}
+                {% include 'back/tableau.html.twig' %}
+                
             {% elseif entreprises is defined %}
-                {% include 'back/tableau_entreprise.html.twig' %}
+                {% include 'back/head_tableau.html.twig' %}
+                {% include 'back/tableau.html.twig' %}
             
             {% elseif stages is defined %}
                  <a class = "bouton-ajouter" href="/back/ajouter-stage"> Ajouter un stage </a>

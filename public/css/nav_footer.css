@@ -1,12 +1,21 @@
+/**************************************************************************
+* Nom du fichier: nav_footer.css
+* Description: feuille de style pour le footer et le header
+* Auteurs: Emilie Le Rouzic, Thibault Tanné
+* Date de création: avril 2024
+* Version: 1.0
+**************************************************************************/
 :root {
     --couleur-principale: #DCBFD9;
     --couleur-texte: #543951;
-    --couleur-survol:black;
-    --couleur-bouton:#B082AC;
-    --couleur-ligne-tableau:#c0a2bdac;
+    --couleur-blanc: white;
+    --couleur-survol: black;
+    --couleur-bouton: #B082AC;
+    --couleur-ligne-tableau: #c0a2bdac;
     --couleur-survol-tableau: rgba(139, 58, 139, 0.552);
-    --couleur-croix:#ee6e73;
-  }
+    --couleur-croix: #ee6e73;
+}
+
 * {
     margin: 0;
     box-sizing: border-box;
@@ -16,7 +25,7 @@ body {
     font-family: Arial, sans-serif;
     display: flex;
     flex-direction: column;
-    min-height: 100vh; /* Utilisez 100% de la hauteur de la vue (viewport height) */
+    min-height: 100vh;
     margin: 0;
 }
 
@@ -29,7 +38,8 @@ header {
     align-items: center;
     justify-content: space-between;
 }
-header img{
+
+header img {
     width: 80px;
 }
 
@@ -43,46 +53,47 @@ header nav ul li {
     margin-left: 20px;
     position: relative;
 }
+
 header nav ul li a::after {
     position: absolute;
     z-index: -1;
     align-self: center;
     left: 50%;
     top: 50%;
-    transform: translate(-50%, -20%); /* Centrez-le horizontalement et verticalement */
+    transform: translate(-50%, -20%);
     content: "";
     width: 30px;
     height: 30px;
     border-radius: 0px 0px 15px 15px;
     background: var(--couleur-principale);
-    transition: transform 0.5s; /* Ajoutez la transition ici pour que le mouvement soit fluide */
-
+    transition: transform 0.5s;
 }
+
 header nav ul li a.active::after {
     transform: translate(-50%, 80%);
 }
 
 header nav ul li a:hover::after {
-    transform: translate(-50%, 80%); /* Centrez-le horizontalement et verticalement */
+    transform: translate(-50%, 80%);
 }
 
 header nav ul li a {
     position: relative;
     text-decoration: none;
     font-weight: 700;
-    padding: 10px; /* Ajoutez une taille fixe pour les liens */
+    padding: 10px;
     color: var(--couleur-texte);
-    transition: color 0.3s; /* Ajoute une transition pour une animation douce */
+    transition: color 0.3s;
 }
 
 header nav ul li a:hover {
     text-decoration: none;
-    color: var(--couleur-survol); /* Change la couleur du texte au survol */
+    color: var(--couleur-survol);
 }
 
 .content {
-    flex: 1; /* Occupe tout l'espace disponible */
-    padding: 20px; /* Ajoutez une marge intérieure au contenu si nécessaire */
+    flex: 1;
+    padding: 20px;
 }
 
 footer {
@@ -95,8 +106,7 @@ footer {
     justify-content: space-between;
     flex-direction: row;
 }
+
 footer p {
     font-weight: 500;
 }
-
-

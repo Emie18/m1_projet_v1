@@ -1,6 +1,14 @@
+/**************************************************************************
+* Nom du fichier: form.css
+* Description: feuille de style pour le formulaire d'ajout d'un stage
+* Auteurs: Emilie Le Rouzic, Thibault Tanné
+* Date de création: avril 2024
+* Version: 1.0
+**************************************************************************/
 @import url('nav_footer.css');
-h1{
-    padding : 1rem;
+
+h1 {
+    padding: 1rem;
     color: var(--couleur-texte);
     background-color: var(--couleur-principale);
     width: fit-content;
@@ -11,91 +19,87 @@ h1{
     margin-right: auto;
 }
 
-
 form {
     display: flex;
-        flex-wrap: wrap;
-    justify-content: space-between; /* Aligne les colonnes à l'extrémité gauche et droite */
-    width: 80%; /* Ajustez la largeur selon vos besoins */
-    margin: auto; /* Centre le formulaire */
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 80%;
+    margin: auto
 }
-
-
 
 #ajoutstage {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between; /* Aligne les éléments à l'extrémité gauche et droite */
-    width: 100%; /* Occupe toute la largeur disponible */
+    justify-content: space-between;
+    width: 100%;
 }
 
-#ajoutstage > div {
-    flex: 1 0 50%; /* Pour diviser en deux colonnes, chaque élément occupe 45% de la largeur */
+#ajoutstage>div {
+    flex: 1 0 50%;
 }
 
 input {
     border-radius: 15px;
     padding: 15px;
 }
+
 #ajoutstage input {
     padding: 5px;
 
 }
-#ajoutstage label{
+
+#ajoutstage label {
     text-align: center;
     display: block;
 }
-/* #ajoutstage #ajoutstage_date_fin,
-#ajoutstage #ajoutstage_date_debut {
-    display: inline-block;
-    margin: 0 auto; /* Pour centrer horizontalement
-} */
-#ajoutstage div{
-    padding:10px;
+
+#ajoutstage div {
+    padding: 10px;
     display: flex;
     flex-direction: column;
     width: 100%;
 }
 
-div#ajoutstage_rapport_remis, div#ajoutstage_confidentiel, div#ajoutstage_visio{
+div#ajoutstage_rapport_remis,
+div#ajoutstage_confidentiel,
+div#ajoutstage_visio {
     display: flex;
     flex-direction: row;
     justify-content: center;
 }
-#ajoutstage_rapport_remis label, div#ajoutstage_confidentiel label, div#ajoutstage_visio label{
-   margin-right:10px;
+
+#ajoutstage_rapport_remis label,
+div#ajoutstage_confidentiel label,
+div#ajoutstage_visio label {
+    margin-right: 10px;
 }
 
-#ajoutstage{
-    /* position: relative; */
-
-    /* display: flex;
-    flex-wrap: wrap;
-    flex-direction: column; */
+#ajoutstage {
     align-items: center;
     margin: 1rem;
     background: var(--couleur-principale);
-    padding:1rem;
+    padding: 1rem;
     border-radius: 30px;
 }
+
 #ajoutstage select {
     padding: 5px;
     border: none;
     border-radius: 5px;
 
 }
+
 form button {
     border: none;
     width: 100px;
     border-radius: 15px;
-    padding:5px;
+    padding: 5px;
     margin: auto;
     transition: ease-in-out 0.2s;
     background: var(--couleur-principale);
 }
+
 form button:hover {
     background: var(--couleur-texte);
-    color:white;
+    color: var(--couleur-blanc);
 }
-
-

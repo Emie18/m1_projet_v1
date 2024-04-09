@@ -1,3 +1,10 @@
+{# #######################################################################
+# Nom du fichier: base_back.html.twig
+# Description: Base d'une page du back
+# Auteurs: Emilie Le Rouzic, Thibault Tanné
+# Date de création: avril 2024
+# Version: 1.0
+####################################################################### #}
 <!DOCTYPE html>
 <html>
 	<head>
@@ -15,7 +22,7 @@
 				<nav>
 					<ul>
 						<li><a href="/back/">Stage</a></li>
-						<li><a href="/back/statistique">Statistics</a></li>
+						<li><a href="/back/statistique">Statistiques</a></li>
                         <li><a href="/back/tuteur-isen">Tuteur Isen</a></li>
                         <li><a href="/back/tuteur-stage">Tuteur Stage</a></li>
                         <li><a href="/back/apprenant">Apprenant</a></li>
@@ -23,6 +30,7 @@
                         <li><a href="/back/import-file">Importer un csv</a></li>
 					</ul>
 				</nav>
+				<img src="{{asset('logo/ISEN-Brest-blanc.png')}}">
 			</header>
 
 			<div class="content"> {% block body %}{% endblock %}
@@ -30,7 +38,7 @@
 
 				<footer>
 					<!-- pied de page -->
-					<p>Site créer par Emilie Le Rouzic et Thibault Tanné</p>
+					<p>Site créé par Emilie Le Rouzic et Thibault Tanné</p>
 					<p class="version">Version 1.0</p>
 				</footer>
 

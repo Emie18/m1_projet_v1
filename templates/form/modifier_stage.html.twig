@@ -1,3 +1,10 @@
+{# #######################################################################
+# Nom du fichier: modifier_stage.html.twig
+# Description: Modifier le stage
+# Auteurs: Emilie Le Rouzic, Thibault Tanné
+# Date de création: avril 2024
+# Version: 1.0
+####################################################################### #}
 {{ form_start(form, {'attr': {'id': 'myForm'}}) }}
 
 <div class="form_modif">
@@ -113,17 +120,28 @@
         if (dateSoutenance === "") {
             // Remplacer la valeur vide par null
             document.getElementById('ajoutstage_date_soutenance').value = null;
-                console.log("oui");
+                //console.log("oui");
         }
+        var titre_form = document.getElementById('ajoutstage_titre').value;
+        var des_form = document.getElementById('ajoutstage_description').value;
+        if(titre_form === "" && des_form === ""){
+            alert('Une erreur s\'est produite, le titre et la description du stage sont vides.');
+        }
+        else if(titre_form ===""){
+           alert('Une erreur s\'est produite, le titre du stage est vide.');
+        }
+        else if(des_form ===""){
+            alert('Une erreur s\'est produite, la description du stage est vide.');
+        }else{
 
-        console.log(formData.dat);
+        //console.log(formData.dat);
         var xhr = new XMLHttpRequest();
         var url = '/back/modifier-stage/{{ stage.id }}';
         xhr.open('POST', url, true);
         xhr.onload = function() {
             if (xhr.status >= 200 && xhr.status < 400) {
                 var newData = JSON.parse(xhr.responseText);
-                console.log(newData);
+                //console.log(newData);
                 $('#etatvalidation').html(`<h3>Etat de validation :</h3>
                     <p>Soutenance : ${newData.soutenance}</p>
                     <p>Rapport : ${newData.rapport}</p>
@@ -133,9 +151,10 @@
                 $('#rapport{{ stage.id }}').html(`${newData.rapport}`);
                 $('#eval{{ stage.id }}').html(`${newData.evalEntreprise}`);
                 $('#tuteur{{ stage.id }}').html(`${newData.tuteur_isenN} ${newData.tuteur_isenP}`);
-                 $('#titre{{ stage.id }}').html(`${newData.titre}`);
-                  $('#date{{ stage.id }}').html(`${newData.date_tt}`);
-                    $('#apprenant{{ stage.id }}').html(`${newData.apprenant}`);
+                $('#titre{{ stage.id }}').html(`${newData.titre}`);
+                $('#date{{ stage.id }}').html(`${newData.date_tt}`);
+                $('#apprenant{{ stage.id }}').html(`${newData.apprenant}`);
+                $("#groupe{{ stage.id }}").html(`${newData.groupe}`);
                 $('#commentaire').html(`${newData.commentaire}`);
                 $('#confidentiel').html(`${newData.visio}`);
                 $('#rapport_remis').html(`${newData.rapport_remis}`);
@@ -158,6 +177,7 @@
             });
             } else {
                 console.error("Une erreur s'est produite lors de la modification");
+                alert("Une erreur s'est produite lors de la modification");
             }
         };
 
@@ -166,6 +186,6 @@
         };
     console.log(formData);
         // Envoyer les données du formulaire
-        xhr.send(formData);
+        xhr.send(formData);}
     });
 </script>

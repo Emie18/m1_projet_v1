@@ -1,3 +1,11 @@
+
+{# #######################################################################
+# Nom du fichier: tableau.html.twig
+# Description: Afficher le contenu du tableau
+# Auteurs: Emilie Le Rouzic, Thibault Tanné
+# Date de création: avril 2024
+# Version: 1.0
+####################################################################### #}
 <script src="{{ asset('js/pagination.js') }}"></script>
 <script src="{{ asset('js/trier.js') }}"></script>
 <table>
@@ -5,6 +13,7 @@
         <tr>
             <th onclick="trier('apprenant')">Apprenant <span id="sapprenant" >▲</span></th>
             <th onclick="trier('date')">Date début-fin <span id ="sdate" >▲</span></th>
+            <th onclick="trier('groupe')">Groupe <span id="sgroupe">▲</span></th>
             <th onclick="trier('titre')">Titre stage <span id = "stitre">▲</span></th>
             <th onclick="trier('tuteur')" >Tuteur académique <span id="stuteur">▲</span></th>
             <th onclick="trier('soutenance')">Soutenance <span id="ssoutenance">▲</span></th>
@@ -15,9 +24,10 @@
     <tbody id="tableBody">
         {% for stage in stages %}
         <tr  onclick="afficherDetails({{ stage.id }});" class="lignetableau">
-            <td id="apprenant{{ stage.id }}">{{ stage.apprenant.nom }} {{ stage.apprenant.prenom }}</td>
-            <td id="date{{ stage.id }}">{{ stage.dateDebut|date('d-m-Y') }} - {{ stage.dateFin|date('d-m-Y') }}</td>
-            <td id= "titre{{ stage.id}}">{{ stage.titre }}</td>
+            <td id="apprenant{{stage.id}}">{{ stage.apprenant.nom }} {{ stage.apprenant.prenom }}</td>
+            <td id="date{{stage.id}}">{{ stage.dateDebut|date('d-m-Y') }} - {{ stage.dateFin|date('d-m-Y') }}</td>
+            <td id="groupe{{stage.id}}">{{stage.groupe}}</td>
+            <td id="titre{{stage.id}}">{{ stage.titre }}</td>
             <td id="tuteur{{ stage.id }}">{{ stage.tuteurIsen.nom }} {{ stage.tuteurIsen.prenom }}</td>
             <td id="soutenance{{ stage.id }}">{{ stage.soutenance }}</td>
             <td id="rapport{{ stage.id }}">{{ stage.rapport }}</td>

@@ -1,4 +1,10 @@
-
+/**************************************************************************
+* Nom du fichier: importcsv.css
+* Description: feuille de style pour la page d'importation du csv
+* Auteurs: Emilie Le Rouzic, Thibault Tanné
+* Date de création: avril 2024
+* Version: 1.0
+**************************************************************************/
 h1{
     padding : 1rem;
     color: var(--couleur-texte);

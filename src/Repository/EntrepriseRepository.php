@@ -32,29 +32,16 @@ class EntrepriseRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+    public function autoCompleteNom($val){
+        $query = $this->createQueryBuilder("e");
+        $result = $query->where(
+            $query->expr()->like("e.nom", ":nom")
+        )
+        ->setParameter("nom", "%".$val."%")
+        ->orderBy("e.nom", "ASC")
+        ->getQuery()
+        ->getResult();
+        return $result;
+    }
 
-//    /**
-//     * @return Entreprise[] Returns an array of Entreprise objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('e')
-//            ->andWhere('e.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('e.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?Entreprise
-//    {
-//        return $this->createQueryBuilder('e')
-//            ->andWhere('e.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
 }

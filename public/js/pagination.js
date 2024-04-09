@@ -1,5 +1,12 @@
+/**************************************************************************
+* Nom du fichier: pagination.js
+* Description: Script pour réaliser la pagination des tableaux
+* Auteurs: Emilie Le Rouzic, Thibault Tanné
+* Date de création: avril 2024
+* Version: 1.0
+**************************************************************************/
 function paginer(page) {
-    var itemsPerPage = 20; // Nombre d'éléments par page
+    var itemsPerPage = 30; // Nombre d'éléments par page
     var tableBody = document.getElementById("tableBody");
     var rows = tableBody.getElementsByTagName("tr");
 
@@ -53,4 +60,9 @@ function paginer(page) {
     if (page < totalPages) {
         paginationButtons.innerHTML += '<button onclick="paginer(' + (page + 1) + ')">Page suivante</button>';
     }
+}
+function addMore(){
+    var liste = document.getElementById("listTuteur")
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", )
 }

@@ -1,0 +1,107 @@
+{# #######################################################################
+# Nom du fichier: head_tableau.html.twig
+# Description: En-tête du tableau avec l'autocomplétion
+# Auteurs: Emilie Le Rouzic, Thibault Tanné
+# Date de création: avril 2024
+# Version: 1.0
+####################################################################### #}
+<script src="{{ asset('js/pagination.js') }}"></script>
+<script src="{{ asset('js/filtrage.js') }}"></script>
+{% if personnes[0].numApprenant is defined %}
+   <a class = "bouton-ajouter" href="/back/ajouter-apprenant">Ajouter un apprenant</a>
+{% elseif personnes[0].numTuteurStage is defined %}
+    <a class = "bouton-ajouter" href="/back/ajouter-tuteur-stage">Ajouter un tuteur Stage</a>
+{% elseif personnes[0].numTuteurIsen is defined %}
+   <a class = "bouton-ajouter" href="/back/ajouter-tuteur-isen">Ajouter un tuteur Isen</a>
+{% elseif entreprises is defined %}
+<a class = "bouton-ajouter" href="/back/ajouter-entreprise">Ajouter une entreprise</a>
+{% endif %}
+<form id="filterForm">
+    
+    <input type="text" placeholder="Nom" id="Nom" list="dataList" onKeyUp="autoComplete(event)">
+    {% if personnes is defined %}
+    <input type="text" placeholder="Prenom" id="Prenom" list="dataList" onKeyUp="autoComplete(event)">
+    {% endif %}
+    <datalist id="dataList"></datalist>
+    <button type="button" onclick="filterResultsIndi()">Filtrer</button>
+    <button class="croix" type="button" onclick="defiltrer()">✕</button>
+</form>
+<script>
+function autoComplete(event){
+  const input = event.target;
+  const inputValue = input.value;
+  if(inputValue.length >= 3){
+        {% if personnes[0].numApprenant is defined %}
+        var url = "/autocomplete?filtre=nomApprenant"+"&val="+inputValue;
+        {% elseif personnes[0].numTuteurStage is defined %}
+        var url = "/autocomplete?filtre=nomTuteurStage"+"&val="+inputValue;
+        {% elseif personnes[0].numTuteurIsen is defined %}
+        var url = "/autocomplete?filtre=nomTuteurIsen"+"&val="+inputValue;
+        {% elseif entreprises is defined %}
+        var url = "/autocomplete?filtre=nomEntreprise"+"&val="+inputValue;
+        {% endif %}
+
+        switch(input.id){
+            case "Nom":
+                url+="&name=nom";
+                break;
+            case "Prenom":
+                url+="&name=prenom";
+                break;
+        }
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function(){
+            if(this.status == 200){
+            
+            const suggestionList = document.getElementById("dataList");
+            //vider la liste
+            suggestionList.innerHTML = "";
+            suggestionList.setAttribute("element", "apprenant")
+            if(this.responseText != ""){
+                var result = JSON.parse(this.responseText);
+                result.forEach(function(item){
+                const option = document.createElement("option");
+                switch(input.id){
+                    case "Nom":
+                        var name = item.nom;
+                        option.value = name;
+                        break;
+                    case "Prenom":
+                        var name = item.prenom;
+                        option.value = name;
+                        break;
+                }
+
+                    
+                
+                option.setAttribute("data-id", item.id)
+                suggestionList.appendChild(option)
+            })
+
+            }
+
+            }
+        }
+        xhttp.open("GET", url, true)
+        xhttp.send();
+  } 
+}
+function setId(event){
+  const input = event.target;
+  const selectedOption = document.querySelector(`option[value="${input.value}"]`);
+    if (selectedOption) {
+        const selectedId = selectedOption.getAttribute('data-id');
+        const nameValue = selectedOption.value;
+        console.log(nameValue);
+        document.getElementById('idData').value = nameValue;
+    } else {
+        document.getElementById('idData').value = "";
+    }
+}
+if(document.getElementById('Nom')){
+    document.getElementById('Nom').addEventListener('input', function(event){setId(event)});
+}
+
+if(document.getElementById('Prenom')){
+    document.getElementById('Prenom').addEventListener('input', function(event){setId(event)});
+}</script>

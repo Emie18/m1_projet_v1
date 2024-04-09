@@ -1,10 +1,17 @@
-
+/**************************************************************************
+* Nom du fichier: trier.js
+* Description: Script qui contient la fonction de tri des stages
+* Auteurs: Emilie Le Rouzic, Thibault Tanné
+* Date de création: avril 2024
+* Version: 1.0
+**************************************************************************/
+//focntion de tri des stages
 function trier(colonne) {
     // Récupérer la valeur de l'élément nomInput
-    var nomInput = document.getElementById('nameId');
+    var nomInput = document.getElementById('inputNom');
     var nom = nomInput ? nomInput.value : '';
-    var professeur = document.getElementById('profId').value;
-    var groupe = document.getElementById('groupeId').value;
+    var professeur = document.getElementById('inputProf').value;
+    var groupe = document.getElementById('groupeInput').value;
     // Récupérer le tableau
     var tableau = document.getElementById("tableBody");
     var annee = document.getElementById('anneeInput').value;

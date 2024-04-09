@@ -1,69 +1,121 @@
+{# #######################################################################
+# Nom du fichier: statistiques.html.twig
+# Description: Afficher les stats
+# Auteurs: Emilie Le Rouzic, Thibault Tanné
+# Date de création: avril 2024
+# Version: 1.0
+####################################################################### #}
 {% extends 'base.html.twig' %}
-{% block title %}Statistique
+
+
+{% block title %}Statistiques
 {% endblock %}
 {% block stylesheets %}
 	<link rel="stylesheet" href="{{ asset('css/index.css') }}">
 	<link rel="stylesheet" href="{{ asset('css/stats.css') }}">
+    <script src="{{ asset('js/pagination.js') }}"></script>
 	<script src="{{asset('chart.js')}}"></script>
 {% endblock %}
 
 {% block body %}
 
-
-    <h1 class="titre-page">Statistique</h1>
+    {% set tuteurIndice = 0 %}
+    <h1 class="titre-page">Statistiques</h1>
 	<div class="topEntreprise">
-		<h3>Top 5 des entreprises qui ont pris le plus de Stagiaires</h3>
-	    <ul>
+    <h3 id="toptuteur">Top 5 des tuteurs qui ont pris le plus de Stagiaires</h3>
+    <ul id="listTuteur">
         {% for stat in statistics %}
-            <li><span>{{ loop.index }}.</span> {{stat.entreprise_nom}} avec {{stat.nb_stage}} Stagiaires</li>
+            {% if loop.index <= 5 %}
+                <li><span>{{ loop.index }}.</span> {{ stat.tuteur }} avec {{ stat.nb_stage }} Stagiaires</li>
+            {% else %}
+                <li class="hidden"><span>{{ loop.index }}.</span> {{ stat.tuteur }} avec {{ stat.nb_stage }} Stagiaires</li>
+            {% endif %}
         {% endfor %}
+        <div class="afficherplus"><p onclick="toggleList()"> <img src="{{asset('logo/plus.png')}}"> </p></div>
     </ul>
-	</div>
-	{# {{dump(pourcentage)}} #}
-<div class="graphstatmois">
-	<h3>Pourcentage de stages en fonction de leur durée en mois</h3>
-	<div class="piecontent">
-		<canvas id="myChart" width="100" height="100"></canvas>
-	</div>
+   
 </div>
-    <script>
-document.addEventListener("DOMContentLoaded", function() {
-    var ctx = document.getElementById('myChart').getContext('2d');
-    var myChart = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-            labels: [
-                {% for stat in statMois %}
-                    '{{ stat.nb_mois }}',
-                {% endfor %}
-            ],
-            datasets: [{
-                label: 'Nombre de mois de stage par étudiant en',
-                data: [
-                    {% for stat in statMois %}
-                        {{ stat.pourcentage }},
-                    {% endfor %}
-                ],
-                backgroundColor: [
-            '#C185AF',
-			'#C185D3' ,
-			'#85C1AF',
-			'#85AFC1' ,
-			'#85AF94' ,
-			'#AF85C1' ,
-			'#AFC185'
-                ],
-                hoverOffset: 7
-            }]
-        },
-        options: {
-            animation: {
-                animateRotate: true,
-                animateScale: true
+
+<script>
+function toggleList() {
+    var listItems = document.querySelectorAll('#listTuteur li.hidden');
+    var button = document.querySelector('.topEntreprise p');
+
+    if (listItems.length > 0) {
+        $('#toptuteur').html(`Top ${listItems.length+5} des tuteurs qui ont pris le plus de Stagiaires`);
+        listItems.forEach(function(item) {
+            item.classList.remove('hidden');
+        });
+        button.innerHTML ="";
+        button.innerHTML = '<img src="{{asset('logo/moins.png')}}">';
+    } else {
+        var allItems = document.querySelectorAll('#listTuteur li');
+        allItems.forEach(function(item, index) {
+            if (index > 4) {
+                item.classList.add('hidden');
             }
-        }
-    });
-});
+        });
+        button.innerHTML ="";
+        $('#toptuteur').html(`Top 5 des tuteurs qui ont pris le plus de Stagiaires`);
+        button.innerHTML = '<img src="{{asset('logo/plus.png')}}">';
+    }
+}
+</script>
+
+
+	{# {{dump(pourcentage)}} #}
+    {# <div class="graphstatmois">
+        <h3>Pourcentage de stages en fonction de leur tuteur</h3>
+        <div class="piecontent">
+            <canvas id="myChart" class="myChartTuteur" width="100" height="100"></canvas>
+        </div>
+    </div> #}
+    <div class="topEntreprise">
+    	<h3 id = "topentreeprise">Top 5 des entreprises qui ont pris le plus de Stagiaires</h3>
+	    <ul id="listentreprise">
+        {% for stat in statEntreprise %}
+            {% if loop.index <= 5 %}
+                <li><span>{{ loop.index }}.</span> {{stat.entreprise_nom}} avec {{stat.nb_stage}} Stagiaires</li>
+            {% else %}
+                <li class="hidden"><span>{{ loop.index }}.</span> {{stat.entreprise_nom}} avec {{stat.nb_stage}} Stagiaires</li>
+            {% endif %}
+        {% endfor %}
+         <div class="afficherplus"><p onclick="toggleListentreprise()" id="entrepriseplus"> <img src="{{asset('logo/plus.png')}}"> </p></div>
+        </ul>
+	</div>
+    <script>
+function toggleListentreprise() {
+    var listItems = document.querySelectorAll('#listentreprise li.hidden');
+    var button = document.querySelector('#entrepriseplus');
+
+    if (listItems.length > 0) {
+        $('#topentreeprise').html(`Top ${listItems.length+5} des entreprises qui ont pris le plus de Stagiaires`);
+        listItems.forEach(function(item) {
+            item.classList.remove('hidden');
+        });
+        button.innerHTML ="";
+        button.innerHTML = '<img src="{{asset('logo/moins.png')}}">';
+    } else {
+        var allItems = document.querySelectorAll('#listentreprise li');
+        allItems.forEach(function(item, index) {
+            if (index > 4) {
+                item.classList.add('hidden');
+            }
+        });
+        $('#topentreeprise').html(`Top 5 des entreprises qui ont pris le plus de Stagiaires`);
+        button.innerHTML ="";
+        button.innerHTML = '<img src="{{asset('logo/plus.png')}}">';
+    }
+}
+</script>
+    <div class="graphstatmois">
+        <h3>Pourcentage de stages en fonction de leur durée en mois</h3>
+        <div class="piecontent">
+            <canvas id="myChart" class="myChartMois" width="100" height="100"></canvas>
+        </div>
+    </div>
+    <script>
+    {% include "statistique/graphique.html.twig" %}
 
   </script>
 {% endblock %}

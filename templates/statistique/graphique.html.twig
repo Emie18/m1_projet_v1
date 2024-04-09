@@ -1,0 +1,79 @@
+{# #######################################################################
+# Nom du fichier: graphique.html.twig
+# Description: Afficher le graphique dans les stats
+# Auteurs: Emilie Le Rouzic, Thibault Tanné
+# Date de création: avril 2024
+# Version: 1.0
+####################################################################### #}
+document.addEventListener("DOMContentLoaded", function() {
+    var ctx1 = document.getElementsByClassName('myChartTuteur');
+    var myChartTuteur = new Chart(ctx1, {
+        type: 'doughnut',
+        data: {
+            labels: [
+                {% for stat in pourcentage %}
+                    '{{ stat.tuteur }}',
+                {% endfor %}
+            ],
+            datasets: [{
+                label: 'Pourcentage d\'étudiants ',
+                data: [
+                    {% for stat in pourcentage %}
+                        {{ stat.pourcentage }},
+                    {% endfor %}
+                ],
+                backgroundColor: [
+            '#C185AF',
+			'#C185D3' ,
+			'#85C1AF',
+			'#85AFC1' ,
+			'#85AF94' ,
+			'#AF85C1' ,
+			'#AFC185'
+                ],
+                hoverOffset: 7
+            }]
+        },
+        options: {
+            animation: {
+                animateRotate: true,
+                animateScale: true
+            }
+        }
+    });
+    var ctx2 = document.getElementsByClassName('myChartMois');
+    var myChart = new Chart(ctx2, {
+        type: 'doughnut',
+        data: {
+            labels: [
+                {% for stat in statMois %}
+                    '{{ stat.nb_mois }}',
+                {% endfor %}
+            ],
+            datasets: [{
+                label: 'Pourcentage d\'étudiants ',
+                data: [
+                    {% for stat in statMois %}
+                        {{ stat.pourcentage }},
+                    {% endfor %}
+                ],
+                backgroundColor: [
+            '#C185AF',
+			'#C185D3' ,
+			'#85C1AF',
+			'#85AFC1' ,
+			'#85AF94' ,
+			'#AF85C1' ,
+			'#AFC185'
+                ],
+                hoverOffset: 7
+            }]
+        },
+        options: {
+            animation: {
+                animateRotate: true,
+                animateScale: true
+            }
+        }
+    });
+});

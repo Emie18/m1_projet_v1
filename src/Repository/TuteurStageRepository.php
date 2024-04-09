@@ -20,19 +20,90 @@ class TuteurStageRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, TuteurStage::class);
     }
+    /**
+     * ajouter un tuteur de stage  
+     *
+     * @param  TuteurStage $tuteur le tuteur à ajouter
+     * @return void
+     */    
     public function addTuteurStage(TuteurStage $tuteur){
         $entityManager = $this->getEntityManager();
         $entityManager->persist($tuteur);
         $entityManager->flush();
     }
-    public function findAllTuteurStage()
+    /**
+     * Obtenir tout les tuteur de stage et les classer par ordre alphabétique 
+     * @return array: liste des apprenants
+     */    public function findAllTuteurStage()
     {
         return $this->createQueryBuilder('ts')
             ->orderBy('ts.nom', 'ASC')
             ->getQuery()
             ->getResult();
+    
     }
-
+    /**
+     * autocompletion du nom pour le back
+     * @param String $val le nom à completer
+     * @return Array les noms trouvés 
+     */    public function autoCompleteNom($val){
+        $query = $this->createQueryBuilder("t");
+        $result = $query->where(
+            $query->expr()->like("t.nom", ":nom")
+        )
+        ->setParameter("nom", "%".$val."%")
+        ->orderBy("t.nom", "ASC")
+        ->getQuery()
+        ->getResult();
+        return $result;
+    }
+    /**
+     * Autocompletion du prénom pour le back
+     * @param String $var le prénom à compléter
+     * @return Array les prénoms trouvés
+     */
+    public function autoCompletePrenom($val){
+        $query = $this->createQueryBuilder("t");
+        $result = $query->where(
+            $query->expr()->like("t.prenom", ":prenom")
+        )
+        ->setParameter("prenom", "%".$val."%")
+        ->orderBy("t.prenom", "ASC")
+        ->groupBy("t.prenom")
+        ->getQuery()
+        ->getResult();
+        return $result;
+    }
+    /**
+     * Rechercher dans la base les correspondances avec le nom ET le prénom
+     *
+     * @param  String $nom le nom à chercher
+     * @param  String $prenom le prénom à chercher
+     * @return Array les correspondances trouvées
+     */    public function findByNom($nom, $prenom){
+        $query = $this->createQueryBuilder("t");
+        if($nom){
+            $result = $query->where(
+                $query->expr()->like("t.nom", ":nom")
+                
+            )
+            ->setParameter("nom", "%".$nom."%");
+        }if($nom && $prenom){
+            $result = $query->andWhere(
+                $query->expr()->like("t.prenom", ":prenom")
+            )
+            ->setParameter("prenom", "%".$prenom."%");
+        }elseif($prenom){
+            $result = $query->where(
+                $query->expr()->like("t.prenom", ":prenom")
+            )
+            ->setParameter("prenom", "%".$prenom."%");
+        }
+        $result = $query->orderBy("t.nom", "ASC")
+        ->getQuery()
+        ->getResult();
+        return $result;
+    }
 //    /**
 //     * @return TuteurStage[] Returns an array of TuteurStage objects
 //     */
