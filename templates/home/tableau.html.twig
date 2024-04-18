@@ -21,20 +21,7 @@
             <th onclick="trier('eval')">Évaluation entreprise <span id="seval">▲</span></th>
         </tr>
     </thead>
-    <tbody id="tableBody">
-        {% for stage in stages %}
-        <tr  onclick="afficherDetails({{ stage.id }});" class="lignetableau">
-            <td id="apprenant{{stage.id}}">{{ stage.apprenant.nom }} {{ stage.apprenant.prenom }}</td>
-            <td id="date{{stage.id}}">{{ stage.dateDebut|date('d-m-Y') }} - {{ stage.dateFin|date('d-m-Y') }}</td>
-            <td id="groupe{{stage.id}}">{{stage.groupe}}</td>
-            <td id="titre{{stage.id}}">{{ stage.titre }}</td>
-            <td id="tuteur{{ stage.id }}">{{ stage.tuteurIsen.nom }} {{ stage.tuteurIsen.prenom }}</td>
-            <td id="soutenance{{ stage.id }}">{{ stage.soutenance }}</td>
-            <td id="rapport{{ stage.id }}">{{ stage.rapport }}</td>
-            <td id="eval{{ stage.id }}">{{ stage.evalEntreprise }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
+    {% include "home/_table.html.twig" %}
 </table>
 <div id="paginationButtons"></div>
 

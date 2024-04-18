@@ -15,12 +15,18 @@
         <tr onclick="afficherDetails({{ stage.id }});" class="lignetableau">
             <td id="apprenant{{stage.id}}">{{ stage.apprenant.nom }} {{ stage.apprenant.prenom }}</td>
             <td id="date{{stage.id}}">{{ stage.dateDebut|date('d-m-Y') }} - {{ stage.dateFin|date('d-m-Y') }}</td>
-            <td id="groupe{{stage.id}}">{{stage.groupe}}</td>  
+            <td id="groupe{{stage.id}}">{{stage.groupe.libelle }}</td>  
             <td id="titre{{stage.id}}">{{ stage.titre }}</td>
             <td id="tuteur{{ stage.id }}">{{ stage.tuteurIsen.nom }} {{ stage.tuteurIsen.prenom }}</td>
-            <td id="soutenance{{ stage.id }}">{{ stage.soutenance }}</td>
-            <td id="rapport{{ stage.id }}">{{ stage.rapport }}</td>
-            <td id="eval{{ stage.id }}">{{ stage.evalEntreprise }}</td>
+            {% if (stage.soutenance.id == 1 or stage.soutenance.id == 3) and (stage.rapport.id == 1 or stage.rapport.id == 3) and (stage.evalEntreprise.id == 1 or stage.evalEntreprise.id == 3) %}
+                <td id="soutenance{{ stage.id }}" class="valid">{{ stage.soutenance }}</td>
+                <td id="rapport{{ stage.id }}" class="valid">{{ stage.rapport }}</td>
+                <td id="eval{{ stage.id }}" class="valid">{{ stage.evalEntreprise }}</td>
+            {% else %}
+                <td id="soutenance{{ stage.id }}">{{ stage.soutenance }}</td>
+                <td id="rapport{{ stage.id }}">{{ stage.rapport }}</td>
+                <td id="eval{{ stage.id }}">{{ stage.evalEntreprise }}</td>
+            {% endif %}
         </tr>
     {% endfor %}
 {% endif %}

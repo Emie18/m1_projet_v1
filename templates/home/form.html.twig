@@ -7,29 +7,23 @@
 ####################################################################### #}
 <script src="{{ asset('js/filtrage.js') }}"></script>
 <form id="filterForm">
-	<label for="nom">Apprenant</label>
+	{# <label for="nom">Apprenant</label> #}
   <input type="text" placeholder="Apprenant" id="inputNom" list="dataList" onKeyUp="autoComplete(event)">
   <datalist id="dataList">
   </datalist>
 
-	<label for="groupe">Groupe :</label>
-
 	<select name="groupe" id="groupeInput">
-		<option value="">groupe</option>
+		<option value="">Groupe</option>
 		{% for groupe in groupes %}
 			<option value="{{ groupe.id }}">{{groupe.libelle}}</option>
 		{% endfor %}
 	</select><br>
-
-	<label for="etat_stage">État du stage :</label>
 	<select name="etat_stage" id="etatInput">
 		<option value="">Etat du stage</option>
 		{% for etat in etats_stages %}
 			<option value="{{ etat.id }}">{{ etat.libelle }}</option>
 		{% endfor %}
 	</select><br>
-
-	<label for="annee">Année :</label>
 	<select name="annee" id="anneeInput">
 		<option value="">Année</option>
 		{% for annee in annees %}
@@ -48,7 +42,7 @@ function autoComplete(event){
   const inputValue = input.value;
   if(inputValue.length >= 3){
     var url = "/autocomplete?filtre="+input.id+"&val="+inputValue;
-    console.log(url)
+    //console.log(url)
       var xhttp = new XMLHttpRequest();
       xhttp.onreadystatechange = function(){
         if(this.status == 200){
@@ -58,7 +52,6 @@ function autoComplete(event){
           suggestionList.innerHTML = "";
           suggestionList.setAttribute("element", "apprenant")
           if(this.responseText != ""){
-            console.log(this.responseText)
             var result = JSON.parse(this.responseText);
             result.forEach(function(item){
               const option = document.createElement("option");
@@ -97,7 +90,5 @@ document.addEventListener('click', function(event) {
       datalist.removeChild(datalist.firstChild);
     }
 });
-
-
 
 </script>

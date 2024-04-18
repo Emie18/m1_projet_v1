@@ -140,6 +140,9 @@
         xhr.open('POST', url, true);
         xhr.onload = function() {
             if (xhr.status >= 200 && xhr.status < 400) {
+                var color = "#68FF59";
+                var idValide = 1;
+                var idValideApresNonValide = 3;
                 var newData = JSON.parse(xhr.responseText);
                 //console.log(newData);
                 $('#etatvalidation').html(`<h3>Etat de validation :</h3>
@@ -147,6 +150,17 @@
                     <p>Rapport : ${newData.rapport}</p>
                     <p>Entreprise : ${newData.evalEntreprise}</p>
                     <button type="button"  class="modifier" onclick=chargerFormulaireModificationEtats({{ stage.id }})>Modifier</button>`);
+                if((`${newData.soutenanceId}` == idValide || `${newData.soutenanceId}` == idValideApresNonValide) && 
+                (`${newData.rapportId}` == idValide || `${newData.rapportId}` == idValideApresNonValide) && 
+                (`${newData.evalEntrepriseId}` == idValide || `${newData.evalEntrepriseId}` == idValideApresNonValide)){
+                    $('#soutenance{{ stage.id }}').addClass("valid");
+                    $('#rapport{{ stage.id }}').addClass("valid");
+                    $('#eval{{ stage.id }}').addClass("valid");
+                }else{
+                    $('#soutenance{{ stage.id }}').removeClass("valid");
+                    $('#rapport{{ stage.id }}').removeClass("valid");
+                    $('#eval{{ stage.id }}').removeClass("valid");
+                }
                 $('#soutenance{{ stage.id }}').html(`${newData.soutenance}`);
                 $('#rapport{{ stage.id }}').html(`${newData.rapport}`);
                 $('#eval{{ stage.id }}').html(`${newData.evalEntreprise}`);

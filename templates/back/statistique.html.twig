@@ -24,9 +24,9 @@
     <ul id="listTuteur">
         {% for stat in statistics %}
             {% if loop.index <= 5 %}
-                <li><span>{{ loop.index }}.</span> {{ stat.tuteur }} avec {{ stat.nb_stage }} Stagiaires</li>
+                <li><span>{{ loop.index }}.</span> {{ stat.tuteur }} avec {{ stat.nb_stage }} {% if stat.nb_stage > 1 %}stagiaires {% else %} stagiaire {% endif %}</li>
             {% else %}
-                <li class="hidden"><span>{{ loop.index }}.</span> {{ stat.tuteur }} avec {{ stat.nb_stage }} Stagiaires</li>
+                <li class="hidden"><span>{{ loop.index }}.</span> {{ stat.tuteur }} avec {{ stat.nb_stage }} {% if stat.nb_stage > 1 %}stagiaires {% else %} stagiaire {% endif %}</li>
             {% endif %}
         {% endfor %}
         <div class="afficherplus"><p onclick="toggleList()"> <img src="{{asset('logo/plus.png')}}"> </p></div>
@@ -73,9 +73,9 @@ function toggleList() {
 	    <ul id="listentreprise">
         {% for stat in statEntreprise %}
             {% if loop.index <= 5 %}
-                <li><span>{{ loop.index }}.</span> {{stat.entreprise_nom}} avec {{stat.nb_stage}} Stagiaires</li>
+                <li><span>{{ loop.index }}.</span> {{stat.entreprise_nom}} avec {{stat.nb_stage}} {% if stat.nb_stage > 1 %}stagiaires {% else %} stagiaire {% endif %}</li>
             {% else %}
-                <li class="hidden"><span>{{ loop.index }}.</span> {{stat.entreprise_nom}} avec {{stat.nb_stage}} Stagiaires</li>
+                <li class="hidden"><span>{{ loop.index }}.</span> {{stat.entreprise_nom}} avec {{stat.nb_stage}} {% if stat.nb_stage > 1 %}stagiaires {% else %} stagiaire {% endif %}</li>
             {% endif %}
         {% endfor %}
          <div class="afficherplus"><p onclick="toggleListentreprise()" id="entrepriseplus"> <img src="{{asset('logo/plus.png')}}"> </p></div>

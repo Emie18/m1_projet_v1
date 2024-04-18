@@ -122,6 +122,22 @@ table tr:nth-child(odd) {
     background-color: var(--couleur-ligne-tableau);/* Couleur de fond pour les lignes impaires */
 }
 
+table tr:nth-child(even) .valid{
+    background-color: var(--couleur-claire);
+}
+
+table tr:nth-child(odd) .valid{
+    background-color: var(--couleur-foncee);
+}
+
+table tr:nth-child(odd):hover .valid{
+    background-color: var(--couleur-tableau-valid-foncee)
+}
+
+table tr:nth-child(even):hover .valid{
+    background-color: var(--couleur-tableau-valid-claire)
+}
+
 table td {
     color: var(--couleur-texte);
     text-align: center;

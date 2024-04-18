@@ -34,7 +34,8 @@ class TuteurStageRepository extends ServiceEntityRepository
     /**
      * Obtenir tout les tuteur de stage et les classer par ordre alphabétique 
      * @return array: liste des apprenants
-     */    public function findAllTuteurStage()
+     */    
+    public function findAllTuteurStage()
     {
         return $this->createQueryBuilder('ts')
             ->orderBy('ts.nom', 'ASC')
@@ -46,7 +47,8 @@ class TuteurStageRepository extends ServiceEntityRepository
      * autocompletion du nom pour le back
      * @param String $val le nom à completer
      * @return Array les noms trouvés 
-     */    public function autoCompleteNom($val){
+     */    
+    public function autoCompleteNom($val){
         $query = $this->createQueryBuilder("t");
         $result = $query->where(
             $query->expr()->like("t.nom", ":nom")
@@ -80,7 +82,8 @@ class TuteurStageRepository extends ServiceEntityRepository
      * @param  String $nom le nom à chercher
      * @param  String $prenom le prénom à chercher
      * @return Array les correspondances trouvées
-     */    public function findByNom($nom, $prenom){
+     */    
+    public function findByNom($nom, $prenom){
         $query = $this->createQueryBuilder("t");
         if($nom){
             $result = $query->where(

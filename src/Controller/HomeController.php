@@ -41,6 +41,7 @@ class HomeController extends AbstractController
         $annees = [];
         //création de la liste contenant les différente années
         foreach ($stages as $stage) {
+            //var_dump($stage);
             $anneeDebut = $stage->getDateDebut()->format('Y');
             $anneeFin = $stage->getDateFin()->format('Y');
             if (!in_array($anneeDebut, $annees)) {
@@ -49,7 +50,9 @@ class HomeController extends AbstractController
             if (!in_array($anneeFin, $annees)) {
                 $annees[] = $anneeFin;
             }
+            
         }
+        arsort($annees);
         //récupération de tout les tuteurs ISEN
         $professeurs = $tuteurIsenRepository->findAllTuteurIsens();
         //envois des données à la page twig "index.html.twig"

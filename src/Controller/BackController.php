@@ -179,7 +179,7 @@ class BackController extends AbstractController
             }
         }
         $professeurs = $tuteurIsenRepository->findAllTuteurIsens();
-
+        arsort($annees);
 
         return $this->render('back/index.html.twig', [
             'stages' => $stages,
@@ -302,6 +302,7 @@ class BackController extends AbstractController
 
         $form->add('date_soutenance', DateTimeType::class, [
             'widget' => 'single_text',
+            'required' => false,
         ]);
 
         $form->add('soutenance', EntityType::class, [
@@ -334,6 +335,7 @@ class BackController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
             $stageRepository->addStage($stage);
             return $this->redirectToRoute('app_back');
         }
@@ -493,8 +495,11 @@ class BackController extends AbstractController
             if ($success) {
                 $operation = "modification réussi";
                 return new JsonResponse([
+                    'soutenanceId' => $soutenance->getId(),
                     'soutenance' => $soutenance->getLibelle(),
+                    'rapportId' => $rapport->getId(),
                     'rapport' => $rapport->getLibelle(),
+                    'evalEntrepriseId' => $evalEntreprise->getId(),
                     'evalEntreprise' => $evalEntreprise->getLibelle(),
                     'commentaire' => $commentaire,
                     'confidentel' => $confi,
@@ -538,6 +543,16 @@ class BackController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $num = $TuteurRepository->findAll();
+            foreach($num as $n){
+                if($n->getNumTuteurIsen() == $tuteur->getNumTuteurIsen()){
+                    return $this->render('form/ajouter_personne.html.twig', [
+                        'form' => $form->createView(),
+                        'title' => "un tuteur ISEN",
+                        'error' => "Numéro déjà existant",
+                    ]); 
+                }
+            }
             $tuteur->setNom(strtoupper($tuteur->getNom()));
             $TuteurRepository->addTuteurIsen($tuteur);
             return $this->redirectToRoute('tuteur_isen');
@@ -674,6 +689,16 @@ class BackController extends AbstractController
         $form = $this->createForm(TuteurType::class, $tuteur);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
+            $num = $TuteurRepository->findAll();
+            foreach($num as $n){
+                if($n->getNumTuteurStage() == $tuteur->getNumTuteurStage()){
+                    return $this->render('form/ajouter_personne.html.twig', [
+                        'form' => $form->createView(),
+                        'title' => "un tuteur de stage",
+                        'error' => "Numéro déjà existant",
+                    ]); 
+                }
+            }
             $tuteur->setNom(strtoupper($tuteur->getNom()));
             $TuteurRepository->addTuteurStage($tuteur);
             return $this->redirectToRoute('tuteur_stage');
@@ -691,6 +716,16 @@ class BackController extends AbstractController
         $form = $this->createForm(ApprenantType::class, $apprenant);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
+            $num = $ApprenantRepository->findAll();
+            foreach($num as $n){
+                if($n->getNumApprenant() == $apprenant->getNumApprenant()){
+                    return $this->render('form/ajouter_personne.html.twig', [
+                        'form' => $form->createView(),
+                        'title' => "un apprenant",
+                        'error' => "Numéro déjà existant",
+                    ]); 
+                }
+            }
             $apprenant->setNom(strtoupper($apprenant->getNom()));
             $ApprenantRepository->addApprenant($apprenant);
             return $this->redirectToRoute('apprenant');
@@ -923,7 +958,7 @@ class BackController extends AbstractController
             $dateDebut = $dateDebut . " 08:00";
         }        
         if(strlen($dateFin) == 10){
-            $dateFin = $dateFin . " 08:00";
+            $dateFin = $dateFin . " 18:00";
         }
         if(strlen($dateDebut) == 0){
             $dateDebut = "01/01/0001 08:00";

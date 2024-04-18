@@ -14,6 +14,10 @@
     --couleur-ligne-tableau: #c0a2bdac;
     --couleur-survol-tableau: rgba(139, 58, 139, 0.552);
     --couleur-croix: #ee6e73;
+    --couleur-claire: #cde5ff70;
+    --couleur-foncee: #a7c0d47d;
+    --couleur-tableau-valid-claire: #cde5ffb9;
+    --couleur-tableau-valid-foncee: #a7c0d4b9;
 }
 
 * {
